@@ -1,0 +1,7 @@
+add_subdirectory(vector)
+add_subdirectory(stack)
+add_subdirectory(queue)
+add_subdirectory(string_view)
+add_subdirectory(string_builder)
+
+
