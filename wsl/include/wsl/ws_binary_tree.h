@@ -34,7 +34,7 @@ inline size_t ws_binary_tree_##TYPE##_size(struct ws_binary_tree_##TYPE tree)   
                                                                                                                                         \
 inline struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_search(struct ws_binary_tree_##TYPE tree, size_t key)               \
 {                                                                                                                                       \
-    struct ws_binary_tree_##TYPE##_node* node = &tree.head;                                                                             \
+    struct ws_binary_tree_##TYPE##_node** node = &tree.head;                                                                            \
                                                                                                                                         \
     while (*node)                                                                                                                       \
     {                                                                                                                                   \
@@ -85,7 +85,7 @@ inline struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_successor(st
         return ws_binary_tree_##TYPE##_minimum(head->right);                                                                            \
     }                                                                                                                                   \
                                                                                                                                         \
-    struct ws_binary_tree__##TYPE##_node* parent = head->parent;                                                                        \
+    struct ws_binary_tree_##TYPE##_node* parent = head->parent;                                                                         \
                                                                                                                                         \
     while (parent != nullptr && head == parent->right)                                                                                  \
     {                                                                                                                                   \
@@ -161,8 +161,8 @@ inline void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* tree, siz
         return;                                                                                                                         \
     }                                                                                                                                   \
                                                                                                                                         \
-    struct ws_binary_tree_##TYPE##_node* node = &tree->head;                                                                            \
-    struct ws_binary_tree_##TYPE##_node* parentNode = node;                                                                             \
+    struct ws_binary_tree_##TYPE##_node** node = &tree->head;                                                                           \
+    struct ws_binary_tree_##TYPE##_node** parentNode = node;                                                                            \
                                                                                                                                         \
     while (*node)                                                                                                                       \
     {                                                                                                                                   \
@@ -195,6 +195,7 @@ inline void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* tree, siz
     if (node->left == nullptr)                                                                                                          \
     {                                                                                                                                   \
         ws_binary_tree_##TYPE##_shift_nodes(tree, node, node->right);                                                                   \
+        memset(node, 0, sizeof(ws_binary_tree_##TYPE##_node));                                                                          \
         free(node);                                                                                                                     \
         tree->size -= 1;                                                                                                                \
                                                                                                                                         \
@@ -204,6 +205,7 @@ inline void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* tree, siz
     if (node->right == nullptr)                                                                                                         \
     {                                                                                                                                   \
         ws_binary_tree_##TYPE##_shift_nodes(tree, node, node->left);                                                                    \
+        memset(node, 0, sizeof(ws_binary_tree_##TYPE##_node));                                                                          \
         free(node);                                                                                                                     \
         tree->size -= 1;                                                                                                                \
                                                                                                                                         \
@@ -211,19 +213,20 @@ inline void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* tree, siz
     }                                                                                                                                   \
     else                                                                                                                                \
     {                                                                                                                                   \
-        struct ws_binary_tree_##TYPE##_node* nodeSuccessor = ws_binary_tree_##TYPE##_successor(node);                                   \
+        struct ws_binary_tree_##TYPE##_node* nodeSuccessor = ws_binary_tree_##TYPE##_predecessor(node);                                 \
                                                                                                                                         \
         if (nodeSuccessor->parent != node)                                                                                              \
         {                                                                                                                               \
-            ws_binary_tree_##TYPE##_shift_nodes(tree, nodeSuccessor, nodeSuccessor->right);                                             \
-            nodeSuccessor->right = node->right;                                                                                         \
-            nodeSuccessor->right->parent = nodeSuccessor;                                                                               \
+            ws_binary_tree_##TYPE##_shift_nodes(tree, nodeSuccessor, nodeSuccessor->left);                                             \
+            nodeSuccessor->left = node->left;                                                                                         \
+            nodeSuccessor->left->parent = nodeSuccessor;                                                                               \
         }                                                                                                                               \
                                                                                                                                         \
         ws_binary_tree_##TYPE##_shift_nodes(tree, node, nodeSuccessor);                                                                 \
-        nodeSuccessor->left = node->left;                                                                                               \
-        nodeSuccessor->left->parent = nodeSuccessor;                                                                                    \
+        nodeSuccessor->right = node->right;                                                                                               \
+        nodeSuccessor->right->parent = nodeSuccessor;                                                                                    \
                                                                                                                                         \
+        memset(node, 0, sizeof(ws_binary_tree_##TYPE##_node));                                                                          \
         free(node);                                                                                                                     \
         tree->size -= 1;                                                                                                                \
                                                                                                                                         \
@@ -259,7 +262,8 @@ inline void ws_binary_tree_##TYPE##_destroy_branch(struct ws_binary_tree_##TYPE#
         strategy(&head->value);                                                                                                         \
     }                                                                                                                                   \
                                                                                                                                         \
-   free(head);                                                                                                                          \
+    memset(head, 0, sizeof(struct ws_binary_tree_##TYPE##_node));                                                                       \
+    free(head);                                                                                                                         \
 }                                                                                                                                       \
                                                                                                                                         \
 inline void ws_binary_tree_##TYPE##_destroy(struct ws_binary_tree_##TYPE* tree, void(*strategy)(TYPE*))                                 \
