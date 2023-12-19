@@ -27,11 +27,13 @@ TEST(string_builder, substring)
 {
     struct ws_string_builder stringA = ws_string_builder_create("Its so over");
     struct ws_string_builder stringB = ws_string_builder_create("so over");
+    struct ws_string_builder stringC = ws_string_builder_substr(stringA, 4, stringA.size);
 
-    EXPECT_STREQ(ws_string_builder_substr(stringA, 4, stringA.size).data, stringB.data);
+    EXPECT_STREQ(stringC.data, stringB.data);
 
     ws_string_builder_destroy(&stringA);
     ws_string_builder_destroy(&stringB);
+    ws_string_builder_destroy(&stringC);
 }
 
 TEST(string_builder, copy_values)

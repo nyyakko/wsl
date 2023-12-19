@@ -197,11 +197,35 @@ inline void ws_string_builder_append_string(struct ws_string_builder* string, ch
 
 [[nodiscard]]inline struct ws_string_builder ws_string_builder_substr(struct ws_string_builder string, size_t begin, size_t end)
 {
-    (void)string;
-    (void)begin;
-    (void)end;
+    // FIXME: properly handle this case
+    assert(begin != end && "BEGIN CANNOT EQUAL TO END");
 
-    return string;
+    size_t length = end - begin + 1;
+
+    // https://graphics.stanford.edu/%7Eseander/bithacks.html#RoundUpPowerOf2
+    size_t roundedLength = length;
+
+    roundedLength -= 1;
+    roundedLength |= roundedLength >> 1;
+    roundedLength |= roundedLength >> 2;
+    roundedLength |= roundedLength >> 4;
+    roundedLength |= roundedLength >> 8;
+    roundedLength |= roundedLength >> 16;
+    roundedLength += 1;
+
+    struct ws_string_builder result =
+    {
+        .data     = (char*)malloc(roundedLength),
+        .begin    = 0,
+        .end      = length,
+        .size     = length,
+        .capacity = roundedLength,
+    };
+
+    memset(result.data, 0, result.capacity);
+    memcpy(result.data, string.data += begin, length);
+
+    return result;
 }
 
 inline void ws_string_builder_copy(struct ws_string_builder* destination, struct ws_string_builder* source)
