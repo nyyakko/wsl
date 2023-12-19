@@ -30,17 +30,17 @@ struct ws_stack_##TYPE                                                          
     TYPE* data;                                                                                                                         \
 };                                                                                                                                      \
                                                                                                                                         \
-size_t ws_stack_##TYPE##_size(struct ws_stack_##TYPE stack)                                                                             \
+inline size_t ws_stack_##TYPE##_size(struct ws_stack_##TYPE stack)                                                                      \
 {                                                                                                                                       \
     return stack.size;                                                                                                                  \
 }                                                                                                                                       \
                                                                                                                                         \
-bool ws_stack_##TYPE##_is_empty(struct ws_stack_##TYPE stack)                                                                           \
+inline bool ws_stack_##TYPE##_is_empty(struct ws_stack_##TYPE stack)                                                                    \
 {                                                                                                                                       \
     return stack.size == 0;                                                                                                             \
 }                                                                                                                                       \
                                                                                                                                         \
-TYPE* ws_stack_##TYPE##_search(struct ws_stack_##TYPE stack, TYPE value, int(*predicate)(TYPE const*, TYPE const*))                     \
+inline TYPE* ws_stack_##TYPE##_search(struct ws_stack_##TYPE stack, TYPE value, int(*predicate)(TYPE const*, TYPE const*))              \
 {                                                                                                                                       \
     for (size_t index = 0llu; index != stack.size; index += 1)                                                                          \
     {                                                                                                                                   \
@@ -53,12 +53,12 @@ TYPE* ws_stack_##TYPE##_search(struct ws_stack_##TYPE stack, TYPE value, int(*pr
     return nullptr;                                                                                                                     \
 }                                                                                                                                       \
                                                                                                                                         \
-TYPE* ws_stack_##TYPE##_top(struct ws_stack_##TYPE stack)                                                                               \
+inline TYPE* ws_stack_##TYPE##_top(struct ws_stack_##TYPE stack)                                                                        \
 {                                                                                                                                       \
     return &stack.data[stack.begin];                                                                                                    \
 }                                                                                                                                       \
                                                                                                                                         \
-void ws_stack_##TYPE##_copy(struct ws_stack_##TYPE* destination, struct ws_stack_##TYPE const* source, void(*strategy)(TYPE*))          \
+inline void ws_stack_##TYPE##_copy(struct ws_stack_##TYPE* destination, struct ws_stack_##TYPE const* source, void(*strategy)(TYPE*))   \
 {                                                                                                                                       \
     if (ws_stack_##TYPE##_is_empty(*source))                                                                                            \
     {                                                                                                                                   \
@@ -84,7 +84,7 @@ void ws_stack_##TYPE##_copy(struct ws_stack_##TYPE* destination, struct ws_stack
     memcpy(destination->data, source->data, destination->capacity * sizeof(TYPE));                                                      \
 }                                                                                                                                       \
                                                                                                                                         \
-void ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack)                                                                           \
+inline void ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack)                                                                    \
 {                                                                                                                                       \
     assert(stack != nullptr && "STACK POINTER WAS NULL");                                                                               \
                                                                                                                                         \
@@ -97,7 +97,7 @@ void ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack)                   
     free(oldData);                                                                                                                      \
 }                                                                                                                                       \
                                                                                                                                         \
-void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value)                                                                  \
+inline void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value)                                                           \
 {                                                                                                                                       \
     assert(stack != nullptr && "STACK POINTER WAS NULL");                                                                               \
                                                                                                                                         \
@@ -109,7 +109,7 @@ void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value)          
     stack->begin = stack->size - 1;                                                                                                     \
 }                                                                                                                                       \
                                                                                                                                         \
-[[nodiscard]]TYPE* ws_stack_##TYPE##_pop(struct ws_stack_##TYPE* stack)                                                                 \
+[[nodiscard]]inline TYPE* ws_stack_##TYPE##_pop(struct ws_stack_##TYPE* stack)                                                          \
 {                                                                                                                                       \
     assert(stack != nullptr && "STACK POINTER WAS NULL");                                                                               \
     assert(stack->size && "TRIED TO POP AN EMPTY STACK");                                                                               \
@@ -120,14 +120,14 @@ void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value)          
     return &stack->data[stack->begin];                                                                                                  \
 }                                                                                                                                       \
                                                                                                                                         \
-struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...)                                                                      \
+inline struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...)                                                               \
 {                                                                                                                                       \
     struct ws_stack_##TYPE stack =                                                                                                      \
     {                                                                                                                                   \
-        .size     = 0,                                                                                                                  \
-        .capacity = 1,                                                                                                                  \
         .begin    = 0,                                                                                                                  \
         .end      = 0,                                                                                                                  \
+        .size     = 0,                                                                                                                  \
+        .capacity = 1,                                                                                                                  \
         .data     = nullptr,                                                                                                            \
     };                                                                                                                                  \
                                                                                                                                         \
@@ -144,7 +144,7 @@ struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...)              
     return stack;                                                                                                                       \
 }                                                                                                                                       \
                                                                                                                                         \
-void ws_stack_##TYPE##_destroy(struct ws_stack_##TYPE* stack, void(*strategy)(TYPE*))                                                   \
+inline void ws_stack_##TYPE##_destroy(struct ws_stack_##TYPE* stack, void(*strategy)(TYPE*))                                            \
 {                                                                                                                                       \
     if (strategy != nullptr)                                                                                                            \
     {                                                                                                                                   \
@@ -159,3 +159,4 @@ void ws_stack_##TYPE##_destroy(struct ws_stack_##TYPE* stack, void(*strategy)(TY
 }
 
 #endif
+

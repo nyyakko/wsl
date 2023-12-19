@@ -1,3 +1,5 @@
+set(CMAKE_CXX_VERSION 23)
+
 add_subdirectory(vector)
 add_subdirectory(stack)
 add_subdirectory(queue)

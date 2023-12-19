@@ -27,12 +27,12 @@ struct ws_hash_map_##TYPE                                                       
     size_t capacity;                                                                                                                    \
 };                                                                                                                                      \
                                                                                                                                         \
-size_t ws_hash_map_##TYPE##_size(struct ws_hash_map_##TYPE hashMap)                                                                     \
+inline size_t ws_hash_map_##TYPE##_size(struct ws_hash_map_##TYPE hashMap)                                                              \
 {                                                                                                                                       \
     return hashMap.size;                                                                                                                \
 }                                                                                                                                       \
                                                                                                                                         \
-struct ws_binary_tree_##TYPE##_node* ws_hash_map_##TYPE##_search(struct ws_hash_map_##TYPE hashMap, size_t key)                         \
+inline struct ws_binary_tree_##TYPE##_node* ws_hash_map_##TYPE##_search(struct ws_hash_map_##TYPE hashMap, size_t key)                  \
 {                                                                                                                                       \
     for (size_t index = 0llu; index != hashMap->capacity; index += 1)                                                                   \
     {                                                                                                                                   \
@@ -48,7 +48,7 @@ struct ws_binary_tree_##TYPE##_node* ws_hash_map_##TYPE##_search(struct ws_hash_
     return nullptr;                                                                                                                     \
 }                                                                                                                                       \
                                                                                                                                         \
-void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t key, TYPE value)                                              \
+inline void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t key, TYPE value)                                       \
 {                                                                                                                                       \
     struct ws_binary_tree_##TYPE##_node* result = ws_hash_map_##TYPE##_search(hashMap, key);                                            \
                                                                                                                                         \
@@ -65,7 +65,7 @@ void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t key, T
     hashMap->size += 1;                                                                                                                 \
 }                                                                                                                                       \
                                                                                                                                         \
-[[nodiscard]]TYPE ws_hash_map_##TYPE##_pop(struct ws_hash_map_##TYPE* hashMap, size_t key)                                              \
+[[nodiscard]]inline TYPE ws_hash_map_##TYPE##_pop(struct ws_hash_map_##TYPE* hashMap, size_t key)                                       \
 {                                                                                                                                       \
     struct ws_hash_item_bucket* workingBucket = &hashMap->buckets[key & (hashMap->capacity - 1)];                                       \
     hashMap->size -= 1;                                                                                                                 \
@@ -74,7 +74,7 @@ void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t key, T
     return ws_binary_tree_##TYPE##_pop(&workingBucket->tree, key);                                                                      \
 }                                                                                                                                       \
                                                                                                                                         \
-[[nodiscard]]struct ws_hash_map_##TYPE ws_hash_map_##TYPE##_create()                                                                    \
+[[nodiscard]]inline struct ws_hash_map_##TYPE ws_hash_map_##TYPE##_create()                                                             \
 {                                                                                                                                       \
     struct ws_hash_map_##TYPE hashMap =                                                                                                 \
     {                                                                                                                                   \
@@ -94,7 +94,7 @@ void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t key, T
     return hashMap;                                                                                                                     \
 }                                                                                                                                       \
                                                                                                                                         \
-void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, void(*strategy)(TYPE*))                                           \
+inline void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, void(*strategy)(TYPE*))                                    \
 {                                                                                                                                       \
     for (size_t index = 0llu; index != hashMap->capacity; index += 1)                                                                   \
     {                                                                                                                                   \
@@ -108,7 +108,7 @@ void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, void(*stra
 
 // MurmurHash: https://en.wikipedia.org/wiki/MurmurHash
 
-size_t ws_hash_map_hash(void const* key, size_t len)
+inline size_t ws_hash_map_hash(void const* key, size_t len)
 {
     const unsigned long long m = 0xc6a4a7935bd1e995ULL;
     const int r = 47;
@@ -164,3 +164,4 @@ size_t ws_hash_map_hash(void const* key, size_t len)
 }
 
 #endif
+

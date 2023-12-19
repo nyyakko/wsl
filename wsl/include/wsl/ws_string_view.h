@@ -15,17 +15,17 @@ struct ws_string_view
     size_t size;
 };
 
-size_t ws_string_view_size(struct ws_string_view view)
+inline size_t ws_string_view_size(struct ws_string_view view)
 {
     return view.size;
 }
 
-bool ws_string_view_is_empty(struct ws_string_view view)
+inline bool ws_string_view_is_empty(struct ws_string_view view)
 {
     return view.size == 0;
 }
 
-bool ws_string_view_equals(struct ws_string_view lhs, struct ws_string_view rhs)
+inline bool ws_string_view_equals(struct ws_string_view lhs, struct ws_string_view rhs)
 {
     size_t lhsSize = lhs.size;
     size_t rhsSize = rhs.size;
@@ -46,32 +46,32 @@ bool ws_string_view_equals(struct ws_string_view lhs, struct ws_string_view rhs)
     return true;
 }
 
-char ws_string_view_at(struct ws_string_view view, size_t index)
+inline char ws_string_view_at(struct ws_string_view view, size_t index)
 {
     assert(index <= view.size + view.begin && "INDEX OUT OF BOUNDS");
     return view.data[index];
 }
 
-char ws_string_view_front(struct ws_string_view view)
+inline char ws_string_view_front(struct ws_string_view view)
 {
     return view.data[view.begin];
 }
 
-char ws_string_view_back(struct ws_string_view view)
+inline char ws_string_view_back(struct ws_string_view view)
 {
     return view.data[view.end - 1];
 }
 
 #ifdef WS_HASHMAP_H
 
-size_t ws_string_view_hash(struct ws_string_view view)
+inline size_t ws_string_view_hash(struct ws_string_view view)
 {
     return ws_hash_map_hash((char unsigned const*)view.data, view.size);
 }
 
 #endif
 
-size_t ws_string_view_search_first(struct ws_string_view view, char needle)
+inline size_t ws_string_view_search_first(struct ws_string_view view, char needle)
 {
     for (size_t index = 0llu; index != view.size; index += 1)
     {
@@ -84,7 +84,7 @@ size_t ws_string_view_search_first(struct ws_string_view view, char needle)
     return SIZE_MAX;
 }
 
-size_t ws_string_view_search_last(struct ws_string_view view, char needle)
+inline size_t ws_string_view_search_last(struct ws_string_view view, char needle)
 {
     for (size_t index = view.size - 1; index != 0; index -= 1)
     {
@@ -97,7 +97,7 @@ size_t ws_string_view_search_last(struct ws_string_view view, char needle)
     return SIZE_MAX;
 }
 
-void ws_string_view_chop_until_first(struct ws_string_view* view, char delimiter)
+inline void ws_string_view_chop_until_first(struct ws_string_view* view, char delimiter)
 {
     assert(view != nullptr && "STRING POINTER WAS NULL");
     assert(view->size != 0 && "STRING WAS EMPTY");
@@ -114,7 +114,7 @@ void ws_string_view_chop_until_first(struct ws_string_view* view, char delimiter
     view->data  += view->begin;
 }
 
-void ws_string_view_chop_until_last(struct ws_string_view* view, char delimiter)
+inline void ws_string_view_chop_until_last(struct ws_string_view* view, char delimiter)
 {
     assert(view != nullptr && "STRING POINTER WAS NULL");
     assert(view->size != 0 && "STRING WAS EMPTY");
@@ -131,7 +131,7 @@ void ws_string_view_chop_until_last(struct ws_string_view* view, char delimiter)
     view->data  += view->begin;
 }
 
-[[nodiscard]]struct ws_string_view ws_string_view_subview(struct ws_string_view view, size_t begin, size_t end)
+[[nodiscard]]inline struct ws_string_view ws_string_view_subview(struct ws_string_view view, size_t begin, size_t end)
 {
     struct ws_string_view result = view;
     result.data += begin;
@@ -142,7 +142,7 @@ void ws_string_view_chop_until_last(struct ws_string_view* view, char delimiter)
     return result;
 }
 
-void ws_string_view_copy(struct ws_string_view* destination, struct ws_string_view const* source)
+inline void ws_string_view_copy(struct ws_string_view* destination, struct ws_string_view const* source)
 {
     destination->data  = source->data;
     destination->begin = source->begin;
@@ -150,7 +150,7 @@ void ws_string_view_copy(struct ws_string_view* destination, struct ws_string_vi
     destination->size  = source->size;
 }
 
-struct ws_string_view ws_string_view_create(char const* data)
+inline struct ws_string_view ws_string_view_create(char const* data)
 {
     size_t size = strlen(data) + 1;
 
@@ -166,3 +166,4 @@ struct ws_string_view ws_string_view_create(char const* data)
 }
 
 #endif
+

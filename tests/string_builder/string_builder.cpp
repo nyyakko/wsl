@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <wsl/ws_string_builder.h>
 
-TEST(chop_until_last, string_builder)
+TEST(string_builder, chop_until_last)
 {
     struct ws_string_builder string = ws_string_builder_create("Its so over");
 
@@ -12,7 +12,7 @@ TEST(chop_until_last, string_builder)
     ws_string_builder_destroy(&string);
 }
 
-TEST(chop_until_first, string_builder)
+TEST(string_builder, chop_until_first)
 {
     struct ws_string_builder string = ws_string_builder_create("Its so over");
 
@@ -23,7 +23,7 @@ TEST(chop_until_first, string_builder)
     ws_string_builder_destroy(&string);
 }
 
-TEST(substring, string_builder)
+TEST(string_builder, substring)
 {
     struct ws_string_builder stringA = ws_string_builder_create("Its so over");
     struct ws_string_builder stringB = ws_string_builder_create("so over");
@@ -34,7 +34,7 @@ TEST(substring, string_builder)
     ws_string_builder_destroy(&stringB);
 }
 
-TEST(copy_values, string_builder)
+TEST(string_builder, copy_values)
 {
     struct ws_string_builder stringA = ws_string_builder_create("Its so over");
     struct ws_string_builder stringB = ws_string_builder_create("so over");
@@ -47,7 +47,7 @@ TEST(copy_values, string_builder)
     ws_string_builder_destroy(&stringB);
 }
 
-TEST(copy_empty, string_builder)
+TEST(string_builder, copy_empty)
 {
     struct ws_string_builder stringA = ws_string_builder_create("Its so over");
     struct ws_string_builder stringB = ws_string_builder_create("");
@@ -60,7 +60,7 @@ TEST(copy_empty, string_builder)
     ws_string_builder_destroy(&stringB);
 }
 
-TEST(append, string_builder)
+TEST(string_builder, append)
 {
     struct ws_string_builder string = ws_string_builder_create("Hello, ");
 
@@ -76,7 +76,7 @@ TEST(append, string_builder)
     ws_string_builder_destroy(&string);
 }
 
-TEST(append_string, string_builder)
+TEST(string_builder, append_string)
 {
     struct ws_string_builder string = ws_string_builder_create("Hello, ");
 

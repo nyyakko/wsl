@@ -17,17 +17,17 @@ struct ws_string_builder
     size_t capacity;
 };
 
-size_t ws_string_builder_size(struct ws_string_builder string)
+inline size_t ws_string_builder_size(struct ws_string_builder string)
 {
     return string.size - 1;
 }
 
-bool ws_string_builder_is_empty(struct ws_string_builder string)
+inline bool ws_string_builder_is_empty(struct ws_string_builder string)
 {
     return string.size - 1 == 0;
 }
 
-bool ws_string_builder_equals(struct ws_string_builder lhs, struct ws_string_builder rhs)
+inline bool ws_string_builder_equals(struct ws_string_builder lhs, struct ws_string_builder rhs)
 {
     size_t lhsSize = lhs.size;
     size_t rhsSize = rhs.size;
@@ -48,25 +48,25 @@ bool ws_string_builder_equals(struct ws_string_builder lhs, struct ws_string_bui
     return true;
 }
 
-char ws_string_builder_at(struct ws_string_builder string, size_t position)
+inline char ws_string_builder_at(struct ws_string_builder string, size_t position)
 {
     assert(position < string.size && "INDEX OUT OF BOUNDS");
     return string.data[position];
 }
 
-char ws_string_builder_front(struct ws_string_builder string)
+inline char ws_string_builder_front(struct ws_string_builder string)
 {
     assert(string.size && "STRING WAS EMPTY");
     return string.data[0];
 }
 
-char ws_string_builder_back(struct ws_string_builder string)
+inline char ws_string_builder_back(struct ws_string_builder string)
 {
     assert(string.size && "STRING WAS EMPTY");
     return string.data[string.size - 1];
 }
 
-size_t ws_string_builder_search_first(struct ws_string_builder string, char needle)
+inline size_t ws_string_builder_search_first(struct ws_string_builder string, char needle)
 {
     for (size_t index = 0llu; index != string.size; index += 1)
     {
@@ -79,7 +79,7 @@ size_t ws_string_builder_search_first(struct ws_string_builder string, char need
     return SIZE_MAX;
 }
 
-size_t ws_string_builder_search_last(struct ws_string_builder string, char needle)
+inline size_t ws_string_builder_search_last(struct ws_string_builder string, char needle)
 {
     for (size_t index = string.size - 1; index != 0; index -= 1)
     {
@@ -94,7 +94,7 @@ size_t ws_string_builder_search_last(struct ws_string_builder string, char needl
 
 #ifdef WS_HASHMAP_H
 
-size_t ws_string_builder_hash(struct ws_string_builder string)
+inline size_t ws_string_builder_hash(struct ws_string_builder string)
 {
     assert(string != nullptr && "STRING POINTER WAS NULL");
     return ws_hash_map_hash((char unsigned const*)string.data, string.size - 1);
@@ -102,7 +102,7 @@ size_t ws_string_builder_hash(struct ws_string_builder string)
 
 #endif
 
-void ws_string_builder_chop_until_first(struct ws_string_builder* string, char delimiter)
+inline void ws_string_builder_chop_until_first(struct ws_string_builder* string, char delimiter)
 {
     assert(string != nullptr && "STRING POINTER WAS NULL");
     assert(string->size != 0 && "STRING WAS EMPTY");
@@ -126,7 +126,7 @@ void ws_string_builder_chop_until_first(struct ws_string_builder* string, char d
     free(buffer);
 }
 
-void ws_string_builder_chop_until_last(struct ws_string_builder* string, char delimiter)
+inline void ws_string_builder_chop_until_last(struct ws_string_builder* string, char delimiter)
 {
     assert(string != nullptr && "STRING POINTER WAS NULL");
     assert(string->size != 0 && "STRING WAS EMPTY");
@@ -153,14 +153,14 @@ void ws_string_builder_chop_until_last(struct ws_string_builder* string, char de
     free(buffer);
 }
 
-void ws_string_builder_clear(struct ws_string_builder* string)
+inline void ws_string_builder_clear(struct ws_string_builder* string)
 {
     assert(string != nullptr && "STRING POINTER WAS NULL");
     memset(string->data, '\0', string->capacity);
     string->size = 1;
 }
 
-void ws_string_builder_realloc(struct ws_string_builder* string)
+inline void ws_string_builder_realloc(struct ws_string_builder* string)
 {
     assert(string != nullptr && "STRING POINTER WAS NULL");
 
@@ -173,7 +173,7 @@ void ws_string_builder_realloc(struct ws_string_builder* string)
     free(oldData);
 }
 
-void ws_string_builder_append(struct ws_string_builder* string, char value)
+inline void ws_string_builder_append(struct ws_string_builder* string, char value)
 {
     assert(string != nullptr && "STRING POINTER WAS NULL");
 
@@ -183,7 +183,7 @@ void ws_string_builder_append(struct ws_string_builder* string, char value)
     string->data[string->size++ - 1] = value;
 }
 
-void ws_string_builder_append_string(struct ws_string_builder* string, char const* value)
+inline void ws_string_builder_append_string(struct ws_string_builder* string, char const* value)
 {
     assert(string != nullptr && "STRING POINTER WAS NULL");
 
@@ -195,7 +195,7 @@ void ws_string_builder_append_string(struct ws_string_builder* string, char cons
     }
 }
 
-struct ws_string_builder ws_string_builder_substr(struct ws_string_builder string, size_t begin, size_t end)
+[[nodiscard]]inline struct ws_string_builder ws_string_builder_substr(struct ws_string_builder string, size_t begin, size_t end)
 {
     (void)string;
     (void)begin;
@@ -204,7 +204,7 @@ struct ws_string_builder ws_string_builder_substr(struct ws_string_builder strin
     return string;
 }
 
-void ws_string_builder_copy(struct ws_string_builder* destination, struct ws_string_builder* source)
+inline void ws_string_builder_copy(struct ws_string_builder* destination, struct ws_string_builder* source)
 {
     assert(destination && "DESTINATION WAS NULL");
     assert(source && "SOURCE WAS NULL");
@@ -225,7 +225,7 @@ void ws_string_builder_copy(struct ws_string_builder* destination, struct ws_str
     memcpy(destination->data, source->data, source->size);
 }
 
-struct ws_string_builder ws_string_builder_create(char const* data)
+inline struct ws_string_builder ws_string_builder_create(char const* data)
 {
     size_t length = strlen(data) + 1;
 
@@ -255,7 +255,7 @@ struct ws_string_builder ws_string_builder_create(char const* data)
     return result;
 }
 
-void ws_string_builder_destroy(struct ws_string_builder* string)
+inline void ws_string_builder_destroy(struct ws_string_builder* string)
 {
     free(string->data);
 
@@ -268,3 +268,4 @@ void ws_string_builder_destroy(struct ws_string_builder* string)
 }
 
 #endif
+

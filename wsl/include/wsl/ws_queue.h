@@ -30,27 +30,27 @@ struct ws_queue_##TYPE                                                          
     TYPE* data;                                                                                                                         \
 };                                                                                                                                      \
                                                                                                                                         \
-size_t ws_queue_##TYPE##_size(struct ws_queue_##TYPE queue)                                                                             \
+inline size_t ws_queue_##TYPE##_size(struct ws_queue_##TYPE queue)                                                                      \
 {                                                                                                                                       \
     return queue.size;                                                                                                                  \
 }                                                                                                                                       \
                                                                                                                                         \
-bool ws_queue_##TYPE##_is_empty(struct ws_queue_##TYPE queue)                                                                           \
+inline bool ws_queue_##TYPE##_is_empty(struct ws_queue_##TYPE queue)                                                                    \
 {                                                                                                                                       \
     return queue.size == 0;                                                                                                             \
 }                                                                                                                                       \
                                                                                                                                         \
-TYPE* ws_queue_##TYPE##_front(struct ws_queue_##TYPE queue)                                                                             \
+inline TYPE* ws_queue_##TYPE##_front(struct ws_queue_##TYPE queue)                                                                      \
 {                                                                                                                                       \
     return &queue.data[queue.begin];                                                                                                    \
 }                                                                                                                                       \
                                                                                                                                         \
-TYPE* ws_queue_##TYPE##_back(struct ws_queue_##TYPE queue)                                                                              \
+inline TYPE* ws_queue_##TYPE##_back(struct ws_queue_##TYPE queue)                                                                       \
 {                                                                                                                                       \
     return &queue.data[queue.end];                                                                                                      \
 }                                                                                                                                       \
                                                                                                                                         \
-TYPE* ws_queue_##TYPE##_search(struct ws_queue_##TYPE queue, TYPE value, bool(*predicate)(TYPE const*, TYPE const*))                    \
+inline TYPE* ws_queue_##TYPE##_search(struct ws_queue_##TYPE queue, TYPE value, bool(*predicate)(TYPE const*, TYPE const*))             \
 {                                                                                                                                       \
     for (size_t index = 0llu; index != queue.size; index += 1)                                                                          \
     {                                                                                                                                   \
@@ -63,7 +63,7 @@ TYPE* ws_queue_##TYPE##_search(struct ws_queue_##TYPE queue, TYPE value, bool(*p
     return nullptr;                                                                                                                     \
 }                                                                                                                                       \
                                                                                                                                         \
-void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, struct ws_queue_##TYPE const* source, void(*strategy)(TYPE*))          \
+inline void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, struct ws_queue_##TYPE const* source, void(*strategy)(TYPE*))   \
 {                                                                                                                                       \
     if (ws_queue_##TYPE##_is_empty(*source))                                                                                            \
     {                                                                                                                                   \
@@ -89,7 +89,7 @@ void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, struct ws_queue
     memcpy(destination->data, source->data, destination->capacity * sizeof(TYPE));                                                      \
 }                                                                                                                                       \
                                                                                                                                         \
-void ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue)                                                                           \
+inline void ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue)                                                                    \
 {                                                                                                                                       \
     assert(queue != nullptr && "QUEUE POINTER WAS NULL");                                                                               \
                                                                                                                                         \
@@ -102,7 +102,7 @@ void ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue)                   
     free(oldData);                                                                                                                      \
 }                                                                                                                                       \
                                                                                                                                         \
-void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value)                                                                  \
+inline void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value)                                                           \
 {                                                                                                                                       \
     assert(queue != nullptr && "QUEUE POINTER WAS NULL");                                                                               \
                                                                                                                                         \
@@ -114,7 +114,7 @@ void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value)          
     queue->end = queue->size - 1;                                                                                                       \
 }                                                                                                                                       \
                                                                                                                                         \
-[[nodiscard]]TYPE* ws_queue_##TYPE##_pop(struct ws_queue_##TYPE* queue)                                                                 \
+[[nodiscard]]inline TYPE* ws_queue_##TYPE##_pop(struct ws_queue_##TYPE* queue)                                                          \
 {                                                                                                                                       \
     assert(queue != nullptr && "QUEUE POINTER WAS NULL");                                                                               \
     assert(queue->size && "TRIED TO POP AN EMPTY QUEUE");                                                                               \
@@ -125,7 +125,7 @@ void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value)          
     return &queue->data[queue->begin - 1];                                                                                              \
 }                                                                                                                                       \
                                                                                                                                         \
-struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...)                                                                      \
+inline struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...)                                                               \
 {                                                                                                                                       \
     struct ws_queue_##TYPE queue =                                                                                                      \
     {                                                                                                                                   \
@@ -147,7 +147,7 @@ struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...)              
     return queue;                                                                                                                       \
 }                                                                                                                                       \
                                                                                                                                         \
-void ws_queue_##TYPE##_destroy(struct ws_queue_##TYPE* queue, void(*strategy)(TYPE*))                                                   \
+inline void ws_queue_##TYPE##_destroy(struct ws_queue_##TYPE* queue, void(*strategy)(TYPE*))                                            \
 {                                                                                                                                       \
     if (strategy != nullptr)                                                                                                            \
     {                                                                                                                                   \

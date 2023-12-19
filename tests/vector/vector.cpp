@@ -5,7 +5,7 @@ WS_VECTOR(int)
 
 int sort_values_comparator(int const* lhs, int const* rhs);
 
-TEST(initialized_with_values, vector)
+TEST(vector, initialized_with_values)
 {
     struct ws_vector_int vector = ws_vector_int_create(ws_vector_initialize(int, 69, 420, 720));
 
@@ -17,7 +17,7 @@ TEST(initialized_with_values, vector)
     ws_vector_destroy(int, &vector);
 }
 
-TEST(push_values, vector)
+TEST(vector, push_values)
 {
     struct ws_vector_int vector = ws_vector_int_create(0);
 
@@ -33,7 +33,7 @@ TEST(push_values, vector)
     ws_vector_destroy(int, &vector);
 }
 
-TEST(pop_values, vector)
+TEST(vector, pop_values)
 {
     struct ws_vector_int vector = ws_vector_int_create(ws_vector_initialize(int, 69, 420, 720));
 
@@ -48,7 +48,7 @@ TEST(pop_values, vector)
     ws_vector_destroy(int, &vector);
 }
 
-TEST(sort_values, vector)
+TEST(vector, sort_values)
 {
     struct ws_vector_int vector = ws_vector_int_create(ws_vector_initialize(int, 720, 69, 420));
 
@@ -61,7 +61,7 @@ TEST(sort_values, vector)
     ws_vector_destroy(int, &vector);
 }
 
-TEST(copy_values, vector)
+TEST(vector, copy_values)
 {
     struct ws_vector_int vectorA = ws_vector_int_create(ws_vector_initialize(int, 69, 420, 720));
     struct ws_vector_int vectorB = ws_vector_int_create(0);
@@ -81,7 +81,7 @@ TEST(copy_values, vector)
     ws_vector_destroy(int, &vectorB);
 }
 
-TEST(copy_values_non_empty, vector)
+TEST(vector, copy_values_non_empty)
 {
     struct ws_vector_int vectorA = ws_vector_int_create(ws_vector_initialize(int, 69, 420, 720));
     struct ws_vector_int vectorB = ws_vector_int_create(ws_vector_initialize(int, 69420));
@@ -101,7 +101,7 @@ TEST(copy_values_non_empty, vector)
     ws_vector_destroy(int, &vectorB);
 }
 
-TEST(copy_empty, vector)
+TEST(vector, copy_empty)
 {
     struct ws_vector_int vectorA = ws_vector_int_create(0);
     struct ws_vector_int vectorB = ws_vector_int_create(0);
