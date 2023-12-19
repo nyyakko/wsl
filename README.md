@@ -6,7 +6,7 @@ funny library i use to do some C stuff. ***i do not recommend*** it to anyone bu
 
 considering you have [clang](https://github.com/llvm/llvm-project/releases) and [cmake](https://cmake.org/) installed already ...
 
-``python build.py && python install.py``
+``python configure.py && python build.py && python install.py``
 
 ## examples:
 
