@@ -4,7 +4,7 @@ funny library i use to do some C stuff. ***i do not recommend*** it to anyone bu
 
 ## installing:
 
-considering you have [clang](https://github.com/llvm/llvm-project/releases) and [cmake](https://cmake.org/) installed already ...
+considering you have [clang](https://github.com/llvm/llvm-project/releases), [vcpkg](https://vcpkg.io/en/) (with gtest package installed) and [cmake](https://cmake.org/) installed already ...
 
 ``python configure.py && python build.py && python install.py``
 
