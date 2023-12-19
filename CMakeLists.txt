@@ -25,12 +25,19 @@ set(wsl_CompilerOptions ${wsl_CompilerOptions}
 
 include(static_analyzers)
 include(GNUInstallDirs)
-include(GoogleTest)
-
-find_package(GTest CONFIG REQUIRED)
-
-enable_testing()
 
 add_subdirectory(wsl)
-add_subdirectory(tests)
+
+if (NOT WSL_DISABLE_TESTS)
+    message("[WARN] project will be building the test suit.")
+
+    include(GoogleTest)
+    find_package(GTest CONFIG REQUIRED)
+
+    enable_testing()
+    add_subdirectory(tests)
+else()
+    message("[WARN] project will not be building the test suit.")
+endif()
+
 

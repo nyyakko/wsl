@@ -7,4 +7,4 @@ TOOLCHAIN  = os.getenv('CMAKE_TOOLCHAIN_FILE')
 if not os.path.exists('build'):
     os.mkdir('build')
 
-os.system(f'cmake -DCMAKE_BUILD_TYPE={BUILD_TYPE} -DCMAKE_TOOLCHAIN_FILE={TOOLCHAIN} -G Ninja -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -B./build/ -S./')
+os.system(f'cmake -DWSL_DISABLE_TESTS=FALSE -DCMAKE_BUILD_TYPE={BUILD_TYPE} -DCMAKE_TOOLCHAIN_FILE={TOOLCHAIN} -G Ninja -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -B./build/ -S./')
