@@ -1,3 +1,5 @@
+project(${PROJECT_NAME} LANGUAGES C)
+
 add_subdirectory(include/${PROJECT_NAME})
 
 add_library(${PROJECT_NAME} INTERFACE ${wsl_HeaderFiles})

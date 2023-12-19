@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
-project(wsl LANGUAGES C)
+
+project(wsl)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
@@ -23,13 +24,11 @@ set(wsl_CompilerOptions ${wsl_CompilerOptions}
 
 include(static_analyzers)
 include(GNUInstallDirs)
+include(GoogleTest)
 
-#
-# find_package(package CONFIG REQUIRED)
-# ...
-#
-# set(arser_ExternalLibraries package ...)
-#
+find_package(GTest CONFIG REQUIRED)
+
+# set(arser_ExternalLibraries )
 
 enable_testing()
 
