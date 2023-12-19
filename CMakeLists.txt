@@ -28,7 +28,7 @@ include(GoogleTest)
 
 find_package(GTest CONFIG REQUIRED)
 
-# set(arser_ExternalLibraries )
+# set(wsl_ExternalLibraries )
 
 enable_testing()
 
