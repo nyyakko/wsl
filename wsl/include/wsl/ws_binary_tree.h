@@ -34,19 +34,19 @@ inline size_t ws_binary_tree_##TYPE##_size(struct ws_binary_tree_##TYPE tree)   
                                                                                                                                         \
 inline struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_search(struct ws_binary_tree_##TYPE tree, size_t key)               \
 {                                                                                                                                       \
-    struct ws_binary_tree_##TYPE##_node** node = &tree.head;                                                                            \
+    struct ws_binary_tree_##TYPE##_node* node = tree.head;                                                                            \
                                                                                                                                         \
-    while (*node)                                                                                                                       \
+    while (node)                                                                                                                       \
     {                                                                                                                                   \
-        if (key == (*node)->key)                                                                                                        \
+        if (key == (node)->key)                                                                                                        \
         {                                                                                                                               \
-            return (*node);                                                                                                             \
+            return (node);                                                                                                             \
         }                                                                                                                               \
                                                                                                                                         \
-        if (key < (*node)->key)                                                                                                         \
-            node = &(*node)->left;                                                                                                      \
+        if (key < (node)->key)                                                                                                         \
+            node = (node)->left;                                                                                                      \
         else                                                                                                                            \
-            node = &(*node)->right;                                                                                                     \
+            node = (node)->right;                                                                                                     \
     }                                                                                                                                   \
                                                                                                                                         \
     return nullptr;                                                                                                                     \
@@ -183,55 +183,46 @@ inline void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* tree, siz
     assert(tree->size && "TREE WAS EMPTY");                                                                                             \
                                                                                                                                         \
     struct ws_binary_tree_##TYPE##_node* node = ws_binary_tree_##TYPE##_search(*tree, key);                                             \
-    TYPE returnValue = {};                                                                                                              \
+    assert(node && "CANNOT POP A NON EXISTING NODE");                                                                                   \
                                                                                                                                         \
-    if (node == nullptr)                                                                                                                \
+    TYPE returnValue = node->value;                                                                                                     \
+                                                                                                                                        \
+    tree->size -= 1;                                                                                                                    \
+                                                                                                                                        \
+    if (node->left == nullptr || node->right == nullptr)                                                                                \
     {                                                                                                                                   \
-        return returnValue;                                                                                                             \
-    }                                                                                                                                   \
-                                                                                                                                        \
-    returnValue = node->value;                                                                                                          \
-                                                                                                                                        \
-    if (node->left == nullptr)                                                                                                          \
-    {                                                                                                                                   \
-        ws_binary_tree_##TYPE##_shift_nodes(tree, node, node->right);                                                                   \
-        memset(node, 0, sizeof(ws_binary_tree_##TYPE##_node));                                                                          \
-        free(node);                                                                                                                     \
-        tree->size -= 1;                                                                                                                \
-                                                                                                                                        \
-        return returnValue;                                                                                                             \
-    }                                                                                                                                   \
-                                                                                                                                        \
-    if (node->right == nullptr)                                                                                                         \
-    {                                                                                                                                   \
-        ws_binary_tree_##TYPE##_shift_nodes(tree, node, node->left);                                                                    \
-        memset(node, 0, sizeof(ws_binary_tree_##TYPE##_node));                                                                          \
-        free(node);                                                                                                                     \
-        tree->size -= 1;                                                                                                                \
-                                                                                                                                        \
-        return returnValue;                                                                                                             \
-    }                                                                                                                                   \
-    else                                                                                                                                \
-    {                                                                                                                                   \
-        struct ws_binary_tree_##TYPE##_node* nodeSuccessor = ws_binary_tree_##TYPE##_predecessor(node);                                 \
-                                                                                                                                        \
-        if (nodeSuccessor->parent != node)                                                                                              \
+        if (node->left == nullptr)                                                                                                      \
         {                                                                                                                               \
-            ws_binary_tree_##TYPE##_shift_nodes(tree, nodeSuccessor, nodeSuccessor->left);                                              \
-            nodeSuccessor->left = node->left;                                                                                           \
-            nodeSuccessor->left->parent = nodeSuccessor;                                                                                \
+            ws_binary_tree_##TYPE##_shift_nodes(tree, node, node->right);                                                               \
+        }                                                                                                                               \
+        else if (node->right == nullptr)                                                                                                \
+        {                                                                                                                               \
+            ws_binary_tree_##TYPE##_shift_nodes(tree, node, node->left);                                                                \
         }                                                                                                                               \
                                                                                                                                         \
-        ws_binary_tree_##TYPE##_shift_nodes(tree, node, nodeSuccessor);                                                                 \
-        nodeSuccessor->right = node->right;                                                                                             \
-        nodeSuccessor->right->parent = nodeSuccessor;                                                                                   \
-                                                                                                                                        \
         memset(node, 0, sizeof(ws_binary_tree_##TYPE##_node));                                                                          \
+        assert(tree->head != node && "HOW DID YOU DO THAT");                                                                            \
         free(node);                                                                                                                     \
-        tree->size -= 1;                                                                                                                \
                                                                                                                                         \
         return returnValue;                                                                                                             \
     }                                                                                                                                   \
+                                                                                                                                        \
+    struct ws_binary_tree_##TYPE##_node* nodePredecessor = ws_binary_tree_##TYPE##_predecessor(node);                                   \
+                                                                                                                                        \
+    if (nodePredecessor->parent != node)                                                                                                \
+    {                                                                                                                                   \
+        ws_binary_tree_##TYPE##_shift_nodes(tree, nodePredecessor, nodePredecessor->left);                                              \
+        nodePredecessor->left = node->left;                                                                                             \
+        nodePredecessor->left->parent = nodePredecessor;                                                                                \
+    }                                                                                                                                   \
+                                                                                                                                        \
+    ws_binary_tree_##TYPE##_shift_nodes(tree, node, nodePredecessor);                                                                   \
+    nodePredecessor->right = node->right;                                                                                               \
+    nodePredecessor->right->parent = nodePredecessor;                                                                                   \
+                                                                                                                                        \
+    memset(node, 0, sizeof(ws_binary_tree_##TYPE##_node));                                                                              \
+    assert(tree->head != node && "HOW DID YOU DO THAT");                                                                                \
+    free(node);                                                                                                                         \
                                                                                                                                         \
     return returnValue;                                                                                                                 \
 }                                                                                                                                       \
@@ -254,7 +245,10 @@ inline void ws_binary_tree_##TYPE##_destroy_branch(struct ws_binary_tree_##TYPE#
         return;                                                                                                                         \
     }                                                                                                                                   \
                                                                                                                                         \
+    assert(head != head->left && "HOW DID YOU DO THAT");                                                                                \
     ws_binary_tree_##TYPE##_destroy_branch(head->left, strategy);                                                                       \
+                                                                                                                                        \
+    assert(head != head->right && "HOW DID YOU DO THAT");                                                                               \
     ws_binary_tree_##TYPE##_destroy_branch(head->right, strategy);                                                                      \
                                                                                                                                         \
     if (strategy != nullptr)                                                                                                            \

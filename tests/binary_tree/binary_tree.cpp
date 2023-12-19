@@ -24,15 +24,14 @@ TEST(binary_tree, pop_values)
     struct ws_binary_tree_int tree = ws_binary_tree_int_create();
 
     ws_binary_tree_int_push(&tree, 1, 69);
-    ws_binary_tree_int_push(&tree, 0, 420);
-    ws_binary_tree_int_push(&tree, 2, 720);
-
     EXPECT_EQ(tree.head->value, 69);
     EXPECT_EQ(ws_binary_tree_int_pop(&tree, 1), 69);
 
+    ws_binary_tree_int_push(&tree, 0, 420);
     EXPECT_EQ(tree.head->value, 420);
     EXPECT_EQ(ws_binary_tree_int_pop(&tree, 0), 420);
 
+    ws_binary_tree_int_push(&tree, 2, 720);
     EXPECT_EQ(tree.head->value, 720);
     EXPECT_EQ(ws_binary_tree_int_pop(&tree, 2), 720);
 

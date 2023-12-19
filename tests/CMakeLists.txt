@@ -6,4 +6,5 @@ add_subdirectory(queue)
 add_subdirectory(string_view)
 add_subdirectory(string_builder)
 add_subdirectory(binary_tree)
+add_subdirectory(hash_map)
 
