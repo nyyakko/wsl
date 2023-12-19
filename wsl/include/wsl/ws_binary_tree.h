@@ -34,19 +34,19 @@ inline size_t ws_binary_tree_##TYPE##_size(struct ws_binary_tree_##TYPE tree)   
                                                                                                                                         \
 inline struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_search(struct ws_binary_tree_##TYPE tree, size_t key)               \
 {                                                                                                                                       \
-    struct ws_binary_tree_##TYPE##_node* node = tree.head;                                                                            \
+    struct ws_binary_tree_##TYPE##_node* node = tree.head;                                                                              \
                                                                                                                                         \
-    while (node)                                                                                                                       \
+    while (node)                                                                                                                        \
     {                                                                                                                                   \
-        if (key == (node)->key)                                                                                                        \
+        if (key == (node)->key)                                                                                                         \
         {                                                                                                                               \
-            return (node);                                                                                                             \
+            return (node);                                                                                                              \
         }                                                                                                                               \
                                                                                                                                         \
-        if (key < (node)->key)                                                                                                         \
-            node = (node)->left;                                                                                                      \
+        if (key < (node)->key)                                                                                                          \
+            node = (node)->left;                                                                                                        \
         else                                                                                                                            \
-            node = (node)->right;                                                                                                     \
+            node = (node)->right;                                                                                                       \
     }                                                                                                                                   \
                                                                                                                                         \
     return nullptr;                                                                                                                     \
