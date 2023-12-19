@@ -108,16 +108,16 @@ inline void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, voi
 
 // MurmurHash: https://en.wikipedia.org/wiki/MurmurHash
 
-inline size_t ws_hash_map_hash(void const* key, size_t len)
+inline size_t ws_hash_map_hash(void const* bytes, size_t length)
 {
     const unsigned long long m = 0xc6a4a7935bd1e995ULL;
     const int r = 47;
     const unsigned long long seed = 69;
 
-    unsigned long long h = seed ^ (len * m);
+    unsigned long long h = seed ^ (length * m);
 
-    const unsigned long long* data = (const unsigned long long*)key;
-    const unsigned long long* end = data + (len / 8);
+    const unsigned long long* data = (const unsigned long long*)bytes;
+    const unsigned long long* end = data + (length / 8);
 
     while (data != end)
     {
@@ -143,7 +143,7 @@ inline size_t ws_hash_map_hash(void const* key, size_t len)
 
     const unsigned char * data2 = (const unsigned char*)data;
 
-    switch (len & 7)
+    switch (length & 7)
     {
         case 7: h ^= (unsigned long long)(data2[6]) << 48; [[fallthrough]];
         case 6: h ^= (unsigned long long)(data2[5]) << 40; [[fallthrough]];
