@@ -217,14 +217,14 @@ inline void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* tree, siz
                                                                                                                                         \
         if (nodeSuccessor->parent != node)                                                                                              \
         {                                                                                                                               \
-            ws_binary_tree_##TYPE##_shift_nodes(tree, nodeSuccessor, nodeSuccessor->left);                                             \
-            nodeSuccessor->left = node->left;                                                                                         \
-            nodeSuccessor->left->parent = nodeSuccessor;                                                                               \
+            ws_binary_tree_##TYPE##_shift_nodes(tree, nodeSuccessor, nodeSuccessor->left);                                              \
+            nodeSuccessor->left = node->left;                                                                                           \
+            nodeSuccessor->left->parent = nodeSuccessor;                                                                                \
         }                                                                                                                               \
                                                                                                                                         \
         ws_binary_tree_##TYPE##_shift_nodes(tree, node, nodeSuccessor);                                                                 \
-        nodeSuccessor->right = node->right;                                                                                               \
-        nodeSuccessor->right->parent = nodeSuccessor;                                                                                    \
+        nodeSuccessor->right = node->right;                                                                                             \
+        nodeSuccessor->right->parent = nodeSuccessor;                                                                                   \
                                                                                                                                         \
         memset(node, 0, sizeof(ws_binary_tree_##TYPE##_node));                                                                          \
         free(node);                                                                                                                     \
