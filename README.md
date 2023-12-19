@@ -2,6 +2,12 @@
 
 funny library i use to do some C stuff. ***i do not recommend*** it to anyone but myself or people who just want to have some fun, if you're looking for production ready code ... what the hell are you doing in here?
 
+## installing:
+
+considering you have [clang](https://github.com/llvm/llvm-project/releases) and [cmake](https://cmake.org/) installed already ...
+
+``python build.py && python install.py``
+
 ## examples:
 
 * ### vector
