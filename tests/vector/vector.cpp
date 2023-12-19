@@ -1,9 +1,9 @@
-#include <wsl/ws_vector.h>
 #include <gtest/gtest.h>
-
-#define WS_ASSERT(condition) if (!(condition)) exit(EXIT_FAILURE);
+#include <wsl/ws_vector.h>
 
 WS_VECTOR(int)
+
+int sort_values_comparator(int const* lhs, int const* rhs);
 
 TEST(initialized_with_values, vector)
 {
@@ -48,16 +48,11 @@ TEST(pop_values, vector)
     ws_vector_destroy(int, &vector);
 }
 
-int test_sort_values_comparator(int const* lhs, int const* rhs)
-{
-    return *lhs > *rhs;
-}
-
 TEST(sort_values, vector)
 {
     struct ws_vector_int vector = ws_vector_int_create(ws_vector_initialize(int, 720, 69, 420));
 
-    ws_vector_sort(int, &vector, test_sort_values_comparator);
+    ws_vector_sort(int, &vector, sort_values_comparator);
 
     EXPECT_EQ(*ws_vector_int_at(vector, 0) , 69);
     EXPECT_EQ(*ws_vector_int_at(vector, 1) , 420);
@@ -117,3 +112,7 @@ TEST(copy_empty, vector)
     ws_vector_destroy(int, &vectorB);
 }
 
+int sort_values_comparator(int const* lhs, int const* rhs)
+{
+    return *lhs > *rhs;
+}

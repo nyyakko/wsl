@@ -1,70 +1,66 @@
-#include "wsl/ws_string_builder.h"
+#include <gtest/gtest.h>
+#include <wsl/ws_string_builder.h>
 
-#include <stdlib.h>
-#include <string.h>
-
-#define WS_ASSERT(condition) if (!(condition)) exit(EXIT_FAILURE);
-
-void test_chop_until_last()
+TEST(chop_until_last, string_builder)
 {
     struct ws_string_builder string = ws_string_builder_create("Its so over");
 
     ws_string_builder_chop_until_last(&string, ' ');
 
-    WS_ASSERT(!strcmp(string.data, "over"));
+    EXPECT_STREQ(string.data, "over");
 
     ws_string_builder_destroy(&string);
 }
 
-void test_chop_until_first()
+TEST(chop_until_first, string_builder)
 {
     struct ws_string_builder string = ws_string_builder_create("Its so over");
 
     ws_string_builder_chop_until_first(&string, ' ');
 
-    WS_ASSERT(!strcmp(string.data, "so over"));
+    EXPECT_STREQ(string.data, "so over");
 
     ws_string_builder_destroy(&string);
 }
 
-void test_substring()
+TEST(substring, string_builder)
 {
     struct ws_string_builder stringA = ws_string_builder_create("Its so over");
     struct ws_string_builder stringB = ws_string_builder_create("so over");
 
-    WS_ASSERT(ws_string_builder_equals(ws_string_builder_substr(stringA, 4, stringA.size), stringB));
+    EXPECT_STREQ(ws_string_builder_substr(stringA, 4, stringA.size).data, stringB.data);
 
     ws_string_builder_destroy(&stringA);
     ws_string_builder_destroy(&stringB);
 }
 
-void test_copy_values()
+TEST(copy_values, string_builder)
 {
     struct ws_string_builder stringA = ws_string_builder_create("Its so over");
     struct ws_string_builder stringB = ws_string_builder_create("so over");
 
     ws_string_builder_copy(&stringB, &stringA);
 
-    WS_ASSERT(ws_string_builder_equals(stringA, stringB));
+    EXPECT_STREQ(stringA.data, stringB.data);
 
     ws_string_builder_destroy(&stringA);
     ws_string_builder_destroy(&stringB);
 }
 
-void test_copy_empty()
+TEST(copy_empty, string_builder)
 {
     struct ws_string_builder stringA = ws_string_builder_create("Its so over");
     struct ws_string_builder stringB = ws_string_builder_create("");
 
     ws_string_builder_copy(&stringA, &stringB);
 
-    WS_ASSERT(ws_string_builder_equals(stringA, stringB));
+    EXPECT_STREQ(stringA.data, stringB.data);
 
     ws_string_builder_destroy(&stringA);
     ws_string_builder_destroy(&stringB);
 }
 
-void test_append()
+TEST(append, string_builder)
 {
     struct ws_string_builder string = ws_string_builder_create("Hello, ");
 
@@ -75,53 +71,18 @@ void test_append()
     ws_string_builder_append(&string, 'd');
     ws_string_builder_append(&string, '!');
 
-    WS_ASSERT(!strcmp(string.data, "Hello, world!"));
+    EXPECT_STREQ(string.data, "Hello, world!");
 
     ws_string_builder_destroy(&string);
 }
 
-void test_append_string()
+TEST(append_string, string_builder)
 {
     struct ws_string_builder string = ws_string_builder_create("Hello, ");
 
     ws_string_builder_append_string(&string, "world!");
-    WS_ASSERT(!strcmp(string.data, "Hello, world!"));
+    EXPECT_STREQ(string.data, "Hello, world!");
 
     ws_string_builder_destroy(&string);
 }
 
-int main(int argumentCount, char const** argumentValues)
-{
-    assert(argumentCount == 2);
-
-    if (!strcmp(argumentValues[1], "chop_until_last"))
-    {
-        test_chop_until_last();
-    }
-    else if (!strcmp(argumentValues[1], "chop_until_first"))
-    {
-        test_chop_until_first();
-    }
-    else if (!strcmp(argumentValues[1], "substring"))
-    {
-        test_substring();
-    }
-    else if (!strcmp(argumentValues[1], "copy_values"))
-    {
-        test_copy_values();
-    }
-    else if (!strcmp(argumentValues[1], "copy_empty"))
-    {
-        test_copy_empty();
-    }
-    else if (!strcmp(argumentValues[1], "append"))
-    {
-        test_append();
-    }
-    else if (!strcmp(argumentValues[1], "append_string"))
-    {
-        test_append_string();
-    }
-
-    return EXIT_SUCCESS;
-}

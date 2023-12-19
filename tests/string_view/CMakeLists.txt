@@ -1,18 +1,16 @@
 set(DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(TEST_NAME string_view)
 
-add_executable(${TEST_NAME} "${DIR}/${TEST_NAME}.c")
+project(${TEST_NAME} LANGUAGES CXX)
+
+add_executable(${TEST_NAME} "${DIR}/${TEST_NAME}.cpp")
 
 enable_static_analyzers(${TEST_NAME} ON)
 
-set_target_properties(${TEST_NAME} PROPERTIES C_STANDARD ${CMAKE_C_VERSION})
+set_target_properties(${TEST_NAME} PROPERTIES CXX_STANDARD 23)
 
-target_link_libraries(${TEST_NAME} PRIVATE wsl)
-target_compile_options(${TEST_NAME} PRIVATE ${wsl_CompilerOptions})
+target_link_libraries(${TEST_NAME} PRIVATE GTest::gtest_main wsl)
+target_compile_options(${TEST_NAME} PRIVATE ${wsl_CompilerOptions} -Wno-c99-extensions)
 
-add_test(NAME string_view_chop_until_last       COMMAND ${TEST_NAME} "chop_until_last")
-add_test(NAME string_view_chop_until_first      COMMAND ${TEST_NAME} "chop_until_first")
-add_test(NAME string_view_subview               COMMAND ${TEST_NAME} "subview")
-add_test(NAME string_view_copy_values           COMMAND ${TEST_NAME} "copy_values")
-add_test(NAME string_view_copy_values_non_empty COMMAND ${TEST_NAME} "copy_values_non_empty")
-add_test(NAME string_view_copy_empty            COMMAND ${TEST_NAME} "copy_empty")
+gtest_discover_tests(${TEST_NAME})
+

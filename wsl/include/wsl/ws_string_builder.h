@@ -137,6 +137,9 @@ void ws_string_builder_chop_until_last(struct ws_string_builder* string, char de
     {
         return;
     }
+    
+    // FIXME: solve the case where it may occoour an allocation of 0 bytes ?
+    assert(string->size - (lastSeenDelimiterIndex + 1) && "HOW DID YOU DID THIS?");
 
     char* buffer = (char*)malloc(string->size - (lastSeenDelimiterIndex + 1));
     memcpy(buffer, &string->data[lastSeenDelimiterIndex + 1], string->size - (lastSeenDelimiterIndex + 1));
