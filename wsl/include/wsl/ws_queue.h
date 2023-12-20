@@ -25,9 +25,9 @@ struct ws_queue_##TYPE                                                          
 {                                                                                                                                       \
     size_t begin;                                                                                                                       \
     size_t end;                                                                                                                         \
+    TYPE* data;                                                                                                                         \
     size_t size;                                                                                                                        \
     size_t capacity;                                                                                                                    \
-    TYPE* data;                                                                                                                         \
 };                                                                                                                                      \
                                                                                                                                         \
 inline size_t ws_queue_##TYPE##_size(struct ws_queue_##TYPE queue)                                                                      \
@@ -129,9 +129,9 @@ inline struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...)       
 {                                                                                                                                       \
     struct ws_queue_##TYPE queue =                                                                                                      \
     {                                                                                                                                   \
+        .data     = nullptr,                                                                                                            \
         .size     = 0,                                                                                                                  \
         .capacity = 1,                                                                                                                  \
-        .data     = nullptr                                                                                                             \
     };                                                                                                                                  \
                                                                                                                                         \
     va_list values = {};                                                                                                                \

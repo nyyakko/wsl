@@ -19,6 +19,11 @@
 #define ws_vector_copy_select(_1, _2, _3, selected, ...) selected
 #define ws_vector_copy(type, ...) ws_vector_copy_select(__VA_ARGS__, ws_vector_copy_2, ws_vector_copy_1, void)(type, __VA_ARGS__)
 
+#define ws_vector_search_1(type, vector, value) ws_vector_##type##_search(vector, value, nullptr)
+#define ws_vector_search_2(type, vector, value, strategy) ws_vector_##type##_search(vector, value, strategy)
+#define ws_vector_search_select(_1, _2, _3, selected, ...) selected
+#define ws_vector_search(type, ...) ws_vector_search_select(__VA_ARGS__, ws_vector_search_2, ws_vector_search_1, void)(type, __VA_ARGS__)
+
 #define ws_vector_destroy_1(type, vector) ws_vector_##type##_destroy(vector, nullptr)
 #define ws_vector_destroy_2(type, vector, strategy) ws_vector_##type##_destroy(vector, strategy)
 #define ws_vector_destroy_select(_1, _2, selected, ...) selected
@@ -28,12 +33,11 @@
                                                                                                                                         \
 struct ws_vector_##TYPE                                                                                                                 \
 {                                                                                                                                       \
-    size_t size;                                                                                                                        \
-    size_t capacity;                                                                                                                    \
     size_t begin;                                                                                                                       \
     size_t end;                                                                                                                         \
-                                                                                                                                        \
     TYPE* data;                                                                                                                         \
+    size_t size;                                                                                                                        \
+    size_t capacity;                                                                                                                    \
 };                                                                                                                                      \
                                                                                                                                         \
 inline size_t ws_vector_##TYPE##_size(struct ws_vector_##TYPE vector)                                                                   \
@@ -44,19 +48,6 @@ inline size_t ws_vector_##TYPE##_size(struct ws_vector_##TYPE vector)           
 inline bool ws_vector_##TYPE##_is_empty(struct ws_vector_##TYPE vector)                                                                 \
 {                                                                                                                                       \
     return vector.size == 0;                                                                                                            \
-}                                                                                                                                       \
-                                                                                                                                        \
-inline bool ws_vector_##TYPE##_is_sorted(struct ws_vector_##TYPE vector, int(*predicate)(TYPE const*, TYPE const*))                     \
-{                                                                                                                                       \
-    for (size_t index = 1llu; index != vector.size; index += 1)                                                                         \
-    {                                                                                                                                   \
-        if (!predicate(&vector.data[index - 1], &vector.data[index]))                                                                   \
-        {                                                                                                                               \
-            return false;                                                                                                               \
-        }                                                                                                                               \
-    }                                                                                                                                   \
-                                                                                                                                        \
-    return true;                                                                                                                        \
 }                                                                                                                                       \
                                                                                                                                         \
 inline TYPE* ws_vector_##TYPE##_at(struct ws_vector_##TYPE vector, size_t position)                                                     \
@@ -75,43 +66,25 @@ inline TYPE* ws_vector_##TYPE##_back(struct ws_vector_##TYPE vector)            
     return &vector.data[vector.end];                                                                                                    \
 }                                                                                                                                       \
                                                                                                                                         \
-inline TYPE* ws_vector_##TYPE##_search(struct ws_vector_##TYPE vector, TYPE value, int(*predicate)(TYPE const*, TYPE const*))           \
+[[nodiscard]]inline TYPE* ws_vector_##TYPE##_search(struct ws_vector_##TYPE vector, TYPE value,                                         \
+        int(*predicate)(TYPE const*, TYPE const*))                                                                                      \
 {                                                                                                                                       \
     for (size_t index = 0llu; index != vector.size; index += 1)                                                                         \
     {                                                                                                                                   \
-        if (predicate(&vector.data[index], &value))                                                                                     \
+        if (predicate != nullptr)                                                                                                       \
+        {                                                                                                                               \
+            if (predicate(&vector.data[index], &value))                                                                                 \
+            {                                                                                                                           \
+                return &vector.data[index];                                                                                             \
+            }                                                                                                                           \
+        }                                                                                                                               \
+        else if (vector.data[index] == value)                                                                                           \
         {                                                                                                                               \
             return &vector.data[index];                                                                                                 \
         }                                                                                                                               \
     }                                                                                                                                   \
                                                                                                                                         \
     return nullptr;                                                                                                                     \
-}                                                                                                                                       \
-                                                                                                                                        \
-inline void ws_vector_##TYPE##_bubble_sort(struct ws_vector_##TYPE* vector, int(*predicate)(TYPE const*, TYPE const*))                  \
-{                                                                                                                                       \
-    assert(vector != nullptr && "VECTOR POINTER WAS NULL");                                                                             \
-    size_t counter = vector->size;                                                                                                      \
-                                                                                                                                        \
-    while (counter >= 1)                                                                                                                \
-    {                                                                                                                                   \
-        size_t current = 0llu;                                                                                                          \
-                                                                                                                                        \
-        for (size_t index = 1llu; index != vector->size; index += 1)                                                                    \
-        {                                                                                                                               \
-            if (predicate(&vector->data[index - 1], &vector->data[index]))                                                              \
-            {                                                                                                                           \
-                TYPE copiedValue = { };                                                                                                 \
-                memcpy(&copiedValue, &vector->data[index - 1], sizeof(TYPE));                                                           \
-                memcpy(&vector->data[index - 1], &vector->data[index], sizeof(TYPE));                                                   \
-                memcpy(&vector->data[index], (TYPE*)&copiedValue, sizeof(TYPE));                                                        \
-                                                                                                                                        \
-                current = index;                                                                                                        \
-            }                                                                                                                           \
-        }                                                                                                                               \
-                                                                                                                                        \
-        counter = current;                                                                                                              \
-    }                                                                                                                                   \
 }                                                                                                                                       \
                                                                                                                                         \
 inline void ws_vector_##TYPE##_copy(struct ws_vector_##TYPE* destination, struct ws_vector_##TYPE const* source, void(*strategy)(TYPE*))\
@@ -176,9 +149,9 @@ inline void ws_vector_##TYPE##_push(struct ws_vector_##TYPE* vector, TYPE value)
 {                                                                                                                                       \
     struct ws_vector_##TYPE vector =                                                                                                    \
     {                                                                                                                                   \
+        .data     = nullptr,                                                                                                            \
         .size     = 0,                                                                                                                  \
         .capacity = 1,                                                                                                                  \
-        .data     = nullptr                                                                                                             \
     };                                                                                                                                  \
                                                                                                                                         \
     va_list values = {};                                                                                                                \

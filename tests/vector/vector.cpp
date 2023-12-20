@@ -3,8 +3,6 @@
 
 WS_VECTOR(int)
 
-int sort_values_comparator(int const* lhs, int const* rhs);
-
 TEST(vector, initialized_with_values)
 {
     struct ws_vector_int vector = ws_vector_int_create(ws_vector_initialize(int, 69, 420, 720));
@@ -44,19 +42,6 @@ TEST(vector, pop_values)
     EXPECT_EQ(ws_vector_int_size(vector), 1);
     EXPECT_EQ(*ws_vector_int_pop(&vector), 69);
     EXPECT_EQ(ws_vector_int_size(vector), 0);
-
-    ws_vector_destroy(int, &vector);
-}
-
-TEST(vector, sort_values)
-{
-    struct ws_vector_int vector = ws_vector_int_create(ws_vector_initialize(int, 720, 69, 420));
-
-    ws_vector_sort(int, &vector, sort_values_comparator);
-
-    EXPECT_EQ(*ws_vector_int_at(vector, 0) , 69);
-    EXPECT_EQ(*ws_vector_int_at(vector, 1) , 420);
-    EXPECT_EQ(*ws_vector_int_at(vector, 2) , 720);
 
     ws_vector_destroy(int, &vector);
 }
@@ -112,7 +97,13 @@ TEST(vector, copy_empty)
     ws_vector_destroy(int, &vectorB);
 }
 
-int sort_values_comparator(int const* lhs, int const* rhs)
+TEST(vector, search_values)
 {
-    return *lhs > *rhs;
+    struct ws_vector_int vector = ws_vector_int_create(ws_vector_initialize(int, 69, 420, 720));
+
+    EXPECT_NE(ws_vector_search(int, vector, 69), nullptr);
+    EXPECT_EQ(ws_vector_search(int, vector, 1945), nullptr);
+
+    ws_vector_destroy(int, &vector);
 }
+

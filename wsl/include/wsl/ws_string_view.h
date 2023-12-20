@@ -9,9 +9,9 @@
 
 struct ws_string_view
 {
-    char const* data;
     size_t begin;
     size_t end;
+    char const* data;
     size_t size;
 };
 
@@ -156,10 +156,10 @@ inline struct ws_string_view ws_string_view_create(char const* data)
 
     struct ws_string_view result =
     {
-        .data  = data,
         .begin = 0,
         .end   = size,
-        .size  = size
+        .data  = data,
+        .size  = size,
     };
 
     return result;

@@ -25,9 +25,9 @@ struct ws_stack_##TYPE                                                          
 {                                                                                                                                       \
     size_t begin;                                                                                                                       \
     size_t end;                                                                                                                         \
+    TYPE* data;                                                                                                                         \
     size_t size;                                                                                                                        \
     size_t capacity;                                                                                                                    \
-    TYPE* data;                                                                                                                         \
 };                                                                                                                                      \
                                                                                                                                         \
 inline size_t ws_stack_##TYPE##_size(struct ws_stack_##TYPE stack)                                                                      \
@@ -126,9 +126,9 @@ inline struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...)       
     {                                                                                                                                   \
         .begin    = 0,                                                                                                                  \
         .end      = 0,                                                                                                                  \
-        .size     = 0,                                                                                                                  \
-        .capacity = 1,                                                                                                                  \
         .data     = nullptr,                                                                                                            \
+        .size     = 0,                                                                                                                  \
+        .capacity = 1                                                                                                                   \
     };                                                                                                                                  \
                                                                                                                                         \
     va_list values = {};                                                                                                                \

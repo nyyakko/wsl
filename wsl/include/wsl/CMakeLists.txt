@@ -1,3 +1,5 @@
+add_subdirectory(algorithm)
+
 set(DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(wsl_HeaderFiles ${wsl_HeaderFiles}
