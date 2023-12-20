@@ -9,6 +9,7 @@
 
 struct ws_string_view
 {
+    size_t reserved[3];
     size_t begin;
     size_t end;
     char const* data;
@@ -156,10 +157,11 @@ inline struct ws_string_view ws_string_view_create(char const* data)
 
     struct ws_string_view result =
     {
-        .begin = 0,
-        .end   = size,
-        .data  = data,
-        .size  = size,
+        .reserved = {0},
+        .begin    = 0,
+        .end      = size,
+        .data     = data,
+        .size     = size,
     };
 
     return result;

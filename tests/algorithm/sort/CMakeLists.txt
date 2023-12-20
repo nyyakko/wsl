@@ -1,5 +1,5 @@
 set(DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(TEST_NAME search)
+set(TEST_NAME sort)
 
 project(${TEST_NAME} LANGUAGES CXX)
 

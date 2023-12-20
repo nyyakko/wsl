@@ -18,9 +18,12 @@ struct ws_generic_interface_t
 
 inline void* ws_search_ex(void const* container, size_t typeSize, void const* value, int(*predicate)(void const*, void const*))
 {
-    struct ws_generic_interface_t containerInterface = {};
+    assert(container && "CONTAINER WAS NULL");
 
+    struct ws_generic_interface_t containerInterface = {};
     memcpy(&containerInterface, container, sizeof(struct ws_generic_interface_t));
+
+    assert(containerInterface.data && "INVALID CONTAINER TYPE");
 
     for (size_t index = containerInterface.begin; index <= containerInterface.end; index += 1)
     {
@@ -60,11 +63,13 @@ inline void* ws_search_ex(void const* container, size_t typeSize, void const* va
 
 inline void ws_sort_ex(void* container, size_t typeSize, int(*predicate)(void const*, void const*))
 {
-    assert(predicate && "PREDICATE CANNOT BE NULL");
+    assert(container && "CONTAINER WAS NULL");
+    assert(predicate && "PREDICATE WAS NULL");
 
     struct ws_generic_interface_t containerInterface = {};
-
     memcpy(&containerInterface, container, sizeof(struct ws_generic_interface_t));
+
+    assert(containerInterface.data && "INVALID CONTAINER TYPE");
 
     while (true)
     {

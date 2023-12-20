@@ -20,6 +20,7 @@ struct ws_hash_item_bucket                                                      
                                                                                                                                         \
 struct ws_hash_map_##TYPE                                                                                                               \
 {                                                                                                                                       \
+    size_t reserved[3];                                                                                                                 \
     struct ws_hash_item_bucket* buckets;                                                                                                \
     size_t size;                                                                                                                        \
     size_t capacity;                                                                                                                    \
@@ -80,6 +81,7 @@ inline void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t
 {                                                                                                                                       \
     struct ws_hash_map_##TYPE hashMap =                                                                                                 \
     {                                                                                                                                   \
+        .reserved = {0},                                                                                                                \
         .buckets  = nullptr,                                                                                                            \
         .size     = 0,                                                                                                                  \
         .capacity = 16                                                                                                                  \

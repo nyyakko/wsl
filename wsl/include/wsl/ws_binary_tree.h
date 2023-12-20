@@ -23,6 +23,7 @@ struct ws_binary_tree_##TYPE##_node                                             
                                                                                                                                         \
 struct ws_binary_tree_##TYPE                                                                                                            \
 {                                                                                                                                       \
+    size_t reserved[3];                                                                                                                 \
     struct ws_binary_tree_##TYPE##_node* head;                                                                                          \
     size_t size;                                                                                                                        \
 };                                                                                                                                      \
@@ -231,8 +232,9 @@ inline void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* tree, siz
 {                                                                                                                                       \
     struct ws_binary_tree_##TYPE tree =                                                                                                 \
     {                                                                                                                                   \
-        .head = nullptr,                                                                                                                \
-        .size = 0                                                                                                                       \
+        .reserved = {0},                                                                                                                \
+        .head     = nullptr,                                                                                                            \
+        .size     = 0                                                                                                                   \
     };                                                                                                                                  \
                                                                                                                                         \
     return tree;                                                                                                                        \
