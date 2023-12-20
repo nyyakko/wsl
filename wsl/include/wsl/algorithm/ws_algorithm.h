@@ -1,7 +1,7 @@
 #ifndef WS_ALGORITMH_H
 #define WS_ALGORITMH_H
 
-#include <cassert>
+#include <assert.h>
 #include <string.h>
 
 struct ws_generic_interface_t

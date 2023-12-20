@@ -71,16 +71,32 @@ inline TYPE* ws_vector_##TYPE##_back(struct ws_vector_##TYPE vector)            
 {                                                                                                                                       \
     for (size_t index = 0llu; index != vector.size; index += 1)                                                                         \
     {                                                                                                                                   \
-        if (predicate != nullptr)                                                                                                       \
+        if (predicate != nullptr && predicate(&vector.data[index], &value))                                                             \
         {                                                                                                                               \
-            if (predicate(&vector.data[index], &value))                                                                                 \
+            return &vector.data[index];                                                                                                 \
+        }                                                                                                                               \
+        else if (predicate == nullptr)                                                                                                  \
+        {                                                                                                                               \
+            char valueLhs[sizeof(TYPE)] = {0};                                                                                          \
+            memcpy(valueLhs, &vector.data[index], sizeof(TYPE));                                                                        \
+            char valueRhs[sizeof(TYPE)] = {0};                                                                                          \
+            memcpy(valueRhs, &value, sizeof(TYPE));                                                                                     \
+                                                                                                                                        \
+            bool found = true;                                                                                                          \
+                                                                                                                                        \
+            for (size_t _index = 0llu; index != sizeof(TYPE); index += 1)                                                               \
+            {                                                                                                                           \
+                if (valueLhs[_index] != valueRhs[_index])                                                                               \
+                {                                                                                                                       \
+                    found = false;                                                                                                      \
+                    break;                                                                                                              \
+                }                                                                                                                       \
+            }                                                                                                                           \
+                                                                                                                                        \
+            if (found)                                                                                                                  \
             {                                                                                                                           \
                 return &vector.data[index];                                                                                             \
             }                                                                                                                           \
-        }                                                                                                                               \
-        else if (vector.data[index] == value)                                                                                           \
-        {                                                                                                                               \
-            return &vector.data[index];                                                                                                 \
         }                                                                                                                               \
     }                                                                                                                                   \
                                                                                                                                         \
