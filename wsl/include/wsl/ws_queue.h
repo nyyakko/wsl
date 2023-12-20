@@ -23,7 +23,6 @@
                                                                                                                                         \
 struct ws_queue_##TYPE                                                                                                                  \
 {                                                                                                                                       \
-    size_t reserved[3];                                                                                                                 \
     size_t begin;                                                                                                                       \
     size_t end;                                                                                                                         \
     TYPE* data;                                                                                                                         \
@@ -130,7 +129,6 @@ inline struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...)       
 {                                                                                                                                       \
     struct ws_queue_##TYPE queue =                                                                                                      \
     {                                                                                                                                   \
-        .reserved = {0},                                                                                                                \
         .data     = nullptr,                                                                                                            \
         .size     = 0,                                                                                                                  \
         .capacity = 1,                                                                                                                  \

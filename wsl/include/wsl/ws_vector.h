@@ -35,6 +35,7 @@ struct ws_vector_##TYPE                                                         
 {                                                                                                                                       \
     size_t begin;                                                                                                                       \
     size_t end;                                                                                                                         \
+    size_t elementSize;                                                                                                                 \
     TYPE* data;                                                                                                                         \
     size_t size;                                                                                                                        \
     size_t capacity;                                                                                                                    \
@@ -165,9 +166,10 @@ inline void ws_vector_##TYPE##_push(struct ws_vector_##TYPE* vector, TYPE value)
 {                                                                                                                                       \
     struct ws_vector_##TYPE vector =                                                                                                    \
     {                                                                                                                                   \
-        .data     = nullptr,                                                                                                            \
-        .size     = 0,                                                                                                                  \
-        .capacity = 1,                                                                                                                  \
+        .elementSize = sizeof(TYPE),                                                                                                    \
+        .data        = nullptr,                                                                                                         \
+        .size        = 0,                                                                                                               \
+        .capacity    = 1,                                                                                                               \
     };                                                                                                                                  \
                                                                                                                                         \
     va_list values = {};                                                                                                                \

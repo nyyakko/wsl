@@ -23,7 +23,6 @@
                                                                                                                                         \
 struct ws_stack_##TYPE                                                                                                                  \
 {                                                                                                                                       \
-    size_t reserved[3];                                                                                                                 \
     size_t begin;                                                                                                                       \
     size_t end;                                                                                                                         \
     TYPE* data;                                                                                                                         \
@@ -125,7 +124,6 @@ inline struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...)       
 {                                                                                                                                       \
     struct ws_stack_##TYPE stack =                                                                                                      \
     {                                                                                                                                   \
-        .reserved = {0},                                                                                                                \
         .begin    = 0,                                                                                                                  \
         .end      = 0,                                                                                                                  \
         .data     = nullptr,                                                                                                            \

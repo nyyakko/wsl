@@ -1,3 +1,3 @@
 import os
 
-os.system('ctest --test-dir build --verbose')
+os.system('ctest --test-dir build')

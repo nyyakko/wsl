@@ -10,7 +10,6 @@
 
 struct ws_string_builder
 {
-    size_t reserved[3];
     size_t begin;
     size_t end;
     char* data;
@@ -215,7 +214,6 @@ inline void ws_string_builder_append_string(struct ws_string_builder* string, ch
 
     struct ws_string_builder result =
     {
-        .reserved = {0},
         .begin    = 0,
         .end      = length,
         .data     = (char*)malloc(roundedLength),
@@ -267,7 +265,6 @@ inline struct ws_string_builder ws_string_builder_create(char const* data)
 
     struct ws_string_builder result =
     {
-        .reserved = {0},
         .begin    = 0,
         .end      = length,
         .data     = (char*)malloc(roundedLength),

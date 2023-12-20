@@ -8,43 +8,39 @@ struct ws_generic_interface_t
 {
     size_t begin;
     size_t end;
+    size_t elementSize;
     void* data;
 };
 
-#define ws_search_1(container, value) ws_search_ex(container, sizeof(*value), value, nullptr)
-#define ws_search_2(container, value, predicate) ws_search_ex(container, sizeof(*value), value, predicate)
+#define ws_search_1(container, value) ws_search_in(container, value, nullptr)
+#define ws_search_2(container, value, predicate) ws_search_in(container, value, predicate)
 #define ws_search_select(_1, _2, selected, ...) selected
 #define ws_search(container, ...) ws_search_select(__VA_ARGS__, ws_search_2, ws_search_1, void)(container, __VA_ARGS__)
 
-inline void* ws_search_ex(void const* container, size_t typeSize, void const* value, int(*predicate)(void const*, void const*))
+inline void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, int(*predicate)(void const*, void const*))
 {
-    assert(container && "CONTAINER WAS NULL");
+    assert(data && "CONTAINER WAS NULL");
 
-    struct ws_generic_interface_t containerInterface = {};
-    memcpy(&containerInterface, container, sizeof(struct ws_generic_interface_t));
-
-    assert(containerInterface.data && "INVALID CONTAINER TYPE");
-
-    for (size_t index = containerInterface.begin; index <= containerInterface.end; index += 1)
+    for (size_t elementIndex = begin; elementIndex <= end; elementIndex += 1)
     {
-        void const* currentValue = (void const*)((uintptr_t)containerInterface.data + (index * typeSize));
+        uintptr_t currentValue = (uintptr_t)data + (elementIndex * elementSize);
 
-        if (predicate && predicate(currentValue, value))
+        if (predicate && predicate((void const*)(currentValue), value))
         {
-            return (void*)((uintptr_t)containerInterface.data + (index * typeSize));
+            return (void*)(currentValue);
         }
         else if (!predicate)
         {
-            char valueLhs[typeSize];
-            memcpy(valueLhs, currentValue, typeSize);
-            char valueRhs[typeSize];
-            memcpy(valueRhs, value, typeSize);
+            char valueLhs[elementSize];
+            memcpy(valueLhs, (void const*)currentValue, elementSize);
+            char valueRhs[elementSize];
+            memcpy(valueRhs, value, elementSize);
 
             bool found = true;
 
-            for (size_t _index = 0llu; _index != typeSize; _index += 1)
+            for (size_t byteIndex = 0llu; byteIndex != elementSize; byteIndex += 1)
             {
-                if (valueLhs[_index] != valueRhs[_index])
+                if (valueLhs[byteIndex] != valueRhs[byteIndex])
                 {
                     found = false;
                     break;
@@ -53,7 +49,7 @@ inline void* ws_search_ex(void const* container, size_t typeSize, void const* va
 
             if (found)
             {
-                return (void*)((uintptr_t)containerInterface.data + (index * typeSize));
+                return (void*)(currentValue);
             }
         }
     }
@@ -61,34 +57,37 @@ inline void* ws_search_ex(void const* container, size_t typeSize, void const* va
     return nullptr;
 }
 
-inline void ws_sort_ex(void* container, size_t typeSize, int(*predicate)(void const*, void const*))
+inline void* ws_search_in(void const* container, void const* value, int(*predicate)(void const*, void const*))
 {
-    assert(container && "CONTAINER WAS NULL");
-    assert(predicate && "PREDICATE WAS NULL");
-
     struct ws_generic_interface_t containerInterface = {};
     memcpy(&containerInterface, container, sizeof(struct ws_generic_interface_t));
 
-    assert(containerInterface.data && "INVALID CONTAINER TYPE");
+    return ws_search_ex(containerInterface.data, containerInterface.begin, containerInterface.end, containerInterface.elementSize, value, predicate);
+}
+
+#define ws_sort(container, predicate) ws_sort_in(container, predicate)
+
+inline void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, int(*predicate)(void const*, void const*))
+{
+    assert(data && "CONTAINER WAS NULL");
+    assert(predicate && "PREDICATE WAS NULL");
 
     while (true)
     {
         bool sorted = true;
 
-        for (size_t index = containerInterface.begin + 1llu; index <= containerInterface.end; index += 1)
+        for (size_t index = begin + 1llu; index <= end; index += 1)
         {
-            void* currentValue  = (void*)((uintptr_t)containerInterface.data + (index * typeSize));
-            void* previousValue = (void*)((uintptr_t)containerInterface.data + ((index - 1) * typeSize));
+            void* currentValue  = (void*)((uintptr_t)data + (index * elementSize));
+            void* previousValue = (void*)((uintptr_t)data + ((index - 1) * elementSize));
 
             if (predicate(currentValue, previousValue))
             {
-                char valueTemporary[typeSize];
+                char valueTemporary[elementSize];
 
-                memset(valueTemporary, 0, typeSize);
-
-                memcpy(valueTemporary, previousValue, typeSize);
-                memcpy(previousValue, currentValue, typeSize);
-                memcpy(currentValue, valueTemporary, typeSize);
+                memcpy(valueTemporary, previousValue, elementSize);
+                memcpy(previousValue, currentValue, elementSize);
+                memcpy(currentValue, valueTemporary, elementSize);
 
                 sorted = false;
             }
@@ -99,6 +98,14 @@ inline void ws_sort_ex(void* container, size_t typeSize, int(*predicate)(void co
             return;
         }
     }
+}
+
+inline void ws_sort_in(void* container, int(*predicate)(void const*, void const*))
+{
+    struct ws_generic_interface_t containerInterface = {};
+    memcpy(&containerInterface, container, sizeof(struct ws_generic_interface_t));
+
+    return ws_sort_ex(containerInterface.data, containerInterface.begin, containerInterface.end, containerInterface.elementSize, predicate);
 }
 
 #endif
