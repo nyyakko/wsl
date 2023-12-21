@@ -145,7 +145,7 @@ inline void ws_vector_##TYPE##_clear(struct ws_vector_##TYPE* vector, void(*stra
         }                                                                                                                               \
     }                                                                                                                                   \
                                                                                                                                         \
-    memset(vector->data, 0, vector->capacity);                                                                                          \
+    memset(vector->data, 0, vector->capacity * sizeof(TYPE));                                                                           \
     vector->size = 0;                                                                                                                   \
 }                                                                                                                                       \
                                                                                                                                         \

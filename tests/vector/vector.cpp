@@ -51,6 +51,11 @@ TEST(vector, clear_values)
     struct ws_vector_int vector = ws_vector_int_create(ws_vector_initialize(int, 69, 420, 720));
 
     ws_vector_clear(int, &vector);
+
+    EXPECT_EQ(vector.data[0], 0);
+    EXPECT_EQ(vector.data[1], 0);
+    EXPECT_EQ(vector.data[2], 0);
+
     EXPECT_EQ(ws_vector_int_size(vector), 0);
 
     ws_vector_destroy(int, &vector);
