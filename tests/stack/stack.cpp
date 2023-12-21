@@ -33,11 +33,11 @@ TEST(stack, pop_values)
     struct ws_stack_int stack = ws_stack_int_create(ws_stack_initialize(int, 69, 420, 720));
 
     EXPECT_EQ(ws_stack_int_size(stack),  3);
-    EXPECT_EQ(*ws_stack_int_pop(&stack), 720);
+    EXPECT_EQ(ws_stack_int_pop(&stack), 720);
     EXPECT_EQ(ws_stack_int_size(stack),  2);
-    EXPECT_EQ(*ws_stack_int_pop(&stack), 420);
+    EXPECT_EQ(ws_stack_int_pop(&stack), 420);
     EXPECT_EQ(ws_stack_int_size(stack),  1);
-    EXPECT_EQ(*ws_stack_int_pop(&stack), 69);
+    EXPECT_EQ(ws_stack_int_pop(&stack), 69);
     EXPECT_EQ(ws_stack_int_size(stack),  0);
 
     ws_stack_destroy(int, &stack);

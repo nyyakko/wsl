@@ -109,7 +109,7 @@ inline void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value)   
     stack->begin = stack->size - 1;                                                                                                       \
 }                                                                                                                                         \
                                                                                                                                           \
-[[nodiscard]]inline TYPE* ws_stack_##TYPE##_pop(struct ws_stack_##TYPE* stack)                                                            \
+[[nodiscard]]inline TYPE ws_stack_##TYPE##_pop(struct ws_stack_##TYPE* stack)                                                             \
 {                                                                                                                                         \
     assert(stack != nullptr && "STACK POINTER WAS NULL");                                                                                 \
     assert(stack->size && "TRIED TO POP AN EMPTY STACK");                                                                                 \
@@ -117,7 +117,7 @@ inline void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value)   
     stack->size -= 1;                                                                                                                     \
     stack->begin = stack->size;                                                                                                           \
                                                                                                                                           \
-    return &stack->data[stack->begin];                                                                                                    \
+    return stack->data[stack->begin];                                                                                                     \
 }                                                                                                                                         \
                                                                                                                                           \
 inline struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...)                                                                 \

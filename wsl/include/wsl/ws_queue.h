@@ -114,7 +114,7 @@ inline void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value)   
     queue->end = queue->size - 1;                                                                                                        \
 }                                                                                                                                        \
                                                                                                                                          \
-[[nodiscard]]inline TYPE* ws_queue_##TYPE##_pop(struct ws_queue_##TYPE* queue)                                                           \
+[[nodiscard]]inline TYPE ws_queue_##TYPE##_pop(struct ws_queue_##TYPE* queue)                                                            \
 {                                                                                                                                        \
     assert(queue != nullptr && "QUEUE POINTER WAS NULL");                                                                                \
     assert(queue->size && "TRIED TO POP AN EMPTY QUEUE");                                                                                \
@@ -122,7 +122,7 @@ inline void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value)   
     queue->size  -= 1;                                                                                                                   \
     queue->begin += 1;                                                                                                                   \
                                                                                                                                          \
-    return &queue->data[queue->begin - 1];                                                                                               \
+    return queue->data[queue->begin - 1];                                                                                                \
 }                                                                                                                                        \
                                                                                                                                          \
 inline struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...)                                                                \

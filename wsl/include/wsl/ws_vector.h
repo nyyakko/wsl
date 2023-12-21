@@ -172,12 +172,12 @@ inline void ws_vector_##TYPE##_push(struct ws_vector_##TYPE* vector, TYPE value)
     vector->end = vector->size - 1;                                                                                                           \
 }                                                                                                                                             \
                                                                                                                                               \
-[[nodiscard]]inline TYPE* ws_vector_##TYPE##_pop(struct ws_vector_##TYPE* vector)                                                             \
+[[nodiscard]]inline TYPE ws_vector_##TYPE##_pop(struct ws_vector_##TYPE* vector)                                                              \
 {                                                                                                                                             \
     assert(vector != nullptr && "VECTOR POINTER WAS NULL");                                                                                   \
     assert(vector->size && "TRIED TO POP AN EMPTY VECTOR");                                                                                   \
     vector->end = --vector->size;                                                                                                             \
-    return &vector->data[vector->end];                                                                                                        \
+    return vector->data[vector->end];                                                                                                         \
 }                                                                                                                                             \
                                                                                                                                               \
 [[nodiscard]]inline struct ws_vector_##TYPE ws_vector_##TYPE##_create(size_t count, ...)                                                      \

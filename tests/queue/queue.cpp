@@ -33,11 +33,11 @@ TEST(queue, pop_values)
     struct ws_queue_int queue = ws_queue_int_create(ws_queue_initialize(int, 69, 420, 720));
 
     EXPECT_EQ(ws_queue_int_size(queue), 3);
-    EXPECT_EQ(*ws_queue_int_pop(&queue), 69);
+    EXPECT_EQ(ws_queue_int_pop(&queue), 69);
     EXPECT_EQ(ws_queue_int_size(queue), 2);
-    EXPECT_EQ(*ws_queue_int_pop(&queue), 420);
+    EXPECT_EQ(ws_queue_int_pop(&queue), 420);
     EXPECT_EQ(ws_queue_int_size(queue), 1);
-    EXPECT_EQ(*ws_queue_int_pop(&queue), 720);
+    EXPECT_EQ(ws_queue_int_pop(&queue), 720);
     EXPECT_EQ(ws_queue_int_size(queue), 0);
 
     ws_queue_destroy(int, &queue);
