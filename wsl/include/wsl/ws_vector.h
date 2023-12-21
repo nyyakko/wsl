@@ -72,8 +72,7 @@ inline TYPE* ws_vector_##TYPE##_back(struct ws_vector_##TYPE vector)            
     return &vector.data[vector.end];                                                                                                          \
 }                                                                                                                                             \
                                                                                                                                               \
-[[nodiscard]]inline TYPE* ws_vector_##TYPE##_search(struct ws_vector_##TYPE vector, TYPE value,                                               \
-        int(*predicate)(TYPE const*, TYPE const*))                                                                                            \
+[[nodiscard]]inline TYPE* ws_vector_##TYPE##_search(struct ws_vector_##TYPE vector, TYPE value, int(*predicate)(TYPE const*, TYPE const*))    \
 {                                                                                                                                             \
     for (size_t index = 0llu; index != vector.size; index += 1)                                                                               \
     {                                                                                                                                         \

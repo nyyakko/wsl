@@ -10,104 +10,104 @@
 #define ws_hash_map_destroy_select(_1, _2, selected, ...) selected
 #define ws_hash_map_destroy(type, ...) ws_hash_map_destroy_select(__VA_ARGS__, ws_hash_map_destroy_2, ws_hash_map_destroy_1, void)(type, __VA_ARGS__)
 
-#define WS_HASH_MAP(TYPE)                                                                                                               \
-                                                                                                                                        \
-struct ws_hash_item_bucket                                                                                                              \
-{                                                                                                                                       \
-    struct ws_binary_tree_##TYPE tree;                                                                                                  \
-    size_t size;                                                                                                                        \
-};                                                                                                                                      \
-                                                                                                                                        \
-struct ws_hash_map_##TYPE                                                                                                               \
-{                                                                                                                                       \
-    struct ws_hash_item_bucket* buckets;                                                                                                \
-    size_t size;                                                                                                                        \
-    size_t capacity;                                                                                                                    \
-};                                                                                                                                      \
-                                                                                                                                        \
-inline size_t ws_hash_map_##TYPE##_size(struct ws_hash_map_##TYPE hashMap)                                                              \
-{                                                                                                                                       \
-    return hashMap.size;                                                                                                                \
-}                                                                                                                                       \
-                                                                                                                                        \
-inline struct ws_binary_tree_##TYPE##_node* ws_hash_map_##TYPE##_search(struct ws_hash_map_##TYPE hashMap, size_t key)                  \
-{                                                                                                                                       \
-    for (size_t index = 0llu; index != hashMap.capacity; index += 1)                                                                    \
-    {                                                                                                                                   \
-        struct ws_hash_item_bucket workingBucket = hashMap.buckets[index];                                                              \
-        struct ws_binary_tree_##TYPE##_node* result = ws_binary_tree_##TYPE##_search(workingBucket.tree, key);                          \
-                                                                                                                                        \
-        if (result != nullptr)                                                                                                          \
-        {                                                                                                                               \
-            return result;                                                                                                              \
-        }                                                                                                                               \
-    }                                                                                                                                   \
-                                                                                                                                        \
-    return nullptr;                                                                                                                     \
-}                                                                                                                                       \
-                                                                                                                                        \
-inline void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t key, TYPE value)                                       \
-{                                                                                                                                       \
-    assert(hashMap != nullptr && "HASHMAP POINTER WAS NULL");                                                                           \
-                                                                                                                                        \
-    struct ws_binary_tree_##TYPE##_node* result = ws_hash_map_##TYPE##_search(*hashMap, key);                                           \
-                                                                                                                                        \
-    if (result != nullptr)                                                                                                              \
-    {                                                                                                                                   \
-        result->value = value;                                                                                                          \
-        return;                                                                                                                         \
-    }                                                                                                                                   \
-                                                                                                                                        \
-    struct ws_hash_item_bucket* workingBucket = &hashMap->buckets[key & (hashMap->capacity - 1)];                                       \
-    ws_binary_tree_##TYPE##_push(&workingBucket->tree, key, value);                                                                     \
-                                                                                                                                        \
-    workingBucket->size += 1;                                                                                                           \
-    hashMap->size += 1;                                                                                                                 \
-}                                                                                                                                       \
-                                                                                                                                        \
-[[nodiscard]]inline TYPE ws_hash_map_##TYPE##_pop(struct ws_hash_map_##TYPE* hashMap, size_t key)                                       \
-{                                                                                                                                       \
-    assert(hashMap != nullptr && "HASHMAP POINTER WAS NULL");                                                                           \
-                                                                                                                                        \
-    struct ws_hash_item_bucket* workingBucket = &hashMap->buckets[key & (hashMap->capacity - 1)];                                       \
-    hashMap->size -= 1;                                                                                                                 \
-    workingBucket->size -= 1;                                                                                                           \
-                                                                                                                                        \
-    return ws_binary_tree_##TYPE##_pop(&workingBucket->tree, key);                                                                      \
-}                                                                                                                                       \
-                                                                                                                                        \
-[[nodiscard]]inline struct ws_hash_map_##TYPE ws_hash_map_##TYPE##_create()                                                             \
-{                                                                                                                                       \
-    struct ws_hash_map_##TYPE hashMap =                                                                                                 \
-    {                                                                                                                                   \
-        .buckets  = nullptr,                                                                                                            \
-        .size     = 0,                                                                                                                  \
-        .capacity = 16                                                                                                                  \
-    };                                                                                                                                  \
-                                                                                                                                        \
-    hashMap.buckets = (struct ws_hash_item_bucket*)malloc(hashMap.capacity * sizeof(struct ws_hash_item_bucket));                       \
-                                                                                                                                        \
-    for (size_t index = 0llu; index != hashMap.capacity; index += 1)                                                                    \
-    {                                                                                                                                   \
-        hashMap.buckets[index].tree = ws_binary_tree_##TYPE##_create();                                                                 \
-        hashMap.buckets[index].size = 0;                                                                                                \
-    }                                                                                                                                   \
-                                                                                                                                        \
-    return hashMap;                                                                                                                     \
-}                                                                                                                                       \
-                                                                                                                                        \
-inline void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, void(*strategy)(TYPE*))                                    \
-{                                                                                                                                       \
-    assert(hashMap != nullptr && "HASHMAP POINTER WAS NULL");                                                                           \
-                                                                                                                                        \
-    for (size_t index = 0llu; index != hashMap->capacity; index += 1)                                                                   \
-    {                                                                                                                                   \
-        struct ws_hash_item_bucket workingBucket = hashMap->buckets[index];                                                             \
-        ws_binary_tree_##TYPE##_destroy(&workingBucket.tree, strategy);                                                                 \
-    }                                                                                                                                   \
-                                                                                                                                        \
-    free(hashMap->buckets);                                                                                                             \
-    memset(hashMap, 0, sizeof(ws_hash_map_##TYPE));                                                                                     \
+#define WS_HASH_MAP(TYPE)                                                                                                                 \
+                                                                                                                                          \
+struct ws_hash_item_bucket                                                                                                                \
+{                                                                                                                                         \
+    struct ws_binary_tree_##TYPE tree;                                                                                                    \
+    size_t size;                                                                                                                          \
+};                                                                                                                                        \
+                                                                                                                                          \
+struct ws_hash_map_##TYPE                                                                                                                 \
+{                                                                                                                                         \
+    struct ws_hash_item_bucket* buckets;                                                                                                  \
+    size_t size;                                                                                                                          \
+    size_t capacity;                                                                                                                      \
+};                                                                                                                                        \
+                                                                                                                                          \
+inline size_t ws_hash_map_##TYPE##_size(struct ws_hash_map_##TYPE hashMap)                                                                \
+{                                                                                                                                         \
+    return hashMap.size;                                                                                                                  \
+}                                                                                                                                         \
+                                                                                                                                          \
+inline struct ws_binary_tree_##TYPE##_node* ws_hash_map_##TYPE##_search(struct ws_hash_map_##TYPE hashMap, size_t key)                    \
+{                                                                                                                                         \
+    for (size_t index = 0llu; index != hashMap.capacity; index += 1)                                                                      \
+    {                                                                                                                                     \
+        struct ws_hash_item_bucket workingBucket = hashMap.buckets[index];                                                                \
+        struct ws_binary_tree_##TYPE##_node* result = ws_binary_tree_##TYPE##_search(workingBucket.tree, key);                            \
+                                                                                                                                          \
+        if (result != nullptr)                                                                                                            \
+        {                                                                                                                                 \
+            return result;                                                                                                                \
+        }                                                                                                                                 \
+    }                                                                                                                                     \
+                                                                                                                                          \
+    return nullptr;                                                                                                                       \
+}                                                                                                                                         \
+                                                                                                                                          \
+inline void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t key, TYPE value)                                         \
+{                                                                                                                                         \
+    assert(hashMap != nullptr && "HASHMAP POINTER WAS NULL");                                                                             \
+                                                                                                                                          \
+    struct ws_binary_tree_##TYPE##_node* result = ws_hash_map_##TYPE##_search(*hashMap, key);                                             \
+                                                                                                                                          \
+    if (result != nullptr)                                                                                                                \
+    {                                                                                                                                     \
+        result->value = value;                                                                                                            \
+        return;                                                                                                                           \
+    }                                                                                                                                     \
+                                                                                                                                          \
+    struct ws_hash_item_bucket* workingBucket = &hashMap->buckets[key & (hashMap->capacity - 1)];                                         \
+    ws_binary_tree_##TYPE##_push(&workingBucket->tree, key, value);                                                                       \
+                                                                                                                                          \
+    workingBucket->size += 1;                                                                                                             \
+    hashMap->size += 1;                                                                                                                   \
+}                                                                                                                                         \
+                                                                                                                                          \
+[[nodiscard]]inline TYPE ws_hash_map_##TYPE##_pop(struct ws_hash_map_##TYPE* hashMap, size_t key)                                         \
+{                                                                                                                                         \
+    assert(hashMap != nullptr && "HASHMAP POINTER WAS NULL");                                                                             \
+                                                                                                                                          \
+    struct ws_hash_item_bucket* workingBucket = &hashMap->buckets[key & (hashMap->capacity - 1)];                                         \
+    hashMap->size -= 1;                                                                                                                   \
+    workingBucket->size -= 1;                                                                                                             \
+                                                                                                                                          \
+    return ws_binary_tree_##TYPE##_pop(&workingBucket->tree, key);                                                                        \
+}                                                                                                                                         \
+                                                                                                                                          \
+[[nodiscard]]inline struct ws_hash_map_##TYPE ws_hash_map_##TYPE##_create()                                                               \
+{                                                                                                                                         \
+    struct ws_hash_map_##TYPE hashMap =                                                                                                   \
+    {                                                                                                                                     \
+        .buckets  = nullptr,                                                                                                              \
+        .size     = 0,                                                                                                                    \
+        .capacity = 16                                                                                                                    \
+    };                                                                                                                                    \
+                                                                                                                                          \
+    hashMap.buckets = (struct ws_hash_item_bucket*)malloc(hashMap.capacity * sizeof(struct ws_hash_item_bucket));                         \
+                                                                                                                                          \
+    for (size_t index = 0llu; index != hashMap.capacity; index += 1)                                                                      \
+    {                                                                                                                                     \
+        hashMap.buckets[index].tree = ws_binary_tree_##TYPE##_create();                                                                   \
+        hashMap.buckets[index].size = 0;                                                                                                  \
+    }                                                                                                                                     \
+                                                                                                                                          \
+    return hashMap;                                                                                                                       \
+}                                                                                                                                         \
+                                                                                                                                          \
+inline void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, void(*strategy)(TYPE*))                                      \
+{                                                                                                                                         \
+    assert(hashMap != nullptr && "HASHMAP POINTER WAS NULL");                                                                             \
+                                                                                                                                          \
+    for (size_t index = 0llu; index != hashMap->capacity; index += 1)                                                                     \
+    {                                                                                                                                     \
+        struct ws_hash_item_bucket workingBucket = hashMap->buckets[index];                                                               \
+        ws_binary_tree_##TYPE##_destroy(&workingBucket.tree, strategy);                                                                   \
+    }                                                                                                                                     \
+                                                                                                                                          \
+    free(hashMap->buckets);                                                                                                               \
+    memset(hashMap, 0, sizeof(ws_hash_map_##TYPE));                                                                                       \
 }
 
 // MurmurHash: https://en.wikipedia.org/wiki/MurmurHash
