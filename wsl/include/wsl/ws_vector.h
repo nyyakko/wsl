@@ -24,6 +24,11 @@
 #define ws_vector_search_select(_1, _2, _3, selected, ...) selected
 #define ws_vector_search(type, ...) ws_vector_search_select(__VA_ARGS__, ws_vector_search_2, ws_vector_search_1, void)(type, __VA_ARGS__)
 
+#define ws_vector_clear_1(type, vector) ws_vector_##type##_clear(vector, nullptr)
+#define ws_vector_clear_2(type, vector, strategy) ws_vector_##type##_clear(vector, strategy)
+#define ws_vector_clear_select(_1, _2, selected, ...) selected
+#define ws_vector_clear(type, ...) ws_vector_clear_select(__VA_ARGS__, ws_vector_clear_2, ws_vector_clear_1, void)(type, __VA_ARGS__)
+
 #define ws_vector_destroy_1(type, vector) ws_vector_##type##_destroy(vector, nullptr)
 #define ws_vector_destroy_2(type, vector, strategy) ws_vector_##type##_destroy(vector, strategy)
 #define ws_vector_destroy_select(_1, _2, selected, ...) selected
@@ -128,6 +133,20 @@ inline void ws_vector_##TYPE##_copy(struct ws_vector_##TYPE* destination, struct
     destination->data     = (TYPE*)malloc(destination->capacity * sizeof(TYPE));                                                        \
                                                                                                                                         \
     memcpy(destination->data, source->data, destination->capacity * sizeof(TYPE));                                                      \
+}                                                                                                                                       \
+                                                                                                                                        \
+inline void ws_vector_##TYPE##_clear(struct ws_vector_##TYPE* vector, void(*strategy)(TYPE*))                                           \
+{                                                                                                                                       \
+    if (strategy != nullptr)                                                                                                            \
+    {                                                                                                                                   \
+        for (size_t index = 0llu; index != vector->size; index += 1)                                                                    \
+        {                                                                                                                               \
+            strategy(&vector->data[index]);                                                                                             \
+        }                                                                                                                               \
+    }                                                                                                                                   \
+                                                                                                                                        \
+    memset(vector->data, 0, vector->capacity);                                                                                          \
+    vector->size = 0;                                                                                                                   \
 }                                                                                                                                       \
                                                                                                                                         \
 inline void ws_vector_##TYPE##_realloc(struct ws_vector_##TYPE* vector)                                                                 \

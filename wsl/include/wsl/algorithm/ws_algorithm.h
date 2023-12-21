@@ -10,6 +10,7 @@ struct ws_generic_interface_t
     size_t end;
     size_t elementSize;
     void* data;
+    size_t size;
 };
 
 #define ws_search_1(container, value) ws_search_in(container, value, nullptr)
@@ -105,7 +106,40 @@ inline void ws_sort_in(void* container, int(*predicate)(void const*, void const*
     struct ws_generic_interface_t containerInterface = {};
     memcpy(&containerInterface, container, sizeof(struct ws_generic_interface_t));
 
-    return ws_sort_ex(containerInterface.data, containerInterface.begin, containerInterface.end, containerInterface.elementSize, predicate);
+    ws_sort_ex(containerInterface.data, containerInterface.begin, containerInterface.end, containerInterface.elementSize, predicate);
+}
+
+#define ws_clear_1(container) ws_clear_in(container, nullptr)
+#define ws_clear_2(container, predicate) ws_clear_in(container, predicate)
+#define ws_clear_select(_1, _2, selected, ...) selected
+#define ws_clear(container, ...) ws_clear_select(__VA_ARGS__, ws_clear_2, ws_clear_1, void)(container, __VA_ARGS__)
+
+inline void ws_clear_ex(void* data, size_t begin, size_t end, size_t elementSize, void(*strategy)(void*))
+{
+    if (strategy != nullptr)
+    {
+        for (size_t index = begin; index <= end; index += 1)
+        {
+            void* currentValue = (void*)((uintptr_t)data + (index * elementSize));
+            strategy(currentValue);
+        }
+    }
+
+    // FIXME: this is assuming the end value will always be zero indexed.
+    // i need to find a better way of doing this. this should work for now though.
+    memset(data, 0, (end + 1) * elementSize);
+}
+
+inline void ws_clear_in(void* container, void(*strategy)(void*))
+{
+    struct ws_generic_interface_t containerInterface = {};
+    memcpy(&containerInterface, container, sizeof(struct ws_generic_interface_t));
+
+    containerInterface.size = 0;
+
+    ws_clear_ex(containerInterface.data, containerInterface.begin, containerInterface.end, containerInterface.elementSize, strategy);
+
+    memcpy(container, &containerInterface, sizeof(struct ws_generic_interface_t));
 }
 
 #endif
