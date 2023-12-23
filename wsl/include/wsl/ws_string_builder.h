@@ -227,7 +227,7 @@ inline void ws_string_builder_append_string(struct ws_string_builder* string, ch
     return result;
 }
 
-inline void ws_string_builder_copy(struct ws_string_builder* destination, struct ws_string_builder* source)
+inline void ws_string_builder_copy(struct ws_string_builder* destination, struct ws_string_builder const* source)
 {
     assert(destination && "DESTINATION WAS NULL");
     assert(source && "SOURCE WAS NULL");
