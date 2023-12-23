@@ -115,15 +115,15 @@ inline void ws_vector_##TYPE##_copy(struct ws_vector_##TYPE* destination, struct
         return;                                                                                                                               \
     }                                                                                                                                         \
                                                                                                                                               \
-    if (!ws_vector_##TYPE##_is_empty(*destination) && strategy != nullptr)                                                                    \
+    if (strategy != nullptr)                                                                                                                  \
     {                                                                                                                                         \
         for (size_t index = 0llu; index != destination->size; index += 1)                                                                     \
         {                                                                                                                                     \
             strategy(&destination->data[index]);                                                                                              \
         }                                                                                                                                     \
-                                                                                                                                              \
-        free(destination->data);                                                                                                              \
     }                                                                                                                                         \
+                                                                                                                                              \
+    free(destination->data);                                                                                                                  \
                                                                                                                                               \
     destination->size     = source->size;                                                                                                     \
     destination->capacity = source->capacity;                                                                                                 \

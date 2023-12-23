@@ -10,7 +10,8 @@ enable_static_analyzers(${TEST_NAME} ON)
 set_target_properties(${TEST_NAME} PROPERTIES CXX_STANDARD ${CMAKE_CXX_VERSION})
 
 target_link_libraries(${TEST_NAME} PRIVATE GTest::gtest_main wsl)
-target_compile_options(${TEST_NAME} PRIVATE ${wsl_CompilerOptions} -Wno-c99-extensions)
+target_compile_options(${TEST_NAME} PRIVATE ${wsl_TestsCompilerOptions} -Wno-c99-extensions)
+target_link_options(${TEST_NAME} PRIVATE ${wsl_TestsLinkerOptions})
 
 gtest_discover_tests(${TEST_NAME})
 

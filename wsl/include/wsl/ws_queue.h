@@ -70,15 +70,15 @@ inline void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, struct w
         return;                                                                                                                          \
     }                                                                                                                                    \
                                                                                                                                          \
-    if (!ws_queue_##TYPE##_is_empty(*destination) && strategy != nullptr)                                                                \
+    if (strategy != nullptr)                                                                                                             \
     {                                                                                                                                    \
         for (size_t index = 0llu; index != destination->size; index += 1)                                                                \
         {                                                                                                                                \
             strategy(&destination->data[index]);                                                                                         \
         }                                                                                                                                \
-                                                                                                                                         \
-        free(destination->data);                                                                                                         \
     }                                                                                                                                    \
+                                                                                                                                         \
+    free(destination->data);                                                                                                             \
                                                                                                                                          \
     destination->size     = source->size;                                                                                                \
     destination->capacity = source->capacity;                                                                                            \

@@ -29,7 +29,16 @@ include(GNUInstallDirs)
 add_subdirectory(wsl)
 
 if (NOT WSL_DISABLE_TESTS)
-    message("[WARN] project will be building the test suit.")
+    message("\n-- Project will be building the test suit.")
+
+    if (NOT ${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
+        message("-- Running on ${CMAKE_HOST_SYSTEM_NAME}, sanitizers for tests are enabled.")
+        set(wsl_TestsLinkerOptions ${wsl_TestsLinkerOptions} -fsanitize=undefined,leak,address)
+    else()
+        message("-- Running on ${CMAKE_HOST_SYSTEM_NAME}, sanitizers for tests are disabled.")
+    endif()
+
+    set(wsl_TestsCompilerOptions ${wsl_TestsCompilerOptions} ${wsl_CompilerOptions})
 
     include(GoogleTest)
     find_package(GTest CONFIG REQUIRED)
@@ -37,7 +46,7 @@ if (NOT WSL_DISABLE_TESTS)
     enable_testing()
     add_subdirectory(tests)
 else()
-    message("[WARN] project will not be building the test suit.")
+    message("\n-- Project will not be building the test suit.")
 endif()
 
 
