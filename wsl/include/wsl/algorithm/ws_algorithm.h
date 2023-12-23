@@ -1,7 +1,10 @@
 #ifndef WS_ALGORITMH_H
 #define WS_ALGORITMH_H
 
+#include "wsl/ws_vector.h"
+
 #include <assert.h>
+#include <stdlib.h>
 #include <string.h>
 
 struct ws_generic_interface
@@ -42,7 +45,7 @@ inline void* ws_search_ex(void const* data, size_t begin, size_t end, size_t ele
                 return (void*)(currentValue);
             }
         }
-        else if (predicate == nullptr)
+        else
         {
             char valueLhs[elementSize];
 
@@ -54,18 +57,18 @@ inline void* ws_search_ex(void const* data, size_t begin, size_t end, size_t ele
             char valueRhs[elementSize];
             memcpy(valueRhs, value, elementSize);
 
-            bool found = true;
+            bool matchesByByte = true;
 
             for (size_t byteIndex = 0llu; byteIndex != elementSize; byteIndex += 1)
             {
                 if (valueLhs[byteIndex] != valueRhs[byteIndex])
                 {
-                    found = false;
+                    matchesByByte = false;
                     break;
                 }
             }
 
-            if (found)
+            if (matchesByByte)
             {
                 return (void*)(currentValue);
             }
@@ -168,6 +171,79 @@ inline void ws_clear_in(void* container, ws_strategy* strategy)
     ws_clear_ex(containerInterface.data, containerInterface.begin, containerInterface.end, containerInterface.elementSize, strategy);
 
     memcpy(container, &containerInterface, sizeof(struct ws_generic_interface));
+}
+
+#define ws_split_1(container, delimiter) ws_split_in(container, delimiter, nullptr, nullptr)
+#define ws_split_2(container, delimiter, projection) ws_split_in(container, delimiter, projection, nullptr)
+#define ws_split_3(container, delimiter, projection, predicate) ws_split_in(container, delimiter, projection, predicate)
+#define ws_split_select(_1, _2, _3, selected, ...) selected
+#define ws_split(container, ...) ws_split_select(__VA_ARGS__, ws_split_3, ws_split_2, ws_split_1, void)(container, __VA_ARGS__)
+
+typedef void* ws_generic_t;
+
+void ws_generic_destroy(ws_generic_t* value)
+{
+    free(*value);
+}
+
+WS_VECTOR(ws_generic_t)
+
+inline struct ws_vector_ws_generic_t ws_split_ex(void* data, size_t begin, size_t end, size_t elementSize, void const* delimiter, ws_predicate* predicate, ws_projection* projection)
+{
+    struct ws_vector_ws_generic_t result = ws_vector_ws_generic_t_create(0);
+
+    for (size_t elementIndex = begin; elementIndex <= end; elementIndex += 1)
+    {
+        void const* currentValue = (void const*)((uintptr_t)data + (elementIndex * elementSize));
+
+        if (predicate != nullptr)
+        {
+            if ((projection != nullptr && !predicate(projection(delimiter), projection(currentValue))) || !predicate(delimiter, currentValue))
+            {
+                ws_vector_ws_generic_t_push(&result, (ws_generic_t)malloc(elementSize));
+                memcpy(ws_vector_ws_generic_t_back(result), currentValue, elementSize);
+            }
+        }
+        else
+        {
+            char valueLhs[elementSize];
+
+            if (projection != nullptr)
+                memcpy(valueLhs, projection((void const*)currentValue), elementSize);
+            else
+                memcpy(valueLhs, (void const*)currentValue, elementSize);
+
+            char valueRhs[elementSize];
+            memcpy(valueRhs, delimiter, elementSize);
+
+            bool matchesByByte = true;
+
+            for (size_t byteIndex = 0llu; byteIndex != elementSize; byteIndex += 1)
+            {
+                if (valueLhs[byteIndex] != valueRhs[byteIndex])
+                {
+                    matchesByByte = false;
+                    break;
+                }
+            }
+
+            if (!matchesByByte)
+            {
+                ws_vector_ws_generic_t_push(&result, (ws_generic_t)malloc(elementSize));
+                memcpy(*ws_vector_ws_generic_t_back(result), currentValue, elementSize);
+            }
+        }
+    }
+
+    return result;
+}
+
+inline struct ws_vector_ws_generic_t ws_split_in(void* container, void const* delimiter, ws_predicate* predicate, ws_projection* projection)
+{
+    struct ws_generic_interface containerInterface = {};
+    memcpy(&containerInterface, container, sizeof(struct ws_generic_interface));
+
+    return ws_split_ex(containerInterface.data, containerInterface.begin, containerInterface.end, containerInterface.elementSize, delimiter, predicate, projection);
 }
 
 #endif
