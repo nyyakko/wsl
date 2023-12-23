@@ -139,8 +139,8 @@ inline void ws_sort_in(void* container, ws_predicate* predicate, ws_projection* 
 
 #define ws_clear_1(container) ws_clear_in(container, nullptr)
 #define ws_clear_2(container, predicate) ws_clear_in(container, predicate)
-#define ws_clear_select(_1, _2, selected, ...) selected
-#define ws_clear(container, ...) ws_clear_select(__VA_ARGS__, ws_clear_2, ws_clear_1, void)(container, __VA_ARGS__)
+#define ws_clear_select(_1, selected, ...) selected
+#define ws_clear(container, ...) ws_clear_select(__VA_ARGS__ __VA_OPT__(,) ws_clear_2, ws_clear_1)(container, __VA_ARGS__)
 
 inline void ws_clear_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_strategy* strategy)
 {
