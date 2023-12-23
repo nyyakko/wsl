@@ -38,8 +38,6 @@ int const* student_get_id(struct student const* student)
     return &student->id;
 }
 
-typedef void const*(projection_t)(void const*);
-
 TEST(algorithm, vector_sort_with_projection)
 {
     struct ws_vector_student vector = ws_vector_student_create(0);
@@ -51,7 +49,7 @@ TEST(algorithm, vector_sort_with_projection)
     struct student studentC = { .id = 720 };
     ws_vector_student_push(&vector, studentC);
 
-    ws_sort(&vector, predicate, (projection_t*)student_get_id);
+    ws_sort(&vector, predicate, (ws_projection*)student_get_id);
 
     EXPECT_EQ(ws_vector_student_at(vector, 0)->id, 720);
     EXPECT_EQ(ws_vector_student_at(vector, 1)->id, 420);

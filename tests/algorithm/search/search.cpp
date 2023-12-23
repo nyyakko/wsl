@@ -30,8 +30,6 @@ int const* student_get_id(struct student const* student)
     return &student->id;
 }
 
-typedef void const*(projection_t)(void const*);
-
 TEST(algorithm, vector_search_with_projection)
 {
     struct ws_vector_student vector = ws_vector_student_create(0);
@@ -40,9 +38,9 @@ TEST(algorithm, vector_search_with_projection)
     ws_vector_student_push(&vector, student);
 
     int valueA = 420;
-    EXPECT_NE(ws_search(&vector, &valueA, (projection_t*)student_get_id), nullptr);
+    EXPECT_NE(ws_search(&vector, &valueA, nullptr, (ws_projection*)student_get_id), nullptr);
     int valueB = 720;
-    EXPECT_EQ(ws_search(&vector, &valueB, (projection_t*)student_get_id), nullptr);
+    EXPECT_EQ(ws_search(&vector, &valueB, nullptr, (ws_projection*)student_get_id), nullptr);
 
     ws_vector_destroy(student, &vector);
 }

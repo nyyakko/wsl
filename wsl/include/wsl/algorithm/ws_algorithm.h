@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <string.h>
 
-struct ws_generic_interface_t
+struct ws_generic_interface
 {
     size_t begin;
     size_t end;
@@ -13,13 +13,17 @@ struct ws_generic_interface_t
     size_t size;
 };
 
+typedef void const*(ws_projection)(void const*);
+typedef int(ws_predicate)(void const*, void const*);
+typedef void(ws_strategy)(void*);
+
 #define ws_search_1(container, value) ws_search_in(container, value, nullptr, nullptr)
 #define ws_search_2(container, value, projection) ws_search_in(container, value, projection, nullptr)
 #define ws_search_3(container, value, projection, predicate) ws_search_in(container, value, projection, predicate)
 #define ws_search_select(_1, _2, _3, selected, ...) selected
 #define ws_search(container, ...) ws_search_select(__VA_ARGS__, ws_search_3, ws_search_2, ws_search_1, void)(container, __VA_ARGS__)
 
-inline void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, void const*(*projection)(void const*), int(*predicate)(void const*, void const*))
+inline void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_predicate* predicate, ws_projection* projection)
 {
     assert(data && "CONTAINER WAS NULL");
 
@@ -71,12 +75,12 @@ inline void* ws_search_ex(void const* data, size_t begin, size_t end, size_t ele
     return nullptr;
 }
 
-inline void* ws_search_in(void const* container, void const* value, void const*(*projection)(void const*), int(*predicate)(void const*, void const*))
+inline void* ws_search_in(void const* container, void const* value, ws_predicate* predicate, ws_projection* projection)
 {
-    struct ws_generic_interface_t containerInterface = {};
-    memcpy(&containerInterface, container, sizeof(struct ws_generic_interface_t));
+    struct ws_generic_interface containerInterface = {};
+    memcpy(&containerInterface, container, sizeof(struct ws_generic_interface));
 
-    return ws_search_ex(containerInterface.data, containerInterface.begin, containerInterface.end, containerInterface.elementSize, value, projection, predicate);
+    return ws_search_ex(containerInterface.data, containerInterface.begin, containerInterface.end, containerInterface.elementSize, value, predicate, projection);
 }
 
 #define ws_sort_1(container, predicate) ws_sort_in(container, predicate, nullptr)
@@ -84,7 +88,7 @@ inline void* ws_search_in(void const* container, void const* value, void const*(
 #define ws_sort_select(_1, _2, selected, ...) selected
 #define ws_sort(container, ...) ws_sort_select(__VA_ARGS__, ws_sort_2, ws_sort_1, void)(container, __VA_ARGS__)
 
-inline void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, int(*predicate)(void const*, void const*), void const*(*projection)(void const*))
+inline void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_predicate* predicate, ws_projection* projection)
 {
     assert(data && "CONTAINER WAS NULL");
     assert(predicate && "PREDICATE WAS NULL");
@@ -125,10 +129,10 @@ inline void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize,
     }
 }
 
-inline void ws_sort_in(void* container, int(*predicate)(void const*, void const*), void const*(*projection)(void const*))
+inline void ws_sort_in(void* container, ws_predicate* predicate, ws_projection* projection)
 {
-    struct ws_generic_interface_t containerInterface = {};
-    memcpy(&containerInterface, container, sizeof(struct ws_generic_interface_t));
+    struct ws_generic_interface containerInterface = {};
+    memcpy(&containerInterface, container, sizeof(struct ws_generic_interface));
 
     ws_sort_ex(containerInterface.data, containerInterface.begin, containerInterface.end, containerInterface.elementSize, predicate, projection);
 }
@@ -138,7 +142,7 @@ inline void ws_sort_in(void* container, int(*predicate)(void const*, void const*
 #define ws_clear_select(_1, _2, selected, ...) selected
 #define ws_clear(container, ...) ws_clear_select(__VA_ARGS__, ws_clear_2, ws_clear_1, void)(container, __VA_ARGS__)
 
-inline void ws_clear_ex(void* data, size_t begin, size_t end, size_t elementSize, void(*strategy)(void*))
+inline void ws_clear_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_strategy* strategy)
 {
     if (strategy != nullptr)
     {
@@ -154,16 +158,16 @@ inline void ws_clear_ex(void* data, size_t begin, size_t end, size_t elementSize
     memset(data, 0, (end + 1) * elementSize);
 }
 
-inline void ws_clear_in(void* container, void(*strategy)(void*))
+inline void ws_clear_in(void* container, ws_strategy* strategy)
 {
-    struct ws_generic_interface_t containerInterface = {};
-    memcpy(&containerInterface, container, sizeof(struct ws_generic_interface_t));
+    struct ws_generic_interface containerInterface = {};
+    memcpy(&containerInterface, container, sizeof(struct ws_generic_interface));
 
     containerInterface.size = 0;
 
     ws_clear_ex(containerInterface.data, containerInterface.begin, containerInterface.end, containerInterface.elementSize, strategy);
 
-    memcpy(container, &containerInterface, sizeof(struct ws_generic_interface_t));
+    memcpy(container, &containerInterface, sizeof(struct ws_generic_interface));
 }
 
 #endif
