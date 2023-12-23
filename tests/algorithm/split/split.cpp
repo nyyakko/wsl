@@ -23,3 +23,19 @@ TEST(algorithm, vector_split)
     ws_vector_destroy(int, &vector);
 }
 
+TEST(algorithm, c_array_split)
+{
+    int array[4] = { 69, 720, 69, 420 };
+
+    int delimiter = 69;
+
+    struct ws_vector_ws_generic_t result = ws_split_ex(array, 0, 3, sizeof(int), &delimiter, nullptr, nullptr);
+
+    EXPECT_EQ(ws_vector_ws_generic_t_size(result), 2);
+
+    EXPECT_EQ(*(int const*)(*ws_vector_ws_generic_t_at(result, 0)), 720);
+    EXPECT_EQ(*(int const*)(*ws_vector_ws_generic_t_at(result, 1)), 420);
+
+    ws_vector_destroy(ws_generic_t, &result, ws_generic_destroy);
+}
+

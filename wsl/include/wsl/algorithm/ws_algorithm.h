@@ -188,7 +188,7 @@ void ws_generic_destroy(ws_generic_t* value)
 
 WS_VECTOR(ws_generic_t)
 
-inline struct ws_vector_ws_generic_t ws_split_ex(void* data, size_t begin, size_t end, size_t elementSize, void const* delimiter, ws_predicate* predicate, ws_projection* projection)
+inline struct ws_vector_ws_generic_t ws_split_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* delimiter, ws_predicate* predicate, ws_projection* projection)
 {
     struct ws_vector_ws_generic_t result = ws_vector_ws_generic_t_create(0);
 
@@ -238,7 +238,7 @@ inline struct ws_vector_ws_generic_t ws_split_ex(void* data, size_t begin, size_
     return result;
 }
 
-inline struct ws_vector_ws_generic_t ws_split_in(void* container, void const* delimiter, ws_predicate* predicate, ws_projection* projection)
+inline struct ws_vector_ws_generic_t ws_split_in(void const* container, void const* delimiter, ws_predicate* predicate, ws_projection* projection)
 {
     struct ws_generic_interface containerInterface = {};
     memcpy(&containerInterface, container, sizeof(struct ws_generic_interface));
