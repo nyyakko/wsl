@@ -131,12 +131,12 @@ inline void ws_string_builder_chop_until_last(struct ws_string_builder* string, 
     assert(string->size != 0 && "STRING WAS EMPTY");
 
     size_t lastSeenDelimiterIndex = ws_string_builder_search_last(*string, delimiter);
-    
+
     if (lastSeenDelimiterIndex == SIZE_MAX)
     {
         return;
     }
-    
+
     // FIXME: solve the case where it may occoour an allocation of 0 bytes ?
     assert(string->size - (lastSeenDelimiterIndex + 1) && "HOW DID YOU DID THIS?");
 
@@ -178,13 +178,50 @@ inline void ws_string_builder_append(struct ws_string_builder* string, char valu
 
     if (string->size >= string->capacity) ws_string_builder_realloc(string);
     if (string->data == nullptr) string->data = (char*)malloc(string->capacity + 1);
-    
+
     string->data[string->size++ - 1] = value;
+}
+
+inline void ws_string_builder_append_string_while(struct ws_string_builder* destination, char const* value, int(*predicate)(int))
+{
+    assert(destination != nullptr && "DESTINATION POINTER WAS NULL");
+    assert(value != nullptr && "SOURCE POINTER WAS NULL");
+
+    size_t stringLength = strlen(value);
+
+    for (size_t index = 0llu; index != stringLength; index += 1)
+    {
+        if (!predicate(value[index]))
+        {
+            break;
+        }
+
+        ws_string_builder_append(destination, value[index]);
+    }
+}
+
+inline void ws_string_builder_append_string_while_not(struct ws_string_builder* destination, char const* value, int(*predicate)(int))
+{
+    assert(destination != nullptr && "DESTINATION POINTER WAS NULL");
+    assert(value != nullptr && "SOURCE POINTER WAS NULL");
+
+    size_t stringLength = strlen(value);
+
+    for (size_t index = 0llu; index != stringLength; index += 1)
+    {
+        if (predicate(value[index]))
+        {
+            break;
+        }
+
+        ws_string_builder_append(destination, value[index]);
+    }
 }
 
 inline void ws_string_builder_append_string(struct ws_string_builder* string, char const* value)
 {
     assert(string != nullptr && "STRING POINTER WAS NULL");
+    assert(value != nullptr && "VALUE POINTER WAS NULL");
 
     size_t stringLength = strlen(value);
 
