@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 
+#define WS_ALGORITHM_DEFINITION
 #include <wsl/algorithm/ws_algorithm.h>
-
+#define WS_VECTOR_DEFINITION
 #include <wsl/ws_vector.h>
 
 WS_VECTOR(int)

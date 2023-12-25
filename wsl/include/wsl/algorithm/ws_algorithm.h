@@ -1,6 +1,7 @@
 #ifndef WS_ALGORITMH_H
 #define WS_ALGORITMH_H
 
+#define WS_VECTOR_DEFINITION
 #include "wsl/ws_vector.h"
 
 #include <assert.h>
@@ -19,6 +20,7 @@ struct ws_generic_interface
 typedef void const*(ws_projection)(void const*);
 typedef int(ws_predicate)(void const*, void const*);
 typedef void(ws_strategy)(void*);
+typedef void* ws_generic_t;
 
 #define ws_search_1(container, value) ws_search_in(container, value, nullptr, nullptr)
 #define ws_search_2(container, value, projection) ws_search_in(container, value, projection, nullptr)
@@ -36,7 +38,17 @@ typedef void(ws_strategy)(void*);
 #define ws_clear_select(_1, selected, ...) selected
 #define ws_clear(container, ...) ws_clear_select(__VA_ARGS__ __VA_OPT__(,) ws_clear_2, ws_clear_1)(container, __VA_ARGS__)
 
+#define ws_split_1(container, delimiter) ws_split_in(container, delimiter, nullptr, nullptr)
+#define ws_split_2(container, delimiter, projection) ws_split_in(container, delimiter, projection, nullptr)
+#define ws_split_3(container, delimiter, projection, predicate) ws_split_in(container, delimiter, projection, predicate)
+#define ws_split_select(_1, _2, _3, selected, ...) selected
+#define ws_split(container, ...) ws_split_select(__VA_ARGS__, ws_split_3, ws_split_2, ws_split_1, void)(container, __VA_ARGS__)
+
+WS_VECTOR(ws_generic_t)
+
 #ifndef WS_ALGORITHM_DEFINITION
+
+void ws_generic_destroy(ws_generic_t* value);
 
 void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_predicate* predicate, ws_projection* projection);
 void* ws_search_in(void const* container, void const* value, ws_predicate* predicate, ws_projection* projection);
@@ -44,6 +56,8 @@ void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_pre
 void ws_sort_in(void* container, ws_predicate* predicate, ws_projection* projection);
 void ws_clear_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_strategy* strategy);
 void ws_clear_in(void* container, ws_strategy* strategy);
+struct ws_vector_ws_generic_t ws_split_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* delimiter, ws_predicate* predicate, ws_projection* projection);
+struct ws_vector_ws_generic_t ws_split_in(void const* container, void const* delimiter, ws_predicate* predicate, ws_projection* projection);
 
 #else
 
@@ -184,20 +198,10 @@ inline void ws_clear_in(void* container, ws_strategy* strategy)
     memcpy(container, &containerInterface, sizeof(struct ws_generic_interface));
 }
 
-#define ws_split_1(container, delimiter) ws_split_in(container, delimiter, nullptr, nullptr)
-#define ws_split_2(container, delimiter, projection) ws_split_in(container, delimiter, projection, nullptr)
-#define ws_split_3(container, delimiter, projection, predicate) ws_split_in(container, delimiter, projection, predicate)
-#define ws_split_select(_1, _2, _3, selected, ...) selected
-#define ws_split(container, ...) ws_split_select(__VA_ARGS__, ws_split_3, ws_split_2, ws_split_1, void)(container, __VA_ARGS__)
-
-typedef void* ws_generic_t;
-
 void ws_generic_destroy(ws_generic_t* value)
 {
     free(*value);
 }
-
-WS_VECTOR(ws_generic_t)
 
 inline struct ws_vector_ws_generic_t ws_split_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* delimiter, ws_predicate* predicate, ws_projection* projection)
 {
