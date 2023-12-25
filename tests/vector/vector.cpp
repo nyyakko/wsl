@@ -46,6 +46,25 @@ TEST(vector, pop_values)
     ws_vector_destroy(int, &vector);
 }
 
+int predicate(int const* lhs, int const* rhs)
+{
+    return *lhs > *rhs;
+}
+
+TEST(vector, sort_values)
+{
+    struct ws_vector_int vector = ws_vector_int_create(ws_vector_initialize(int, 69, 720, 420));
+
+    ws_vector_sort(int, &vector, predicate);
+
+    EXPECT_EQ(*ws_vector_int_at(vector, 0), 720);
+    EXPECT_EQ(*ws_vector_int_at(vector, 1), 420);
+    EXPECT_EQ(*ws_vector_int_at(vector, 2), 69);
+
+    ws_vector_destroy(int, &vector);
+}
+
+
 TEST(vector, clear_values)
 {
     struct ws_vector_int vector = ws_vector_int_create(ws_vector_initialize(int, 69, 420, 720));

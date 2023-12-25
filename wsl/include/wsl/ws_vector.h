@@ -118,7 +118,7 @@ void ws_vector_##TYPE##_sort(struct ws_vector_##TYPE* vector, int(*predicate)(TY
                                                                                                                                               \
         for (auto index = 1llu; index != vector->size; index += 1)                                                                            \
         {                                                                                                                                     \
-            if (predicate(&vector->data[index - 1], &vector->data[index]))                                                                    \
+            if (predicate(&vector->data[index], &vector->data[index - 1]))                                                                    \
             {                                                                                                                                 \
                 TYPE copiedValue = { };                                                                                                       \
                 memcpy(&copiedValue, &vector->data[index - 1], sizeof(TYPE));                                                                 \
