@@ -23,6 +23,27 @@ typedef void(ws_strategy)(void*);
 #define ws_search_select(_1, _2, _3, selected, ...) selected
 #define ws_search(container, ...) ws_search_select(__VA_ARGS__, ws_search_3, ws_search_2, ws_search_1, void)(container, __VA_ARGS__)
 
+#define ws_sort_1(container, predicate) ws_sort_in(container, predicate, nullptr)
+#define ws_sort_2(container, predicate, projection) ws_sort_in(container, predicate, projection)
+#define ws_sort_select(_1, _2, selected, ...) selected
+#define ws_sort(container, ...) ws_sort_select(__VA_ARGS__, ws_sort_2, ws_sort_1, void)(container, __VA_ARGS__)
+
+#define ws_clear_1(container) ws_clear_in(container, nullptr)
+#define ws_clear_2(container, predicate) ws_clear_in(container, predicate)
+#define ws_clear_select(_1, selected, ...) selected
+#define ws_clear(container, ...) ws_clear_select(__VA_ARGS__ __VA_OPT__(,) ws_clear_2, ws_clear_1)(container, __VA_ARGS__)
+
+#ifndef WS_ALGORITHM_DEFINITION
+
+void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_predicate* predicate, ws_projection* projection);
+void* ws_search_in(void const* container, void const* value, ws_predicate* predicate, ws_projection* projection);
+void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_predicate* predicate, ws_projection* projection);
+void ws_sort_in(void* container, ws_predicate* predicate, ws_projection* projection);
+void ws_clear_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_strategy* strategy);
+void ws_clear_in(void* container, ws_strategy* strategy);
+
+#else
+
 inline void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_predicate* predicate, ws_projection* projection)
 {
     assert(data && "CONTAINER WAS NULL");
@@ -83,11 +104,6 @@ inline void* ws_search_in(void const* container, void const* value, ws_predicate
     return ws_search_ex(containerInterface.data, containerInterface.begin, containerInterface.end, containerInterface.elementSize, value, predicate, projection);
 }
 
-#define ws_sort_1(container, predicate) ws_sort_in(container, predicate, nullptr)
-#define ws_sort_2(container, predicate, projection) ws_sort_in(container, predicate, projection)
-#define ws_sort_select(_1, _2, selected, ...) selected
-#define ws_sort(container, ...) ws_sort_select(__VA_ARGS__, ws_sort_2, ws_sort_1, void)(container, __VA_ARGS__)
-
 inline void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_predicate* predicate, ws_projection* projection)
 {
     assert(data && "CONTAINER WAS NULL");
@@ -137,11 +153,6 @@ inline void ws_sort_in(void* container, ws_predicate* predicate, ws_projection* 
     ws_sort_ex(containerInterface.data, containerInterface.begin, containerInterface.end, containerInterface.elementSize, predicate, projection);
 }
 
-#define ws_clear_1(container) ws_clear_in(container, nullptr)
-#define ws_clear_2(container, predicate) ws_clear_in(container, predicate)
-#define ws_clear_select(_1, selected, ...) selected
-#define ws_clear(container, ...) ws_clear_select(__VA_ARGS__ __VA_OPT__(,) ws_clear_2, ws_clear_1)(container, __VA_ARGS__)
-
 inline void ws_clear_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_strategy* strategy)
 {
     if (strategy != nullptr)
@@ -169,5 +180,7 @@ inline void ws_clear_in(void* container, ws_strategy* strategy)
 
     memcpy(container, &containerInterface, sizeof(struct ws_generic_interface));
 }
+
+#endif
 
 #endif
