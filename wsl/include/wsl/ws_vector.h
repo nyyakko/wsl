@@ -9,7 +9,7 @@
 
 #define ws_vector_initialize(type, ...) sizeof((type[]){ __VA_ARGS__ }) / sizeof(type) __VA_OPT__(,) __VA_ARGS__
 
-#define ws_vector_sort_1(type, vector, predicate) ws_vector_##type##_bubble_sort(vector, predicate)
+#define ws_vector_sort_1(type, vector, predicate) ws_vector_##type##_sort(vector, predicate)
 #define ws_vector_sort_2(type, vector, predicate, strategy) strategy(vector, predicate)
 #define ws_vector_sort_select(_1, _2, _3, selected, ...) selected
 #define ws_vector_sort(type, ...) ws_vector_sort_select(__VA_ARGS__, ws_vector_sort_2, ws_vector_sort_1, void)(type, __VA_ARGS__)
@@ -106,6 +106,34 @@ inline TYPE* ws_vector_##TYPE##_back(struct ws_vector_##TYPE vector)            
     }                                                                                                                                         \
                                                                                                                                               \
     return nullptr;                                                                                                                           \
+}                                                                                                                                             \
+                                                                                                                                              \
+void ws_vector_##TYPE##_sort(struct ws_vector_##TYPE* vector, int(*predicate)(TYPE const*, TYPE const*))                                      \
+{                                                                                                                                             \
+    assert(vector != nullptr && "VECTOR POINTER WAS NULL");                                                                                   \
+                                                                                                                                              \
+    while (true)                                                                                                                              \
+    {                                                                                                                                         \
+        bool sorted = true;                                                                                                                   \
+                                                                                                                                              \
+        for (auto index = 1llu; index != vector->size; index += 1)                                                                            \
+        {                                                                                                                                     \
+            if (predicate(&vector->data[index - 1], &vector->data[index]))                                                                    \
+            {                                                                                                                                 \
+                TYPE copiedValue = { };                                                                                                       \
+                memcpy(&copiedValue, &vector->data[index - 1], sizeof(TYPE));                                                                 \
+                memcpy(&vector->data[index - 1], &vector->data[index], sizeof(TYPE));                                                         \
+                memcpy(&vector->data[index], (TYPE*)&copiedValue, sizeof(TYPE));                                                              \
+                                                                                                                                              \
+                sorted = false;                                                                                                               \
+            }                                                                                                                                 \
+        }                                                                                                                                     \
+                                                                                                                                              \
+        if (sorted)                                                                                                                           \
+        {                                                                                                                                     \
+            return;                                                                                                                           \
+        }                                                                                                                                     \
+    }                                                                                                                                         \
 }                                                                                                                                             \
                                                                                                                                               \
 inline void ws_vector_##TYPE##_copy(struct ws_vector_##TYPE* destination, struct ws_vector_##TYPE const* source, void(*strategy)(TYPE*))      \
