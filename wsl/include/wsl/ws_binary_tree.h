@@ -199,7 +199,7 @@ inline void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* tree, siz
             ws_binary_tree_##TYPE##_shift_nodes(tree, node, node->left);                                                                                                \
         }                                                                                                                                                               \
                                                                                                                                                                         \
-        memset(node, 0, sizeof(ws_binary_tree_##TYPE##_node));                                                                                                          \
+        memset(node, 0, sizeof(struct ws_binary_tree_##TYPE##_node));                                                                                                   \
         assert(tree->head != node && "HOW DID YOU DO THAT");                                                                                                            \
         free(node);                                                                                                                                                     \
                                                                                                                                                                         \
@@ -219,7 +219,7 @@ inline void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* tree, siz
     nodePredecessor->right = node->right;                                                                                                                               \
     nodePredecessor->right->parent = nodePredecessor;                                                                                                                   \
                                                                                                                                                                         \
-    memset(node, 0, sizeof(ws_binary_tree_##TYPE##_node));                                                                                                              \
+    memset(node, 0, sizeof(struct ws_binary_tree_##TYPE##_node));                                                                                                       \
     assert(tree->head != node && "HOW DID YOU DO THAT");                                                                                                                \
     free(node);                                                                                                                                                         \
                                                                                                                                                                         \
