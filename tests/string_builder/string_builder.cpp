@@ -1,3 +1,5 @@
+#define WS_STRING_BUILDER_DEFINITION
+
 #include <gtest/gtest.h>
 #include <wsl/ws_string_builder.h>
 
@@ -76,6 +78,32 @@ TEST(string_builder, append)
     EXPECT_STREQ(string.data, "Hello, world!");
 
     ws_string_builder_destroy(&string);
+}
+
+TEST(string_builder, append_while)
+{
+    struct ws_string_builder stringA = ws_string_builder_create("how are you, fine sankyou!");
+    struct ws_string_builder stringB = ws_string_builder_create("");
+
+    ws_string_builder_append_string_while(&stringB, stringA.data, isalpha);
+
+    EXPECT_STREQ(stringB.data, "how");
+
+    ws_string_builder_destroy(&stringB);
+    ws_string_builder_destroy(&stringA);
+}
+
+TEST(string_builder, append_while_not)
+{
+    struct ws_string_builder stringA = ws_string_builder_create("how are you, fine sankyou!");
+    struct ws_string_builder stringB = ws_string_builder_create("");
+
+    ws_string_builder_append_string_while_not(&stringB, stringA.data, ispunct);
+
+    EXPECT_STREQ(stringB.data, "how are you");
+
+    ws_string_builder_destroy(&stringB);
+    ws_string_builder_destroy(&stringA);
 }
 
 TEST(string_builder, append_string)

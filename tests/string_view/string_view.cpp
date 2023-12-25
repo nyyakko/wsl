@@ -1,3 +1,5 @@
+#define WS_STRING_VIEW_DEFINITION
+
 #include <gtest/gtest.h>
 #include <wsl/ws_string_view.h>
 

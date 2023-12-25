@@ -12,6 +12,7 @@ considering you have [clang](https://github.com/llvm/llvm-project/releases), [vc
 
 * ### vector
 ```c
+#define WS_VECTOR_DEFINITION
 #include <wsl/ws_vector.h>
 
 #include <stdio.h>
@@ -35,6 +36,7 @@ int main(void)
 ```
 * ### string_builder
 ```c
+#define WS_STRING_BUILDER_DEFINITION
 #include <wsl/ws_string_builder.h>
 
 #include <stdio.h>

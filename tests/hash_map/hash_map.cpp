@@ -1,8 +1,8 @@
+#define WS_HASH_MAP_DEFINITION
+
 #include <gtest/gtest.h>
 #include <wsl/ws_hash_map.h>
-#include <wsl/ws_binary_tree.h>
 
-WS_BINARY_TREE(int)
 WS_HASH_MAP(int)
 
 TEST(hash_map, push_values)

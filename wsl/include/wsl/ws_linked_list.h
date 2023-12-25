@@ -14,6 +14,36 @@
 #define ws_linked_list_destroy_select(_1, _2, selected, ...) selected
 #define ws_linked_list_destroy(type, ...) ws_linked_list_destroy_select(__VA_ARGS__, ws_linked_list_destroy_2, ws_linked_list_destroy_1, void)(type, __VA_ARGS__)
 
+#ifndef WS_LINKED_LIST_DEFINITION
+
+#define WS_LINKED_LIST(TYPE)                                                                                                                                                \
+                                                                                                                                                                            \
+struct ws_linked_list_##TYPE##_node                                                                                                                                         \
+{                                                                                                                                                                           \
+    struct ws_linked_list_##TYPE##_node* previous;                                                                                                                          \
+    struct ws_linked_list_##TYPE##_node* next;                                                                                                                              \
+    TYPE value;                                                                                                                                                             \
+};                                                                                                                                                                          \
+                                                                                                                                                                            \
+struct ws_linked_list_##TYPE                                                                                                                                                \
+{                                                                                                                                                                           \
+    size_t size;                                                                                                                                                            \
+    struct ws_linked_list_##TYPE##_node* head;                                                                                                                              \
+    struct ws_linked_list_##TYPE##_node* tail;                                                                                                                              \
+};                                                                                                                                                                          \
+                                                                                                                                                                            \
+size_t ws_linked_list_##TYPE##_size(struct ws_linked_list_##TYPE list);                                                                                                     \
+[[nodiscard]]TYPE* ws_linked_list_##TYPE##_front(struct ws_linked_list_##TYPE list);                                                                                        \
+[[nodiscard]]TYPE* ws_linked_list_##TYPE##_back(struct ws_linked_list_##TYPE list);                                                                                         \
+[[nodiscard]]TYPE ws_linked_list_##TYPE##_pop_front(struct ws_linked_list_##TYPE* list);                                                                                    \
+[[nodiscard]]TYPE ws_linked_list_##TYPE##_pop_back(struct ws_linked_list_##TYPE* list);                                                                                     \
+void ws_linked_list_##TYPE##_push_front(struct ws_linked_list_##TYPE* list, TYPE value);                                                                                    \
+void ws_linked_list_##TYPE##_push_back(struct ws_linked_list_##TYPE* list, TYPE value);                                                                                     \
+struct ws_linked_list_##TYPE ws_linked_list_##TYPE##_create(size_t count, ...);                                                                                             \
+void ws_linked_list_##TYPE##_destroy(struct ws_linked_list_##TYPE* list, void(*strategy)(TYPE*));
+
+#else
+
 #define WS_LINKED_LIST(TYPE)                                                                                                                                                \
                                                                                                                                                                             \
 struct ws_linked_list_##TYPE##_node                                                                                                                                         \
@@ -189,5 +219,7 @@ inline void ws_linked_list_##TYPE##_destroy(struct ws_linked_list_##TYPE* list, 
                                                                                                                                                                             \
     memset(list, 0, sizeof(struct ws_linked_list_##TYPE));                                                                                                                  \
 }
+
+#endif
 
 #endif

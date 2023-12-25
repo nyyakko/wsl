@@ -19,6 +19,32 @@
 #define ws_queue_destroy_select(_1, _2, selected, ...) selected
 #define ws_queue_destroy(type, ...) ws_queue_destroy_select(__VA_ARGS__, ws_queue_destroy_2, ws_queue_destroy_1, void)(type, __VA_ARGS__)
 
+#ifndef WS_QUEUE_DEFINITION
+
+#define WS_QUEUE(TYPE)                                                                                                                   \
+                                                                                                                                         \
+struct ws_queue_##TYPE                                                                                                                   \
+{                                                                                                                                        \
+    size_t begin;                                                                                                                        \
+    size_t end;                                                                                                                          \
+    TYPE* data;                                                                                                                          \
+    size_t size;                                                                                                                         \
+    size_t capacity;                                                                                                                     \
+};                                                                                                                                       \
+                                                                                                                                         \
+size_t ws_queue_##TYPE##_size(struct ws_queue_##TYPE queue);                                                                             \
+bool ws_queue_##TYPE##_is_empty(struct ws_queue_##TYPE queue);                                                                           \
+TYPE* ws_queue_##TYPE##_front(struct ws_queue_##TYPE queue);                                                                             \
+TYPE* ws_queue_##TYPE##_back(struct ws_queue_##TYPE queue);                                                                              \
+TYPE* ws_queue_##TYPE##_search(struct ws_queue_##TYPE queue, TYPE value, bool(*predicate)(TYPE const*, TYPE const*));                    \
+void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, struct ws_queue_##TYPE const* source, void(*strategy)(TYPE*));          \
+void ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue);                                                                           \
+void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value);                                                                  \
+[[nodiscard]]TYPE ws_queue_##TYPE##_pop(struct ws_queue_##TYPE* queue);                                                                  \
+struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...);                                                                      \
+void ws_queue_##TYPE##_destroy(struct ws_queue_##TYPE* queue, void(*strategy)(TYPE*));
+
+#else
 #define WS_QUEUE(TYPE)                                                                                                                   \
                                                                                                                                          \
 struct ws_queue_##TYPE                                                                                                                   \
@@ -160,6 +186,8 @@ inline void ws_queue_##TYPE##_destroy(struct ws_queue_##TYPE* queue, void(*strat
     free(queue->data);                                                                                                                   \
     memset(queue, 0, sizeof(struct ws_queue_##TYPE));                                                                                    \
 }
+
+#endif
 
 #endif
 
