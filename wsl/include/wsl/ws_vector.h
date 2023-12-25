@@ -50,10 +50,10 @@ struct ws_vector_##TYPE                                                         
                                                                                                                                                    \
 size_t ws_vector_##TYPE##_size(struct ws_vector_##TYPE vector);                                                                                    \
 bool ws_vector_##TYPE##_is_empty(struct ws_vector_##TYPE vector);                                                                                  \
-[[nodiscard]]YPE* ws_vector_##TYPE##_at(struct ws_vector_##TYPE vector, size_t position);                                                          \
-[[nodiscard]]YPE* ws_vector_##TYPE##_front(struct ws_vector_##TYPE vector);                                                                        \
-[[nodiscard]]YPE* ws_vector_##TYPE##_back(struct ws_vector_##TYPE vector);                                                                         \
-[[nodiscard]]TYPE* ws_vector_##TYPE##_search(struct ws_vector_##TYPE vector, TYPE value, int(*predicate)(TYPE const*, TYPE const*));               \
+[[nodiscard]]TYPE* ws_vector_##TYPE##_at(struct ws_vector_##TYPE vector, size_t position);                                                         \
+[[nodiscard]]TYPE* ws_vector_##TYPE##_front(struct ws_vector_##TYPE vector);                                                                       \
+[[nodiscard]]TYPE* ws_vector_##TYPE##_back(struct ws_vector_##TYPE vector);                                                                        \
+[[nodiscard]]TTYPE* ws_vector_##TYPE##_search(struct ws_vector_##TYPE vector, TYPE value, int(*predicate)(TYPE const*, TYPE const*));              \
 void ws_vector_##TYPE##_sort(struct ws_vector_##TYPE* vector, int(*predicate)(TYPE const*, TYPE const*));                                          \
 void ws_vector_##TYPE##_copy(struct ws_vector_##TYPE* destination, struct ws_vector_##TYPE const* source, void(*strategy)(TYPE*));                 \
 void ws_vector_##TYPE##_clear(struct ws_vector_##TYPE* vector, void(*strategy)(TYPE*));                                                            \
