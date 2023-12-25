@@ -107,7 +107,7 @@ inline void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, voi
     }                                                                                                                                     \
                                                                                                                                           \
     free(hashMap->buckets);                                                                                                               \
-    memset(hashMap, 0, sizeof(ws_hash_map_##TYPE));                                                                                       \
+    memset(hashMap, 0, sizeof(struct ws_hash_map_##TYPE));                                                                                \
 }
 
 // MurmurHash: https://en.wikipedia.org/wiki/MurmurHash
