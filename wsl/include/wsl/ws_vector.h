@@ -34,6 +34,36 @@
 #define ws_vector_destroy_select(_1, _2, selected, ...) selected
 #define ws_vector_destroy(type, ...) ws_vector_destroy_select(__VA_ARGS__, ws_vector_destroy_2, ws_vector_destroy_1, void)(type, __VA_ARGS__)
 
+#ifndef WS_VECTOR_DEFINITION
+
+#define WS_VECTOR(TYPE)                                                                                                                       \
+                                                                                                                                              \
+struct ws_vector_##TYPE                                                                                                                       \
+{                                                                                                                                             \
+    size_t begin;                                                                                                                             \
+    size_t end;                                                                                                                               \
+    size_t elementSize;                                                                                                                       \
+    TYPE* data;                                                                                                                               \
+    size_t size;                                                                                                                              \
+    size_t capacity;                                                                                                                          \
+};                                                                                                                                            \
+                                                                                                                                              \
+size_t ws_vector_##TYPE##_size(struct ws_vector_##TYPE vector);                                                                               \
+bool ws_vector_##TYPE##_is_empty(struct ws_vector_##TYPE vector);                                                                             \
+TYPE* ws_vector_##TYPE##_at(struct ws_vector_##TYPE vector, size_t position);                                                                 \
+TYPE* ws_vector_##TYPE##_front(struct ws_vector_##TYPE vector);                                                                               \
+TYPE* ws_vector_##TYPE##_back(struct ws_vector_##TYPE vector);                                                                                \
+[[nodiscard]]TYPE* ws_vector_##TYPE##_search(struct ws_vector_##TYPE vector, TYPE value, int(*predicate)(TYPE const*, TYPE const*));          \
+void ws_vector_##TYPE##_copy(struct ws_vector_##TYPE* destination, struct ws_vector_##TYPE const* source, void(*strategy)(TYPE*));            \
+void ws_vector_##TYPE##_clear(struct ws_vector_##TYPE* vector, void(*strategy)(TYPE*));                                                       \
+void ws_vector_##TYPE##_realloc(struct ws_vector_##TYPE* vector);                                                                             \
+void ws_vector_##TYPE##_push(struct ws_vector_##TYPE* vector, TYPE value);                                                                    \
+[[nodiscard]]TYPE ws_vector_##TYPE##_pop(struct ws_vector_##TYPE* vector);                                                                    \
+[[nodiscard]]struct ws_vector_##TYPE ws_vector_##TYPE##_create(size_t count, ...);                                                            \
+void ws_vector_##TYPE##_destroy(struct ws_vector_##TYPE* vector, void(*strategy)(TYPE*));
+
+#else
+
 #define WS_VECTOR(TYPE)                                                                                                                       \
                                                                                                                                               \
 struct ws_vector_##TYPE                                                                                                                       \
@@ -246,6 +276,8 @@ inline void ws_vector_##TYPE##_destroy(struct ws_vector_##TYPE* vector, void(*st
     free(vector->data);                                                                                                                       \
     memset(vector, 0, sizeof(struct ws_vector_##TYPE));                                                                                       \
 }
+
+#endif
 
 #endif
 

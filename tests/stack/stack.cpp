@@ -1,3 +1,5 @@
+#define WS_STACK_DEFINITION
+
 #include <gtest/gtest.h>
 #include <wsl/ws_stack.h>
 

@@ -1,3 +1,5 @@
+#define WS_HASH_MAP_DEFINITION
+
 #include <gtest/gtest.h>
 #include <wsl/ws_hash_map.h>
 

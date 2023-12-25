@@ -17,6 +17,31 @@ struct ws_string_builder
     size_t capacity;
 };
 
+#ifndef WS_STRING_BUILDER_DEFINITION
+
+size_t ws_string_builder_size(struct ws_string_builder string);
+bool ws_string_builder_is_empty(struct ws_string_builder string);
+bool ws_string_builder_equals(struct ws_string_builder lhs, struct ws_string_builder rhs);
+char ws_string_builder_at(struct ws_string_builder string, size_t position);
+char ws_string_builder_front(struct ws_string_builder string);
+char ws_string_builder_back(struct ws_string_builder string);
+size_t ws_string_builder_search_first(struct ws_string_builder string, char needle);
+size_t ws_string_builder_search_last(struct ws_string_builder string, char needle);
+void ws_string_builder_chop_until_first(struct ws_string_builder* string, char delimiter);
+void ws_string_builder_chop_until_last(struct ws_string_builder* string, char delimiter);
+void ws_string_builder_clear(struct ws_string_builder* string);
+void ws_string_builder_realloc(struct ws_string_builder* string);
+void ws_string_builder_append(struct ws_string_builder* string, char value);
+void ws_string_builder_append_string_while(struct ws_string_builder* destination, char const* value, int(*predicate)(int));
+void ws_string_builder_append_string_while_not(struct ws_string_builder* destination, char const* value, int(*predicate)(int));
+void ws_string_builder_append_string(struct ws_string_builder* string, char const* value);
+[[nodiscard]]struct ws_string_builder ws_string_builder_substr(struct ws_string_builder string, size_t begin, size_t end);
+void ws_string_builder_copy(struct ws_string_builder* destination, struct ws_string_builder const* source);
+struct ws_string_builder ws_string_builder_create(char const* data);
+void ws_string_builder_destroy(struct ws_string_builder* string);
+
+#else
+
 inline size_t ws_string_builder_size(struct ws_string_builder string)
 {
     return string.size - 1;
@@ -317,6 +342,8 @@ inline void ws_string_builder_destroy(struct ws_string_builder* string)
 
     memset(string, 0, sizeof(struct ws_string_builder));
 }
+
+#endif
 
 #endif
 

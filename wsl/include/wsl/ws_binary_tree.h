@@ -10,6 +10,40 @@
 #define ws_binary_tree_destroy_select(_1, _2, selected, ...) selected
 #define ws_binary_tree_destroy(type, ...) ws_binary_tree_destroy_select(__VA_ARGS__, ws_binary_tree_destroy_2, ws_binary_tree_destroy_1, void)(type, __VA_ARGS__)
 
+#ifndef WS_BINARY_TREE_DEFINITION
+
+#define WS_BINARY_TREE(TYPE)                                                                                                                                            \
+                                                                                                                                                                        \
+struct ws_binary_tree_##TYPE##_node                                                                                                                                     \
+{                                                                                                                                                                       \
+    size_t key;                                                                                                                                                         \
+    TYPE value;                                                                                                                                                         \
+    struct ws_binary_tree_##TYPE##_node* parent;                                                                                                                        \
+    struct ws_binary_tree_##TYPE##_node* left;                                                                                                                          \
+    struct ws_binary_tree_##TYPE##_node* right;                                                                                                                         \
+};                                                                                                                                                                      \
+                                                                                                                                                                        \
+struct ws_binary_tree_##TYPE                                                                                                                                            \
+{                                                                                                                                                                       \
+    struct ws_binary_tree_##TYPE##_node* head;                                                                                                                          \
+    size_t size;                                                                                                                                                        \
+};                                                                                                                                                                      \
+                                                                                                                                                                        \
+size_t ws_binary_tree_##TYPE##_size(struct ws_binary_tree_##TYPE tree);                                                                                                 \
+struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_search(struct ws_binary_tree_##TYPE tree, size_t key);                                                     \
+struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_minimum(struct ws_binary_tree_##TYPE##_node* head);                                                        \
+struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_maximum(struct ws_binary_tree_##TYPE##_node* head);                                                        \
+struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_successor(struct ws_binary_tree_##TYPE##_node* head);                                                      \
+struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_predecessor(struct ws_binary_tree_##TYPE##_node* head);                                                    \
+void ws_binary_tree_##TYPE##_shift_nodes(struct ws_binary_tree_##TYPE* tree, struct ws_binary_tree_##TYPE##_node* lhs, struct ws_binary_tree_##TYPE##_node* rhs);       \
+void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* tree, size_t key, TYPE value);                                                                          \
+[[nodiscard]]TYPE ws_binary_tree_##TYPE##_pop(struct ws_binary_tree_##TYPE* tree, size_t key);                                                                          \
+[[nodiscard]]struct ws_binary_tree_##TYPE ws_binary_tree_##TYPE##_create();                                                                                             \
+void ws_binary_tree_##TYPE##_destroy_branch(struct ws_binary_tree_##TYPE##_node* head, void(*strategy)(TYPE*));                                                         \
+void ws_binary_tree_##TYPE##_destroy(struct ws_binary_tree_##TYPE* tree, void(*strategy)(TYPE*));
+
+#else
+
 #define WS_BINARY_TREE(TYPE)                                                                                                                                            \
                                                                                                                                                                         \
 struct ws_binary_tree_##TYPE##_node                                                                                                                                     \
@@ -265,6 +299,8 @@ inline void ws_binary_tree_##TYPE##_destroy(struct ws_binary_tree_##TYPE* tree, 
     ws_binary_tree_##TYPE##_destroy_branch(tree->head, strategy);                                                                                                       \
     memset(tree, 0, sizeof(struct ws_binary_tree_##TYPE));                                                                                                              \
 }
+
+#endif
 
 #endif
 
