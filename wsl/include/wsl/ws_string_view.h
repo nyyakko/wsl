@@ -62,15 +62,6 @@ inline char ws_string_view_back(struct ws_string_view view)
     return view.data[view.end - 1];
 }
 
-#ifdef WS_HASHMAP_H
-
-inline size_t ws_string_view_hash(struct ws_string_view view)
-{
-    return ws_hash_map_hash((char unsigned const*)view.data, view.size);
-}
-
-#endif
-
 inline size_t ws_string_view_search_first(struct ws_string_view view, char needle)
 {
     for (size_t index = 0llu; index != view.size; index += 1)
