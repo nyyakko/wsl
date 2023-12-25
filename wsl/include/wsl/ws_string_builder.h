@@ -92,15 +92,6 @@ inline size_t ws_string_builder_search_last(struct ws_string_builder string, cha
     return SIZE_MAX;
 }
 
-#ifdef WS_HASHMAP_H
-
-inline size_t ws_string_builder_hash(struct ws_string_builder string)
-{
-    return ws_hash_map_hash((char unsigned const*)string.data, string.size - 1);
-}
-
-#endif
-
 inline void ws_string_builder_chop_until_first(struct ws_string_builder* string, char delimiter)
 {
     assert(string != nullptr && "STRING POINTER WAS NULL");
