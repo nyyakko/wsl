@@ -139,7 +139,7 @@ inline TYPE* ws_vector_##TYPE##_back(struct ws_vector_##TYPE vector)            
     return nullptr;                                                                                                                           \
 }                                                                                                                                             \
                                                                                                                                               \
-inline void ws_vector_##TYPE##_sort(struct ws_vector_##TYPE* vector, int(*predicate)(TYPE const*, TYPE const*))                               \
+void ws_vector_##TYPE##_sort(struct ws_vector_##TYPE* vector, int(*predicate)(TYPE const*, TYPE const*))                                      \
 {                                                                                                                                             \
     assert(vector != nullptr && "VECTOR POINTER WAS NULL");                                                                                   \
                                                                                                                                               \
