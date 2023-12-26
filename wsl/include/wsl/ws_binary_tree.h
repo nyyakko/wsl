@@ -5,10 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define ws_binary_tree_destroy_1(type, binary_tree) ws_binary_tree_##type##_destroy(binary_tree, nullptr)
-#define ws_binary_tree_destroy_2(type, binary_tree, strategy) ws_binary_tree_##type##_destroy(binary_tree, strategy)
-#define ws_binary_tree_destroy_select(_1, _2, selected, ...) selected
-#define ws_binary_tree_destroy(type, ...) ws_binary_tree_destroy_select(__VA_ARGS__, ws_binary_tree_destroy_2, ws_binary_tree_destroy_1, void)(type, __VA_ARGS__)
+#define __ws_binary_tree_destroy_1(type, binary_tree) ws_binary_tree_##type##_destroy(binary_tree, nullptr)
+#define __ws_binary_tree_destroy_2(type, binary_tree, strategy) ws_binary_tree_##type##_destroy(binary_tree, strategy)
+#define __ws_binary_tree_destroy_select(_1, _2, selected, ...) selected
+#define ws_binary_tree_destroy(type, ...) __ws_binary_tree_destroy_select(__VA_ARGS__, __ws_binary_tree_destroy_2, __ws_binary_tree_destroy_1, void)(type, __VA_ARGS__)
 
 #ifndef WS_BINARY_TREE_DEFINITION
 

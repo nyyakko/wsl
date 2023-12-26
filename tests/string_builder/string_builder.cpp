@@ -25,6 +25,33 @@ TEST(string_builder, chop_until_first)
     ws_string_builder_destroy(&string);
 }
 
+TEST(string_builder, append_string_while)
+{
+    struct ws_string_builder stringA = ws_string_builder_create("What a beautiful world");
+    struct ws_string_builder stringB = ws_string_builder_create("Hello, ");
+
+    ws_string_builder_chop_until_last(&stringA, ' ');
+    ws_string_builder_append_string_while(&stringB, stringA.data, isalpha);
+
+    EXPECT_STREQ(stringB.data, "Hello, world");
+
+    ws_string_builder_destroy(&stringB);
+    ws_string_builder_destroy(&stringA);
+}
+
+TEST(string_builder, append_string_while_not)
+{
+    struct ws_string_builder stringA = ws_string_builder_create("World of mine");
+    struct ws_string_builder stringB = ws_string_builder_create("Hello, ");
+
+    ws_string_builder_append_string_while_not(&stringB, stringA.data, isspace);
+
+    EXPECT_STREQ(stringB.data, "Hello, World");
+
+    ws_string_builder_destroy(&stringB);
+    ws_string_builder_destroy(&stringA);
+}
+
 TEST(string_builder, substring)
 {
     struct ws_string_builder stringA = ws_string_builder_create("Its so over");

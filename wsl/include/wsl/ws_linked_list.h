@@ -9,10 +9,10 @@
 
 #define ws_linked_list_initialize(type, ...) sizeof((type[]){ __VA_ARGS__ }) / sizeof(type) __VA_OPT__(,) __VA_ARGS__
 
-#define ws_linked_list_destroy_1(type, linked_list) ws_linked_list_##type##_destroy(linked_list, nullptr)
-#define ws_linked_list_destroy_2(type, linked_list, strategy) ws_linked_list_##type##_destroy(linked_list, strategy)
-#define ws_linked_list_destroy_select(_1, _2, selected, ...) selected
-#define ws_linked_list_destroy(type, ...) ws_linked_list_destroy_select(__VA_ARGS__, ws_linked_list_destroy_2, ws_linked_list_destroy_1, void)(type, __VA_ARGS__)
+#define __ws_linked_list_destroy_1(type, linked_list) ws_linked_list_##type##_destroy(linked_list, nullptr)
+#define __ws_linked_list_destroy_2(type, linked_list, strategy) ws_linked_list_##type##_destroy(linked_list, strategy)
+#define __ws_linked_list_destroy_select(_1, _2, selected, ...) selected
+#define ws_linked_list_destroy(type, ...) __ws_linked_list_destroy_select(__VA_ARGS__, __ws_linked_list_destroy_2, __ws_linked_list_destroy_1, void)(type, __VA_ARGS__)
 
 #ifndef WS_LINKED_LIST_DEFINITION
 

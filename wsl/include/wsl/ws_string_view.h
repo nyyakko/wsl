@@ -20,9 +20,9 @@ struct ws_string_view
 size_t ws_string_view_size(struct ws_string_view view);
 bool ws_string_view_is_empty(struct ws_string_view view);
 bool ws_string_view_equals(struct ws_string_view lhs, struct ws_string_view rhs);
-char ws_string_view_at(struct ws_string_view view, size_t index);
-char ws_string_view_front(struct ws_string_view view);
-char ws_string_view_back(struct ws_string_view view);
+[[nodiscard]]char ws_string_view_at(struct ws_string_view view, size_t index);
+[[nodiscard]]char ws_string_view_front(struct ws_string_view view);
+[[nodiscard]]char ws_string_view_back(struct ws_string_view view);
 size_t ws_string_view_search_first(struct ws_string_view view, char needle);
 size_t ws_string_view_search_last(struct ws_string_view view, char needle);
 void ws_string_view_chop_until_first(struct ws_string_view* view, char delimiter);
@@ -66,18 +66,18 @@ WS_DECLARATION bool ws_string_view_equals(struct ws_string_view lhs, struct ws_s
     return true;
 }
 
-WS_DECLARATION char ws_string_view_at(struct ws_string_view view, size_t index)
+[[nodiscard]]WS_DECLARATION char ws_string_view_at(struct ws_string_view view, size_t index)
 {
     assert(index <= view.size + view.begin && "INDEX OUT OF BOUNDS");
     return view.data[index];
 }
 
-WS_DECLARATION char ws_string_view_front(struct ws_string_view view)
+[[nodiscard]]WS_DECLARATION char ws_string_view_front(struct ws_string_view view)
 {
     return view.data[view.begin];
 }
 
-WS_DECLARATION char ws_string_view_back(struct ws_string_view view)
+[[nodiscard]]WS_DECLARATION char ws_string_view_back(struct ws_string_view view)
 {
     return view.data[view.end - 1];
 }

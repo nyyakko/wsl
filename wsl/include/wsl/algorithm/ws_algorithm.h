@@ -17,21 +17,21 @@ typedef void const*(ws_projection)(void const*);
 typedef int(ws_predicate)(void const*, void const*);
 typedef void(ws_strategy)(void*);
 
-#define ws_search_1(container, value) ws_search_in(container, value, nullptr, nullptr)
-#define ws_search_2(container, value, projection) ws_search_in(container, value, projection, nullptr)
-#define ws_search_3(container, value, projection, predicate) ws_search_in(container, value, projection, predicate)
-#define ws_search_select(_1, _2, _3, selected, ...) selected
-#define ws_search(container, ...) ws_search_select(__VA_ARGS__, ws_search_3, ws_search_2, ws_search_1, void)(container, __VA_ARGS__)
+#define __ws_search__1(container, value) ws_search_in(container, value, nullptr, nullptr)
+#define __ws_search__2(container, value, projection) ws_search_in(container, value, projection, nullptr)
+#define __ws_search__3(container, value, projection, predicate) ws_search_in(container, value, projection, predicate)
+#define __ws_search__select(_1, _2, _3, selected, ...) selected
+#define ws_search(container, ...) __ws_search__select(__VA_ARGS__, __ws_search__3, __ws_search__2, __ws_search__1, void)(container, __VA_ARGS__)
 
-#define ws_sort_1(container, predicate) ws_sort_in(container, predicate, nullptr)
-#define ws_sort_2(container, predicate, projection) ws_sort_in(container, predicate, projection)
-#define ws_sort_select(_1, _2, selected, ...) selected
-#define ws_sort(container, ...) ws_sort_select(__VA_ARGS__, ws_sort_2, ws_sort_1, void)(container, __VA_ARGS__)
+#define __ws_sort__1(container, predicate) ws_sort_in(container, predicate, nullptr)
+#define __ws_sort__2(container, predicate, projection) ws_sort_in(container, predicate, projection)
+#define __ws_sort__select(_1, _2, selected, ...) selected
+#define ws_sort(container, ...) __ws_sort__select(__VA_ARGS__, __ws_sort__2, __ws_sort__1, void)(container, __VA_ARGS__)
 
-#define ws_clear_1(container) ws_clear_in(container, nullptr)
-#define ws_clear_2(container, predicate) ws_clear_in(container, predicate)
-#define ws_clear_select(_1, selected, ...) selected
-#define ws_clear(container, ...) ws_clear_select(__VA_ARGS__ __VA_OPT__(,) ws_clear_2, ws_clear_1)(container, __VA_ARGS__)
+#define __ws_clear__1(container) ws_clear_in(container, nullptr)
+#define __ws_clear__2(container, predicate) ws_clear_in(container, predicate)
+#define __ws_clear__select(_1, selected, ...) selected
+#define ws_clear(container, ...) __ws_clear__select(__VA_ARGS__ __VA_OPT__(,) __ws_clear__2, __ws_clear__1)(container, __VA_ARGS__)
 
 #ifndef WS_ALGORITHM_DEFINITION
 
