@@ -61,7 +61,7 @@ struct ws_hash_map_##TYPE                                                       
 };                                                                                                                                                                                              \
                                                                                                                                                                                                 \
 size_t ws_hash_map_##TYPE##_size(struct ws_hash_map_##TYPE hashMap);                                                                                                                            \
-[[nodiscard]]struct TYPE* ws_hash_map_##TYPE##_search(struct ws_hash_map_##TYPE hashMap, size_t key);                                                                                           \
+[[nodiscard]]TYPE* ws_hash_map_##TYPE##_search(struct ws_hash_map_##TYPE hashMap, size_t key);                                                                                                  \
 void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t key, TYPE value);                                                                                                     \
 [[nodiscard]]TYPE ws_hash_map_##TYPE##_pop(struct ws_hash_map_##TYPE* hashMap, size_t key);                                                                                                     \
 [[nodiscard]]struct ws_hash_map_##TYPE ws_hash_map_##TYPE##_create();                                                                                                                           \
