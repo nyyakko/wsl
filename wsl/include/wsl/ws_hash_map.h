@@ -15,6 +15,19 @@
 #define __ws_hash_map_tree_destroy_select(_1, _2, selected, ...) selected
 #define __ws_hash_map_tree_destroy(type, ...) __ws_hash_map_tree_destroy_select(__VA_ARGS__, __ws_hash_map_tree_destroy_2, __ws_hash_map_tree_destroy_1, void)(type, __VA_ARGS__)
 
+#define __WS_IS_TRIVIALLY_HASHABLE(CHECK)                                                                                                                                                       \
+    __WS_IS_TRIVIALLY_HASHABLE_TYPE(CHECK, char)                                                                                                                                                \
+    __WS_IS_TRIVIALLY_HASHABLE_TYPE(CHECK, double)                                                                                                                                              \
+    __WS_IS_TRIVIALLY_HASHABLE_TYPE(CHECK, float)                                                                                                                                               \
+    __WS_IS_TRIVIALLY_HASHABLE_TYPE(CHECK, int)                                                                                                                                                 \
+    __WS_IS_TRIVIALLY_HASHABLE_TYPE(CHECK, long)                                                                                                                                                \
+    __WS_IS_TRIVIALLY_HASHABLE_TYPE(CHECK, short)                                                                                                                                               \
+    __WS_IS_TRIVIALLY_HASHABLE_TYPE(CHECK, size_t)                                                                                                                                              \
+    __WS_IS_TRIVIALLY_HASHABLE_TYPE(CHECK, uintptr_t)                                                                                                                                           \
+    false
+
+#define __WS_IS_TRIVIALLY_HASHABLE_TYPE(CHECK, TYPE) !strcmp(#TYPE, CHECK) ||
+
 #ifndef WS_HASH_MAP_DEFINITION
 
 #define WS_HASH_MAP(TYPE)                                                                                                                                                                       \
@@ -61,7 +74,9 @@ struct ws_hash_map_##TYPE                                                       
 };                                                                                                                                                                                              \
                                                                                                                                                                                                 \
 size_t ws_hash_map_##TYPE##_size(struct ws_hash_map_##TYPE hashMap);                                                                                                                            \
+[[nodiscard]]TYPE* ws_hash_map_##TYPE##_search_hashed(struct ws_hash_map_##TYPE hashmap, TYPE value)                                                                                            \
 [[nodiscard]]TYPE* ws_hash_map_##TYPE##_search(struct ws_hash_map_##TYPE hashMap, size_t key);                                                                                                  \
+void ws_hash_map_##TYPE##_push_hashed(struct ws_hash_map_##TYPE* hashmap, TYPE value)                                                                                                           \
 void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t key, TYPE value);                                                                                                     \
 [[nodiscard]]TYPE ws_hash_map_##TYPE##_pop(struct ws_hash_map_##TYPE* hashMap, size_t key);                                                                                                     \
 [[nodiscard]]struct ws_hash_map_##TYPE ws_hash_map_##TYPE##_create();                                                                                                                           \
@@ -363,6 +378,19 @@ WS_DECLARATION size_t ws_hash_map_##TYPE##_size(struct ws_hash_map_##TYPE hashMa
     return nullptr;                                                                                                                                                                             \
 }                                                                                                                                                                                               \
                                                                                                                                                                                                 \
+[[nodiscard]]TYPE* ws_hash_map_##TYPE##_search_hashed(struct ws_hash_map_##TYPE hashmap, TYPE value)                                                                                            \
+{                                                                                                                                                                                               \
+    if (!(__WS_IS_TRIVIALLY_HASHABLE(#TYPE)))                                                                                                                                                   \
+    {                                                                                                                                                                                           \
+        assert(false && "SINCE THIS LANGUAGE IS GARBAGE, YOUR TYPE CANNOT BE HASHED TRIVALLY! :(");                                                                                             \
+    }                                                                                                                                                                                           \
+                                                                                                                                                                                                \
+    char bytes[sizeof(TYPE)] = {0};                                                                                                                                                             \
+    memcpy(bytes, &value, sizeof(TYPE));                                                                                                                                                        \
+    size_t hash = ws_hash_map_hash(bytes, sizeof(TYPE));                                                                                                                                        \
+    return ws_hash_map_##TYPE##_search(hashmap, hash);                                                                                                                                          \
+}                                                                                                                                                                                               \
+                                                                                                                                                                                                \
 WS_DECLARATION void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t key, TYPE value)                                                                                       \
 {                                                                                                                                                                                               \
     assert(hashMap != nullptr && "HASHMAP POINTER WAS NULL");                                                                                                                                   \
@@ -380,6 +408,19 @@ WS_DECLARATION void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap
                                                                                                                                                                                                 \
     workingBucket->size += 1;                                                                                                                                                                   \
     hashMap->size += 1;                                                                                                                                                                         \
+}                                                                                                                                                                                               \
+                                                                                                                                                                                                \
+void ws_hash_map_##TYPE##_push_hashed(struct ws_hash_map_##TYPE* hashmap, TYPE value)                                                                                                           \
+{                                                                                                                                                                                               \
+    if (!(__WS_IS_TRIVIALLY_HASHABLE(#TYPE)))                                                                                                                                                   \
+    {                                                                                                                                                                                           \
+        assert(false && "SINCE THIS LANGUAGE IS GARBAGE, YOUR TYPE CANNOT BE HASHED TRIVALLY! :(");                                                                                             \
+    }                                                                                                                                                                                           \
+                                                                                                                                                                                                \
+    char bytes[sizeof(TYPE)] = {0};                                                                                                                                                             \
+    memcpy(bytes, &value, sizeof(TYPE));                                                                                                                                                        \
+    size_t hash = ws_hash_map_hash(bytes, sizeof(TYPE));                                                                                                                                        \
+    ws_hash_map_##TYPE##_push(hashmap, hash, value);                                                                                                                                            \
 }                                                                                                                                                                                               \
                                                                                                                                                                                                 \
 [[nodiscard]]WS_DECLARATION TYPE ws_hash_map_##TYPE##_pop(struct ws_hash_map_##TYPE* hashMap, size_t key)                                                                                       \
