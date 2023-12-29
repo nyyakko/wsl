@@ -18,7 +18,7 @@ project(some_project)
 
 find_package(wsl CONFIG REQUIRED)
 
-add_executable(some_project main.cpp)
+add_executable(some_project main.c)
 target_link_libraries(some_project PRIVATE wsl::wsl)
 ```
 
