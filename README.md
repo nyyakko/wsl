@@ -8,6 +8,20 @@ considering you have [clang](https://github.com/llvm/llvm-project/releases), [vc
 
 ``python configure.py && python build.py && python install.py``
 
+## using
+
+after you've installed, you can use the library by finding it with ``find_package`` in cmake.
+
+* exmaple:
+```cmake
+project(some_project)
+
+find_package(wsl CONFIG REQUIRED)
+
+add_executable(some_project main.cpp)
+target_link_libraries(some_project PRIVATE wsl::wsl)
+```
+
 ## examples:
 
 * ### vector
