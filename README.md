@@ -10,9 +10,9 @@ considering you have [clang](https://github.com/llvm/llvm-project/releases), [vc
 
 ## using
 
-after you've installed, you can use the library by finding it with ``find_package`` in cmake.
+after you've installed the library, you can use it by finding with the ``find_package`` command in cmake.
 
-* exmaple:
+* example:
 ```cmake
 project(some_project)
 
