@@ -198,6 +198,7 @@ WS_DECLARATION void ws_string_builder_append(struct ws_string_builder* string, c
     if (string->data == nullptr) string->data = (char*)malloc(string->capacity + 1);
 
     string->data[string->size++ - 1] = value;
+    string->end = string->size;
 }
 
 WS_DECLARATION void ws_string_builder_append_string_while(struct ws_string_builder* destination, char const* value, int(*predicate)(int))
