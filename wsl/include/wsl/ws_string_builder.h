@@ -2,6 +2,7 @@
 #define WS_STRING_BUILDER_H
 
 #include <assert.h>
+#include <cstring>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -27,10 +28,11 @@ typedef int(predicate_t)(int);
 [[nodiscard]] char ws_string_builder_back(struct ws_string_builder string);
 [[nodiscard]] size_t ws_string_builder_search_first(struct ws_string_builder string, char needle);
 [[nodiscard]] size_t ws_string_builder_search_last(struct ws_string_builder string, char needle);
+void ws_string_builder_remove_prefix(struct ws_string_builder* view, size_t count);
+void ws_string_builder_remove_suffix(struct ws_string_builder* view, size_t count);
 void ws_string_builder_chop_until_first(struct ws_string_builder* string, char delimiter);
 void ws_string_builder_chop_until_last(struct ws_string_builder* string, char delimiter);
 void ws_string_builder_clear(struct ws_string_builder* string);
-void __ws_string_builder_realloc(struct ws_string_builder* string);
 void ws_string_builder_append(struct ws_string_builder* string, char value);
 void ws_string_builder_append_string_while(struct ws_string_builder* destination, char const* value, predicate_t* predicate);
 void ws_string_builder_append_string_while_not(struct ws_string_builder* destination, char const* value, predicate_t* predicate);
@@ -39,6 +41,9 @@ void ws_string_builder_append_string(struct ws_string_builder* string, char cons
 void ws_string_builder_copy(struct ws_string_builder* destination, struct ws_string_builder const* source);
 [[nodiscard]] struct ws_string_builder ws_string_builder_create(char const* data);
 void ws_string_builder_destroy(struct ws_string_builder* string);
+
+void __ws_string_builder_realloc(struct ws_string_builder* string);
+size_t __ws_string_builder_round(size_t value);
 
 #ifdef WS_STRING_BUILDER_DEFINITION
 
@@ -114,28 +119,49 @@ size_t ws_string_builder_search_last(struct ws_string_builder string, char needl
     return SIZE_MAX;
 }
 
+void ws_string_builder_remove_prefix(struct ws_string_builder* string, size_t count)
+{
+    assert(string != nullptr && "STRING POINTER WAS NULL");
+    assert(string->size != 0 && "STRING WAS EMPTY");
+    assert(count <= string->size);
+
+    memmove(string->data, &string->data[count], string->size - count);
+    memset(&string->data[string->size - count], 0, string->size - count);
+
+    string->end  -= count;
+    string->size -= count;
+}
+
+void ws_string_builder_remove_suffix(struct ws_string_builder* string, size_t count)
+{
+    assert(string != nullptr && "STRING POINTER WAS NULL");
+    assert(string->size != 0 && "STRING WAS EMPTY");
+    assert(count <= string->size);
+
+    memset(&string->data[string->size - (count)], 0, count);
+
+    string->end  -= count;
+    string->size -= count;
+}
+
 void ws_string_builder_chop_until_first(struct ws_string_builder* string, char delimiter)
 {
     assert(string != nullptr && "STRING POINTER WAS NULL");
     assert(string->size != 0 && "STRING WAS EMPTY");
 
-    size_t lastSeenDelimiterIndex = ws_string_builder_search_first(*string, delimiter);
+    size_t position = ws_string_builder_search_first(*string, delimiter);
 
-    if (lastSeenDelimiterIndex == SIZE_MAX)
+    if (position == SIZE_MAX)
     {
         return;
     }
 
-    char* buffer = (char*)malloc(string->size - (lastSeenDelimiterIndex + 1));
-    memcpy(buffer, &string->data[lastSeenDelimiterIndex + 1], string->size - (lastSeenDelimiterIndex + 1));
-    memset(string->data, '\0', string->size);
-    memcpy(string->data, buffer, string->size - (lastSeenDelimiterIndex + 1));
+    memmove(string->data, &string->data[position + 1], string->size - (position + 1));
+    memset(&string->data[string->size - (position + 1)], 0, string->size - (position + 1));
 
-    string->size -= lastSeenDelimiterIndex + 1;
+    string->size  = string->size - position - 1;
     string->begin = 0;
     string->end   = string->size;
-
-    free(buffer);
 }
 
 void ws_string_builder_chop_until_last(struct ws_string_builder* string, char delimiter)
@@ -143,26 +169,22 @@ void ws_string_builder_chop_until_last(struct ws_string_builder* string, char de
     assert(string != nullptr && "STRING POINTER WAS NULL");
     assert(string->size != 0 && "STRING WAS EMPTY");
 
-    size_t lastSeenDelimiterIndex = ws_string_builder_search_last(*string, delimiter);
+    size_t position = ws_string_builder_search_last(*string, delimiter);
 
-    if (lastSeenDelimiterIndex == SIZE_MAX)
+    if (position == SIZE_MAX)
     {
         return;
     }
 
     // FIXME: solve the case where it may occoour an allocation of 0 bytes ?
-    assert(string->size - (lastSeenDelimiterIndex + 1) && "HOW DID YOU DID THIS?");
+    assert(string->size - (position + 1) && "HOW DID YOU DID THIS?");
 
-    char* buffer = (char*)malloc(string->size - (lastSeenDelimiterIndex + 1));
-    memcpy(buffer, &string->data[lastSeenDelimiterIndex + 1], string->size - (lastSeenDelimiterIndex + 1));
-    memset(string->data, '\0', string->capacity);
-    memcpy(string->data, buffer, string->size - (lastSeenDelimiterIndex + 1));
+    memmove(string->data, &string->data[position + 1], string->size - (position + 1));
+    memset(&string->data[string->size - (position + 1)], 0, string->size - (position + 1));
 
-    string->size -= lastSeenDelimiterIndex + 1;
+    string->size -= position + 1;
     string->begin = 0;
     string->end   = string->size;
-
-    free(buffer);
 }
 
 void ws_string_builder_clear(struct ws_string_builder* string)
@@ -172,19 +194,6 @@ void ws_string_builder_clear(struct ws_string_builder* string)
     string->size = 1;
 }
 
-void __ws_string_builder_realloc(struct ws_string_builder* string)
-{
-    assert(string != nullptr && "STRING POINTER WAS NULL");
-
-    char* oldData = string->data;
-    string->capacity += string->capacity;
-    string->data = (char*)malloc(string->capacity + 1);
-    memset(string->data, '\0', string->capacity + 1);
-    memcpy(string->data, oldData, string->size);
-
-    free(oldData);
-}
-
 void ws_string_builder_append(struct ws_string_builder* string, char value)
 {
     assert(string != nullptr && "STRING POINTER WAS NULL");
@@ -192,7 +201,7 @@ void ws_string_builder_append(struct ws_string_builder* string, char value)
     if (string->size >= string->capacity) __ws_string_builder_realloc(string);
     if (string->data == nullptr) string->data = (char*)malloc(string->capacity + 1);
 
-    string->data[string->size++ - 1] = value;
+    string->data[string->size++] = value;
     string->end = string->size;
 }
 
@@ -227,9 +236,9 @@ void ws_string_builder_append_string(struct ws_string_builder* string, char cons
     assert(string != nullptr && "STRING POINTER WAS NULL");
     assert(value != nullptr && "VALUE POINTER WAS NULL");
 
-    size_t stringLength = strlen(value);
+    size_t length = strlen(value);
 
-    for (size_t index = 0llu; index != stringLength; index += 1)
+    for (size_t index = 0llu; index != length; index += 1)
     {
         ws_string_builder_append(string, value[index]);
     }
@@ -237,33 +246,23 @@ void ws_string_builder_append_string(struct ws_string_builder* string, char cons
 
 struct ws_string_builder ws_string_builder_substr(struct ws_string_builder string, size_t begin, size_t end)
 {
-    // FIXME: properly handle this case
     assert(begin != end && "BEGIN CANNOT EQUAL TO END");
 
-    size_t length = end - begin + 1;
-
-    // https://graphics.stanford.edu/%7Eseander/bithacks.html#RoundUpPowerOf2
-    size_t roundedLength = length;
-
-    roundedLength -= 1;
-    roundedLength |= roundedLength >> 1;
-    roundedLength |= roundedLength >> 2;
-    roundedLength |= roundedLength >> 4;
-    roundedLength |= roundedLength >> 8;
-    roundedLength |= roundedLength >> 16;
-    roundedLength += 1;
+    size_t length        = end - (begin + 1);
+    size_t roundedLength = __ws_string_builder_round(length);
+    size_t capacity      = roundedLength > 16 ? roundedLength : 16;
 
     struct ws_string_builder result =
     {
         .begin    = 0,
         .end      = length,
-        .data     = (char*)malloc(roundedLength),
+        .data     = (char*)malloc(capacity),
         .size     = length,
-        .capacity = roundedLength
+        .capacity = capacity
     };
 
-    memset(result.data, 0, result.capacity);
-    memcpy(result.data, string.data += begin, length);
+    memset(result.data, 0, capacity);
+    memcpy(result.data, string.data += (begin + 1), length);
 
     return result;
 }
@@ -279,42 +278,33 @@ void ws_string_builder_copy(struct ws_string_builder* destination, struct ws_str
         free(destination->data);
     }
 
-    destination->data     = (char*)malloc(source->size);
+    destination->data     = (char*)malloc(source->capacity);
     destination->begin    = 0;
     destination->end      = source->end;
     destination->size     = source->size;
     destination->capacity = source->capacity;
 
-    memset(destination->data, '\0', source->size);
+    memset(destination->data, 0, source->capacity);
     memcpy(destination->data, source->data, source->size);
 }
 
 struct ws_string_builder ws_string_builder_create(char const* data)
 {
-    size_t length = strlen(data) + 1;
-
-    // https://graphics.stanford.edu/%7Eseander/bithacks.html#RoundUpPowerOf2
-    size_t roundedLength = length;
-
-    roundedLength -= 1;
-    roundedLength |= roundedLength >> 1;
-    roundedLength |= roundedLength >> 2;
-    roundedLength |= roundedLength >> 4;
-    roundedLength |= roundedLength >> 8;
-    roundedLength |= roundedLength >> 16;
-    roundedLength += 1;
+    size_t length        = strlen(data);
+    size_t roundedLength = __ws_string_builder_round(length);
+    size_t capacity      = roundedLength > 16 ? roundedLength : 16;
 
     struct ws_string_builder result =
     {
         .begin    = 0,
         .end      = length,
-        .data     = (char*)malloc(roundedLength),
+        .data     = (char*)malloc(capacity),
         .size     = length,
-        .capacity = roundedLength
+        .capacity = capacity
     };
 
-    memset(result.data, '\0', roundedLength);
-    memcpy(result.data, data, length - 1);
+    memset(result.data, 0, capacity);
+    memcpy(result.data, data, length);
 
     return result;
 }
@@ -329,6 +319,33 @@ void ws_string_builder_destroy(struct ws_string_builder* string)
     string->capacity = 0;
 
     memset(string, 0, sizeof(struct ws_string_builder));
+}
+
+void __ws_string_builder_realloc(struct ws_string_builder* string)
+{
+    assert(string != nullptr && "STRING POINTER WAS NULL");
+
+    char* oldData = string->data;
+    string->capacity += string->capacity;
+    string->data = (char*)malloc(string->capacity + 1);
+    memset(string->data, '\0', string->capacity + 1);
+    memcpy(string->data, oldData, string->size);
+
+    free(oldData);
+}
+
+// https://graphics.stanford.edu/%7Eseander/bithacks.html#RoundUpPowerOf2
+size_t __ws_string_builder_round(size_t value)
+{
+    value -= 1;
+    value |= value >> 1;
+    value |= value >> 2;
+    value |= value >> 4;
+    value |= value >> 8;
+    value |= value >> 16;
+    value += 1;
+
+    return value;
 }
 
 #endif
