@@ -1,4 +1,5 @@
 add_subdirectory(algorithm)
+add_subdirectory(filesystem)
 
 add_subdirectory(vector)
 add_subdirectory(stack)
