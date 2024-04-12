@@ -1,8 +1,15 @@
 add_subdirectory(include/${PROJECT_NAME})
 
 add_library(${PROJECT_NAME} INTERFACE ${wsl_HeaderFiles})
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-enable_static_analyzers(${PROJECT_NAME} ON)
+if (ENABLE_CLANGTIDY)
+    enable_clang_tidy()
+endif()
+
+if (ENABLE_CPPCHECK)
+    enable_cppcheck()
+endif()
 
 target_include_directories(${PROJECT_NAME}
     INTERFACE
@@ -35,5 +42,7 @@ install(EXPORT      ${PROJECT_NAME}Targets
 
 install(FILES ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake)
 
+target_link_options(${PROJECT_NAME} INTERFACE ${wsl_LinkerOptions})
 target_compile_options(${PROJECT_NAME} INTERFACE ${wsl_CompilerOptions})
 target_link_libraries(${PROJECT_NAME} INTERFACE ${wsl_ExternalLibraries})
+

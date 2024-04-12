@@ -77,4 +77,3 @@ TEST(queue, copy_empty)
     ws_queue_destroy(int, &queueA);
     ws_queue_destroy(int, &queueB);
 }
-

@@ -32,20 +32,20 @@ struct ws_stack_##TYPE                                                          
     size_t capacity;                                                                                                                             \
 };                                                                                                                                               \
                                                                                                                                                  \
-size_t ws_stack_##TYPE##_size(struct ws_stack_##TYPE stack);                                                                                     \
-bool ws_stack_##TYPE##_is_empty(struct ws_stack_##TYPE stack);                                                                                   \
-[[nodiscard]]TYPE* ws_stack_##TYPE##_search(struct ws_stack_##TYPE stack, TYPE value, int(*predicate)(TYPE const*, TYPE const*));                \
-[[nodiscard]]TYPE* ws_stack_##TYPE##_top(struct ws_stack_##TYPE stack);                                                                          \
+[[nodiscard]] size_t ws_stack_##TYPE##_size(struct ws_stack_##TYPE stack);                                                                       \
+[[nodiscard]] bool ws_stack_##TYPE##_is_empty(struct ws_stack_##TYPE stack);                                                                     \
+[[nodiscard]] TYPE* ws_stack_##TYPE##_search(struct ws_stack_##TYPE stack, TYPE value, int(*predicate)(TYPE const*, TYPE const*));               \
+[[nodiscard]] TYPE* ws_stack_##TYPE##_top(struct ws_stack_##TYPE stack);                                                                         \
 void ws_stack_##TYPE##_copy(struct ws_stack_##TYPE* destination, struct ws_stack_##TYPE const* source, void(*strategy)(TYPE*));                  \
 void __ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack);                                                                                 \
 void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value);                                                                          \
-[[nodiscard]]TYPE ws_stack_##TYPE##_pop(struct ws_stack_##TYPE* stack);                                                                          \
-[[nodiscard]]struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...);                                                                 \
+[[nodiscard]] TYPE ws_stack_##TYPE##_pop(struct ws_stack_##TYPE* stack);                                                                         \
+[[nodiscard]] struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...);                                                                \
 void ws_stack_##TYPE##_destroy(struct ws_stack_##TYPE* stack, void(*strategy)(TYPE*));
 
 #else
 
-#define WS_DECLARATION inline
+#define inline
 
 #define WS_STACK(TYPE)                                                                                                                           \
                                                                                                                                                  \
@@ -58,17 +58,17 @@ struct ws_stack_##TYPE                                                          
     size_t capacity;                                                                                                                             \
 };                                                                                                                                               \
                                                                                                                                                  \
-WS_DECLARATION size_t ws_stack_##TYPE##_size(struct ws_stack_##TYPE stack)                                                                       \
+size_t ws_stack_##TYPE##_size(struct ws_stack_##TYPE stack)                                                                                      \
 {                                                                                                                                                \
     return stack.size;                                                                                                                           \
 }                                                                                                                                                \
                                                                                                                                                  \
-WS_DECLARATION bool ws_stack_##TYPE##_is_empty(struct ws_stack_##TYPE stack)                                                                     \
+bool ws_stack_##TYPE##_is_empty(struct ws_stack_##TYPE stack)                                                                                    \
 {                                                                                                                                                \
     return stack.size == 0;                                                                                                                      \
 }                                                                                                                                                \
                                                                                                                                                  \
-[[nodiscard]]WS_DECLARATION TYPE* ws_stack_##TYPE##_search(struct ws_stack_##TYPE stack, TYPE value, int(*predicate)(TYPE const*, TYPE const*))  \
+TYPE* ws_stack_##TYPE##_search(struct ws_stack_##TYPE stack, TYPE value, int(*predicate)(TYPE const*, TYPE const*))                              \
 {                                                                                                                                                \
     for (size_t index = 0llu; index != stack.size; index += 1)                                                                                   \
     {                                                                                                                                            \
@@ -81,12 +81,12 @@ WS_DECLARATION bool ws_stack_##TYPE##_is_empty(struct ws_stack_##TYPE stack)    
     return nullptr;                                                                                                                              \
 }                                                                                                                                                \
                                                                                                                                                  \
-[[nodiscard]]WS_DECLARATION TYPE* ws_stack_##TYPE##_top(struct ws_stack_##TYPE stack)                                                            \
+TYPE* ws_stack_##TYPE##_top(struct ws_stack_##TYPE stack)                                                                                        \
 {                                                                                                                                                \
     return &stack.data[stack.begin];                                                                                                             \
 }                                                                                                                                                \
                                                                                                                                                  \
-WS_DECLARATION void ws_stack_##TYPE##_copy(struct ws_stack_##TYPE* destination, struct ws_stack_##TYPE const* source, void(*strategy)(TYPE*))    \
+void ws_stack_##TYPE##_copy(struct ws_stack_##TYPE* destination, struct ws_stack_##TYPE const* source, void(*strategy)(TYPE*))                   \
 {                                                                                                                                                \
     if (ws_stack_##TYPE##_is_empty(*source))                                                                                                     \
     {                                                                                                                                            \
@@ -112,7 +112,7 @@ WS_DECLARATION void ws_stack_##TYPE##_copy(struct ws_stack_##TYPE* destination, 
     memcpy(destination->data, source->data, destination->capacity * sizeof(TYPE));                                                               \
 }                                                                                                                                                \
                                                                                                                                                  \
-WS_DECLARATION void __ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack)                                                                   \
+void __ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack)                                                                                  \
 {                                                                                                                                                \
     assert(stack != nullptr && "STACK POINTER WAS NULL");                                                                                        \
                                                                                                                                                  \
@@ -125,7 +125,7 @@ WS_DECLARATION void __ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack)  
     free(oldData);                                                                                                                               \
 }                                                                                                                                                \
                                                                                                                                                  \
-WS_DECLARATION void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value)                                                            \
+void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value)                                                                           \
 {                                                                                                                                                \
     assert(stack != nullptr && "STACK POINTER WAS NULL");                                                                                        \
                                                                                                                                                  \
@@ -137,7 +137,7 @@ WS_DECLARATION void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE v
     stack->begin = stack->size - 1;                                                                                                              \
 }                                                                                                                                                \
                                                                                                                                                  \
-[[nodiscard]]WS_DECLARATION TYPE ws_stack_##TYPE##_pop(struct ws_stack_##TYPE* stack)                                                            \
+TYPE ws_stack_##TYPE##_pop(struct ws_stack_##TYPE* stack)                                                                                        \
 {                                                                                                                                                \
     assert(stack != nullptr && "STACK POINTER WAS NULL");                                                                                        \
     assert(stack->size && "TRIED TO POP AN EMPTY STACK");                                                                                        \
@@ -148,7 +148,7 @@ WS_DECLARATION void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE v
     return stack->data[stack->begin];                                                                                                            \
 }                                                                                                                                                \
                                                                                                                                                  \
-[[nodiscard]]WS_DECLARATION struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...)                                                   \
+struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...)                                                                               \
 {                                                                                                                                                \
     struct ws_stack_##TYPE stack =                                                                                                               \
     {                                                                                                                                            \
@@ -172,7 +172,7 @@ WS_DECLARATION void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE v
     return stack;                                                                                                                                \
 }                                                                                                                                                \
                                                                                                                                                  \
-WS_DECLARATION void ws_stack_##TYPE##_destroy(struct ws_stack_##TYPE* stack, void(*strategy)(TYPE*))                                             \
+void ws_stack_##TYPE##_destroy(struct ws_stack_##TYPE* stack, void(*strategy)(TYPE*))                                                            \
 {                                                                                                                                                \
     if (strategy != nullptr)                                                                                                                     \
     {                                                                                                                                            \

@@ -71,4 +71,3 @@ TEST(linked_list, pop_back_values)
 
     ws_linked_list_destroy(int, &list);
 }
-

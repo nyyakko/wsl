@@ -48,24 +48,22 @@ struct ws_vector_##TYPE                                                         
     size_t capacity;                                                                                                                                \
 };                                                                                                                                                  \
                                                                                                                                                     \
-size_t ws_vector_##TYPE##_size(struct ws_vector_##TYPE vector);                                                                                     \
-bool ws_vector_##TYPE##_is_empty(struct ws_vector_##TYPE vector);                                                                                   \
-[[nodiscard]]TYPE* ws_vector_##TYPE##_at(struct ws_vector_##TYPE vector, size_t position);                                                          \
-[[nodiscard]]TYPE* ws_vector_##TYPE##_front(struct ws_vector_##TYPE vector);                                                                        \
-[[nodiscard]]TYPE* ws_vector_##TYPE##_back(struct ws_vector_##TYPE vector);                                                                         \
-[[nodiscard]]TYPE* ws_vector_##TYPE##_search(struct ws_vector_##TYPE vector, TYPE value, int(*predicate)(TYPE const*, TYPE const*));                \
+[[nodiscard]] size_t ws_vector_##TYPE##_size(struct ws_vector_##TYPE vector);                                                                       \
+[[nodiscard]] bool ws_vector_##TYPE##_is_empty(struct ws_vector_##TYPE vector);                                                                     \
+[[nodiscard]] TYPE* ws_vector_##TYPE##_at(struct ws_vector_##TYPE vector, size_t position);                                                         \
+[[nodiscard]] TYPE* ws_vector_##TYPE##_front(struct ws_vector_##TYPE vector);                                                                       \
+[[nodiscard]] TYPE* ws_vector_##TYPE##_back(struct ws_vector_##TYPE vector);                                                                        \
+[[nodiscard]] TYPE* ws_vector_##TYPE##_search(struct ws_vector_##TYPE vector, TYPE value, int(*predicate)(TYPE const*, TYPE const*));               \
 void ws_vector_##TYPE##_sort(struct ws_vector_##TYPE* vector, int(*predicate)(TYPE const*, TYPE const*));                                           \
 void ws_vector_##TYPE##_copy(struct ws_vector_##TYPE* destination, struct ws_vector_##TYPE const* source, void(*strategy)(TYPE*));                  \
 void ws_vector_##TYPE##_clear(struct ws_vector_##TYPE* vector, void(*strategy)(TYPE*));                                                             \
 void __ws_vector_##TYPE##_realloc(struct ws_vector_##TYPE* vector);                                                                                 \
 void ws_vector_##TYPE##_push(struct ws_vector_##TYPE* vector, TYPE value);                                                                          \
-[[nodiscard]]TYPE ws_vector_##TYPE##_pop(struct ws_vector_##TYPE* vector);                                                                          \
-[[nodiscard]]struct ws_vector_##TYPE ws_vector_##TYPE##_create(size_t count, ...);                                                                  \
+[[nodiscard]] TYPE ws_vector_##TYPE##_pop(struct ws_vector_##TYPE* vector);                                                                         \
+[[nodiscard]] struct ws_vector_##TYPE ws_vector_##TYPE##_create(size_t count, ...);                                                                 \
 void ws_vector_##TYPE##_destroy(struct ws_vector_##TYPE* vector, void(*strategy)(TYPE*));
 
 #else
-
-#define WS_DECLARATION inline
 
 #define WS_VECTOR(TYPE)                                                                                                                             \
                                                                                                                                                     \
@@ -79,33 +77,33 @@ struct ws_vector_##TYPE                                                         
     size_t capacity;                                                                                                                                \
 };                                                                                                                                                  \
                                                                                                                                                     \
-WS_DECLARATION size_t ws_vector_##TYPE##_size(struct ws_vector_##TYPE vector)                                                                       \
+size_t ws_vector_##TYPE##_size(struct ws_vector_##TYPE vector)                                                                                      \
 {                                                                                                                                                   \
     return vector.size;                                                                                                                             \
 }                                                                                                                                                   \
                                                                                                                                                     \
-WS_DECLARATION bool ws_vector_##TYPE##_is_empty(struct ws_vector_##TYPE vector)                                                                     \
+bool ws_vector_##TYPE##_is_empty(struct ws_vector_##TYPE vector)                                                                                    \
 {                                                                                                                                                   \
     return vector.size == 0;                                                                                                                        \
 }                                                                                                                                                   \
                                                                                                                                                     \
-[[nodiscard]]WS_DECLARATION TYPE* ws_vector_##TYPE##_at(struct ws_vector_##TYPE vector, size_t position)                                            \
+TYPE* ws_vector_##TYPE##_at(struct ws_vector_##TYPE vector, size_t position)                                                                        \
 {                                                                                                                                                   \
     assert(position < vector.size && "INDEX OUT OF BOUNDS");                                                                                        \
     return &vector.data[position];                                                                                                                  \
 }                                                                                                                                                   \
                                                                                                                                                     \
-[[nodiscard]]WS_DECLARATION TYPE* ws_vector_##TYPE##_front(struct ws_vector_##TYPE vector)                                                          \
+TYPE* ws_vector_##TYPE##_front(struct ws_vector_##TYPE vector)                                                                                      \
 {                                                                                                                                                   \
     return &vector.data[0];                                                                                                                         \
 }                                                                                                                                                   \
                                                                                                                                                     \
-[[nodiscard]]WS_DECLARATION TYPE* ws_vector_##TYPE##_back(struct ws_vector_##TYPE vector)                                                           \
+TYPE* ws_vector_##TYPE##_back(struct ws_vector_##TYPE vector)                                                                                       \
 {                                                                                                                                                   \
     return &vector.data[vector.end];                                                                                                                \
 }                                                                                                                                                   \
                                                                                                                                                     \
-[[nodiscard]]WS_DECLARATION TYPE* ws_vector_##TYPE##_search(struct ws_vector_##TYPE vector, TYPE value, int(*predicate)(TYPE const*, TYPE const*))  \
+TYPE* ws_vector_##TYPE##_search(struct ws_vector_##TYPE vector, TYPE value, int(*predicate)(TYPE const*, TYPE const*))                              \
 {                                                                                                                                                   \
     for (size_t index = 0llu; index != vector.size; index += 1)                                                                                     \
     {                                                                                                                                               \
@@ -141,7 +139,7 @@ WS_DECLARATION bool ws_vector_##TYPE##_is_empty(struct ws_vector_##TYPE vector) 
     return nullptr;                                                                                                                                 \
 }                                                                                                                                                   \
                                                                                                                                                     \
-WS_DECLARATION void ws_vector_##TYPE##_sort(struct ws_vector_##TYPE* vector, int(*predicate)(TYPE const*, TYPE const*))                             \
+void ws_vector_##TYPE##_sort(struct ws_vector_##TYPE* vector, int(*predicate)(TYPE const*, TYPE const*))                                            \
 {                                                                                                                                                   \
     assert(vector != nullptr && "VECTOR POINTER WAS NULL");                                                                                         \
                                                                                                                                                     \
@@ -169,7 +167,7 @@ WS_DECLARATION void ws_vector_##TYPE##_sort(struct ws_vector_##TYPE* vector, int
     }                                                                                                                                               \
 }                                                                                                                                                   \
                                                                                                                                                     \
-WS_DECLARATION void ws_vector_##TYPE##_copy(struct ws_vector_##TYPE* destination, struct ws_vector_##TYPE const* source, void(*strategy)(TYPE*))    \
+void ws_vector_##TYPE##_copy(struct ws_vector_##TYPE* destination, struct ws_vector_##TYPE const* source, void(*strategy)(TYPE*))                   \
 {                                                                                                                                                   \
     if (ws_vector_##TYPE##_is_empty(*source))                                                                                                       \
     {                                                                                                                                               \
@@ -195,7 +193,7 @@ WS_DECLARATION void ws_vector_##TYPE##_copy(struct ws_vector_##TYPE* destination
     memcpy(destination->data, source->data, destination->capacity * sizeof(TYPE));                                                                  \
 }                                                                                                                                                   \
                                                                                                                                                     \
-WS_DECLARATION void ws_vector_##TYPE##_clear(struct ws_vector_##TYPE* vector, void(*strategy)(TYPE*))                                               \
+void ws_vector_##TYPE##_clear(struct ws_vector_##TYPE* vector, void(*strategy)(TYPE*))                                                              \
 {                                                                                                                                                   \
     if (strategy != nullptr)                                                                                                                        \
     {                                                                                                                                               \
@@ -209,7 +207,7 @@ WS_DECLARATION void ws_vector_##TYPE##_clear(struct ws_vector_##TYPE* vector, vo
     vector->size = 0;                                                                                                                               \
 }                                                                                                                                                   \
                                                                                                                                                     \
-WS_DECLARATION void __ws_vector_##TYPE##_realloc(struct ws_vector_##TYPE* vector)                                                                   \
+void __ws_vector_##TYPE##_realloc(struct ws_vector_##TYPE* vector)                                                                                  \
 {                                                                                                                                                   \
     assert(vector != nullptr && "VECTOR POINTER WAS NULL");                                                                                         \
                                                                                                                                                     \
@@ -222,7 +220,7 @@ WS_DECLARATION void __ws_vector_##TYPE##_realloc(struct ws_vector_##TYPE* vector
     free(oldData);                                                                                                                                  \
 }                                                                                                                                                   \
                                                                                                                                                     \
-WS_DECLARATION void ws_vector_##TYPE##_push(struct ws_vector_##TYPE* vector, TYPE value)                                                            \
+void ws_vector_##TYPE##_push(struct ws_vector_##TYPE* vector, TYPE value)                                                                           \
 {                                                                                                                                                   \
     assert(vector != nullptr && "VECTOR POINTER WAS NULL");                                                                                         \
                                                                                                                                                     \
@@ -233,7 +231,7 @@ WS_DECLARATION void ws_vector_##TYPE##_push(struct ws_vector_##TYPE* vector, TYP
     vector->end = vector->size - 1;                                                                                                                 \
 }                                                                                                                                                   \
                                                                                                                                                     \
-[[nodiscard]]WS_DECLARATION TYPE ws_vector_##TYPE##_pop(struct ws_vector_##TYPE* vector)                                                            \
+TYPE ws_vector_##TYPE##_pop(struct ws_vector_##TYPE* vector)                                                                                        \
 {                                                                                                                                                   \
     assert(vector != nullptr && "VECTOR POINTER WAS NULL");                                                                                         \
     assert(vector->size && "TRIED TO POP AN EMPTY VECTOR");                                                                                         \
@@ -241,10 +239,12 @@ WS_DECLARATION void ws_vector_##TYPE##_push(struct ws_vector_##TYPE* vector, TYP
     return vector->data[vector->end];                                                                                                               \
 }                                                                                                                                                   \
                                                                                                                                                     \
-[[nodiscard]]WS_DECLARATION struct ws_vector_##TYPE ws_vector_##TYPE##_create(size_t count, ...)                                                    \
+struct ws_vector_##TYPE ws_vector_##TYPE##_create(size_t count, ...)                                                                                \
 {                                                                                                                                                   \
     struct ws_vector_##TYPE vector =                                                                                                                \
     {                                                                                                                                               \
+        .begin       = 0,                                                                                                                           \
+        .end         = 0,                                                                                                                           \
         .elementSize = sizeof(TYPE),                                                                                                                \
         .data        = nullptr,                                                                                                                     \
         .size        = 0,                                                                                                                           \
@@ -264,7 +264,7 @@ WS_DECLARATION void ws_vector_##TYPE##_push(struct ws_vector_##TYPE* vector, TYP
     return vector;                                                                                                                                  \
 }                                                                                                                                                   \
                                                                                                                                                     \
-WS_DECLARATION void ws_vector_##TYPE##_destroy(struct ws_vector_##TYPE* vector, void(*strategy)(TYPE*))                                             \
+void ws_vector_##TYPE##_destroy(struct ws_vector_##TYPE* vector, void(*strategy)(TYPE*))                                                            \
 {                                                                                                                                                   \
     assert(vector != nullptr && "VECTOR POINTER WAS NULL");                                                                                         \
                                                                                                                                                     \

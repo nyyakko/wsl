@@ -84,4 +84,3 @@ TEST(hash_map, search_values)
 
     ws_hash_map_destroy(int, &hashMap);
 }
-

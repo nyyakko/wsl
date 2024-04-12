@@ -32,21 +32,19 @@ struct ws_queue_##TYPE                                                          
     size_t capacity;                                                                                                                              \
 };                                                                                                                                                \
                                                                                                                                                   \
-size_t ws_queue_##TYPE##_size(struct ws_queue_##TYPE queue);                                                                                      \
-bool ws_queue_##TYPE##_is_empty(struct ws_queue_##TYPE queue);                                                                                    \
-[[nodiscard]]TYPE* ws_queue_##TYPE##_front(struct ws_queue_##TYPE queue);                                                                         \
-[[nodiscard]]TYPE* ws_queue_##TYPE##_back(struct ws_queue_##TYPE queue);                                                                          \
-[[nodiscard]]TYPE* ws_queue_##TYPE##_search(struct ws_queue_##TYPE queue, TYPE value, bool(*predicate)(TYPE const*, TYPE const*));                \
+[[nodiscard]] size_t ws_queue_##TYPE##_size(struct ws_queue_##TYPE queue);                                                                        \
+[[nodiscard]] bool ws_queue_##TYPE##_is_empty(struct ws_queue_##TYPE queue);                                                                      \
+[[nodiscard]] TYPE* ws_queue_##TYPE##_front(struct ws_queue_##TYPE queue);                                                                        \
+[[nodiscard]] TYPE* ws_queue_##TYPE##_back(struct ws_queue_##TYPE queue);                                                                         \
+[[nodiscard]] TYPE* ws_queue_##TYPE##_search(struct ws_queue_##TYPE queue, TYPE value, bool(*predicate)(TYPE const*, TYPE const*));               \
 void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, struct ws_queue_##TYPE const* source, void(*strategy)(TYPE*));                   \
 void __ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue);                                                                                  \
 void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value);                                                                           \
-[[nodiscard]]TYPE ws_queue_##TYPE##_pop(struct ws_queue_##TYPE* queue);                                                                           \
-[[nodiscard]]struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...);                                                                  \
+[[nodiscard]] TYPE ws_queue_##TYPE##_pop(struct ws_queue_##TYPE* queue);                                                                          \
+[[nodiscard]] struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...);                                                                 \
 void ws_queue_##TYPE##_destroy(struct ws_queue_##TYPE* queue, void(*strategy)(TYPE*));
 
 #else
-
-#define WS_DECLARATION inline
 
 #define WS_QUEUE(TYPE)                                                                                                                            \
                                                                                                                                                   \
@@ -59,27 +57,27 @@ struct ws_queue_##TYPE                                                          
     size_t capacity;                                                                                                                              \
 };                                                                                                                                                \
                                                                                                                                                   \
-WS_DECLARATION size_t ws_queue_##TYPE##_size(struct ws_queue_##TYPE queue)                                                                        \
+size_t ws_queue_##TYPE##_size(struct ws_queue_##TYPE queue)                                                                                       \
 {                                                                                                                                                 \
     return queue.size;                                                                                                                            \
 }                                                                                                                                                 \
                                                                                                                                                   \
-WS_DECLARATION bool ws_queue_##TYPE##_is_empty(struct ws_queue_##TYPE queue)                                                                      \
+bool ws_queue_##TYPE##_is_empty(struct ws_queue_##TYPE queue)                                                                                     \
 {                                                                                                                                                 \
     return queue.size == 0;                                                                                                                       \
 }                                                                                                                                                 \
                                                                                                                                                   \
-[[nodiscard]]WS_DECLARATION TYPE* ws_queue_##TYPE##_front(struct ws_queue_##TYPE queue)                                                           \
+TYPE* ws_queue_##TYPE##_front(struct ws_queue_##TYPE queue)                                                                                       \
 {                                                                                                                                                 \
     return &queue.data[queue.begin];                                                                                                              \
 }                                                                                                                                                 \
                                                                                                                                                   \
-[[nodiscard]]WS_DECLARATION TYPE* ws_queue_##TYPE##_back(struct ws_queue_##TYPE queue)                                                            \
+TYPE* ws_queue_##TYPE##_back(struct ws_queue_##TYPE queue)                                                                                        \
 {                                                                                                                                                 \
     return &queue.data[queue.end];                                                                                                                \
 }                                                                                                                                                 \
                                                                                                                                                   \
-[[nodiscard]]WS_DECLARATION TYPE* ws_queue_##TYPE##_search(struct ws_queue_##TYPE queue, TYPE value, bool(*predicate)(TYPE const*, TYPE const*))  \
+TYPE* ws_queue_##TYPE##_search(struct ws_queue_##TYPE queue, TYPE value, bool(*predicate)(TYPE const*, TYPE const*))                              \
 {                                                                                                                                                 \
     for (size_t index = 0llu; index != queue.size; index += 1)                                                                                    \
     {                                                                                                                                             \
@@ -92,7 +90,7 @@ WS_DECLARATION bool ws_queue_##TYPE##_is_empty(struct ws_queue_##TYPE queue)    
     return nullptr;                                                                                                                               \
 }                                                                                                                                                 \
                                                                                                                                                   \
-WS_DECLARATION void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, struct ws_queue_##TYPE const* source, void(*strategy)(TYPE*))     \
+void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, struct ws_queue_##TYPE const* source, void(*strategy)(TYPE*))                    \
 {                                                                                                                                                 \
     if (ws_queue_##TYPE##_is_empty(*source))                                                                                                      \
     {                                                                                                                                             \
@@ -118,7 +116,7 @@ WS_DECLARATION void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, 
     memcpy(destination->data, source->data, destination->capacity * sizeof(TYPE));                                                                \
 }                                                                                                                                                 \
                                                                                                                                                   \
-WS_DECLARATION void __ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue)                                                                    \
+void __ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue)                                                                                   \
 {                                                                                                                                                 \
     assert(queue != nullptr && "QUEUE POINTER WAS NULL");                                                                                         \
                                                                                                                                                   \
@@ -131,7 +129,7 @@ WS_DECLARATION void __ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue)  
     free(oldData);                                                                                                                                \
 }                                                                                                                                                 \
                                                                                                                                                   \
-WS_DECLARATION void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value)                                                             \
+void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value)                                                                            \
 {                                                                                                                                                 \
     assert(queue != nullptr && "QUEUE POINTER WAS NULL");                                                                                         \
                                                                                                                                                   \
@@ -143,7 +141,7 @@ WS_DECLARATION void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE v
     queue->end = queue->size - 1;                                                                                                                 \
 }                                                                                                                                                 \
                                                                                                                                                   \
-[[nodiscard]]WS_DECLARATION TYPE ws_queue_##TYPE##_pop(struct ws_queue_##TYPE* queue)                                                             \
+TYPE ws_queue_##TYPE##_pop(struct ws_queue_##TYPE* queue)                                                                                         \
 {                                                                                                                                                 \
     assert(queue != nullptr && "QUEUE POINTER WAS NULL");                                                                                         \
     assert(queue->size && "TRIED TO POP AN EMPTY QUEUE");                                                                                         \
@@ -154,10 +152,12 @@ WS_DECLARATION void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE v
     return queue->data[queue->begin - 1];                                                                                                         \
 }                                                                                                                                                 \
                                                                                                                                                   \
-[[nodiscard]]WS_DECLARATION struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...)                                                    \
+struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...)                                                                                \
 {                                                                                                                                                 \
     struct ws_queue_##TYPE queue =                                                                                                                \
     {                                                                                                                                             \
+        .begin    = 0,                                                                                                                            \
+        .end      = 0,                                                                                                                            \
         .data     = nullptr,                                                                                                                      \
         .size     = 0,                                                                                                                            \
         .capacity = 1,                                                                                                                            \
@@ -176,7 +176,7 @@ WS_DECLARATION void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE v
     return queue;                                                                                                                                 \
 }                                                                                                                                                 \
                                                                                                                                                   \
-WS_DECLARATION void ws_queue_##TYPE##_destroy(struct ws_queue_##TYPE* queue, void(*strategy)(TYPE*))                                              \
+void ws_queue_##TYPE##_destroy(struct ws_queue_##TYPE* queue, void(*strategy)(TYPE*))                                                             \
 {                                                                                                                                                 \
     if (strategy != nullptr)                                                                                                                      \
     {                                                                                                                                             \

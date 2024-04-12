@@ -32,19 +32,17 @@ struct ws_linked_list_##TYPE                                                    
     struct ws_linked_list_##TYPE##_node* tail;                                                                                                                               \
 };                                                                                                                                                                           \
                                                                                                                                                                              \
-size_t ws_linked_list_##TYPE##_size(struct ws_linked_list_##TYPE list);                                                                                                      \
-[[nodiscard]]TYPE* ws_linked_list_##TYPE##_front(struct ws_linked_list_##TYPE list);                                                                                         \
-[[nodiscard]]TYPE* ws_linked_list_##TYPE##_back(struct ws_linked_list_##TYPE list);                                                                                          \
-[[nodiscard]]TYPE ws_linked_list_##TYPE##_pop_front(struct ws_linked_list_##TYPE* list);                                                                                     \
-[[nodiscard]]TYPE ws_linked_list_##TYPE##_pop_back(struct ws_linked_list_##TYPE* list);                                                                                      \
+[[nodiscard]] size_t ws_linked_list_##TYPE##_size(struct ws_linked_list_##TYPE list);                                                                                        \
+[[nodiscard]] TYPE* ws_linked_list_##TYPE##_front(struct ws_linked_list_##TYPE list);                                                                                        \
+[[nodiscard]] TYPE* ws_linked_list_##TYPE##_back(struct ws_linked_list_##TYPE list);                                                                                         \
+[[nodiscard]] TYPE ws_linked_list_##TYPE##_pop_front(struct ws_linked_list_##TYPE* list);                                                                                    \
+[[nodiscard]] TYPE ws_linked_list_##TYPE##_pop_back(struct ws_linked_list_##TYPE* list);                                                                                     \
 void ws_linked_list_##TYPE##_push_front(struct ws_linked_list_##TYPE* list, TYPE value);                                                                                     \
 void ws_linked_list_##TYPE##_push_back(struct ws_linked_list_##TYPE* list, TYPE value);                                                                                      \
-[[nodiscard]]struct ws_linked_list_##TYPE ws_linked_list_##TYPE##_create(size_t count, ...);                                                                                 \
+[[nodiscard]] struct ws_linked_list_##TYPE ws_linked_list_##TYPE##_create(size_t count, ...);                                                                                \
 void ws_linked_list_##TYPE##_destroy(struct ws_linked_list_##TYPE* list, void(*strategy)(TYPE*));
 
 #else
-
-#define WS_DECLARATION inline
 
 #define WS_LINKED_LIST(TYPE)                                                                                                                                                 \
                                                                                                                                                                              \
@@ -62,23 +60,23 @@ struct ws_linked_list_##TYPE                                                    
     struct ws_linked_list_##TYPE##_node* tail;                                                                                                                               \
 };                                                                                                                                                                           \
                                                                                                                                                                              \
-WS_DECLARATION size_t ws_linked_list_##TYPE##_size(struct ws_linked_list_##TYPE list)                                                                                        \
+size_t ws_linked_list_##TYPE##_size(struct ws_linked_list_##TYPE list)                                                                                                       \
 {                                                                                                                                                                            \
     return list.size;                                                                                                                                                        \
 }                                                                                                                                                                            \
                                                                                                                                                                              \
-[[nodiscard]]WS_DECLARATION TYPE* ws_linked_list_##TYPE##_front(struct ws_linked_list_##TYPE list)                                                                           \
+TYPE* ws_linked_list_##TYPE##_front(struct ws_linked_list_##TYPE list)                                                                                                       \
 {                                                                                                                                                                            \
     return &list.head->value;                                                                                                                                                \
 }                                                                                                                                                                            \
                                                                                                                                                                              \
-[[nodiscard]]WS_DECLARATION TYPE* ws_linked_list_##TYPE##_back(struct ws_linked_list_##TYPE list)                                                                            \
+TYPE* ws_linked_list_##TYPE##_back(struct ws_linked_list_##TYPE list)                                                                                                        \
 {                                                                                                                                                                            \
     return &list.tail->value;                                                                                                                                                \
 }                                                                                                                                                                            \
                                                                                                                                                                              \
                                                                                                                                                                              \
-[[nodiscard]]WS_DECLARATION TYPE ws_linked_list_##TYPE##_pop_front(struct ws_linked_list_##TYPE* list)                                                                       \
+TYPE ws_linked_list_##TYPE##_pop_front(struct ws_linked_list_##TYPE* list)                                                                                                   \
 {                                                                                                                                                                            \
     assert(list != nullptr && "LINKED LIST POINTER WAS NULL");                                                                                                               \
     assert(list->head != nullptr && "LINKED LIST HEAD WAS NULL");                                                                                                            \
@@ -100,7 +98,7 @@ WS_DECLARATION size_t ws_linked_list_##TYPE##_size(struct ws_linked_list_##TYPE 
     return value;                                                                                                                                                            \
 }                                                                                                                                                                            \
                                                                                                                                                                              \
-[[nodiscard]]WS_DECLARATION TYPE ws_linked_list_##TYPE##_pop_back(struct ws_linked_list_##TYPE* list)                                                                        \
+TYPE ws_linked_list_##TYPE##_pop_back(struct ws_linked_list_##TYPE* list)                                                                                                    \
 {                                                                                                                                                                            \
     assert(list != nullptr && "LINKED LIST POINTER WAS NULL");                                                                                                               \
     assert(list->tail != nullptr && "LINKED LIST TAIL WAS NULL");                                                                                                            \
@@ -126,7 +124,7 @@ WS_DECLARATION size_t ws_linked_list_##TYPE##_size(struct ws_linked_list_##TYPE 
     return value;                                                                                                                                                            \
 }                                                                                                                                                                            \
                                                                                                                                                                              \
-WS_DECLARATION void ws_linked_list_##TYPE##_push_front(struct ws_linked_list_##TYPE* list, TYPE value)                                                                       \
+void ws_linked_list_##TYPE##_push_front(struct ws_linked_list_##TYPE* list, TYPE value)                                                                                      \
 {                                                                                                                                                                            \
     assert(list != nullptr && "LINKED LIST POINTER WAS NULL");                                                                                                               \
                                                                                                                                                                              \
@@ -153,7 +151,7 @@ WS_DECLARATION void ws_linked_list_##TYPE##_push_front(struct ws_linked_list_##T
     list->tail = newNode;                                                                                                                                                    \
 }                                                                                                                                                                            \
                                                                                                                                                                              \
-WS_DECLARATION void ws_linked_list_##TYPE##_push_back(struct ws_linked_list_##TYPE* list, TYPE value)                                                                        \
+void ws_linked_list_##TYPE##_push_back(struct ws_linked_list_##TYPE* list, TYPE value)                                                                                       \
 {                                                                                                                                                                            \
     assert(list != nullptr && "LINKED LIST POINTER WAS NULL");                                                                                                               \
                                                                                                                                                                              \
@@ -180,7 +178,7 @@ WS_DECLARATION void ws_linked_list_##TYPE##_push_back(struct ws_linked_list_##TY
     list->tail = newNode;                                                                                                                                                    \
 }                                                                                                                                                                            \
                                                                                                                                                                              \
-[[nodiscard]]WS_DECLARATION struct ws_linked_list_##TYPE ws_linked_list_##TYPE##_create(size_t count, ...)                                                                   \
+struct ws_linked_list_##TYPE ws_linked_list_##TYPE##_create(size_t count, ...)                                                                                               \
 {                                                                                                                                                                            \
     struct ws_linked_list_##TYPE list =                                                                                                                                      \
     {                                                                                                                                                                        \
@@ -202,7 +200,7 @@ WS_DECLARATION void ws_linked_list_##TYPE##_push_back(struct ws_linked_list_##TY
     return list;                                                                                                                                                             \
 }                                                                                                                                                                            \
                                                                                                                                                                              \
-WS_DECLARATION void ws_linked_list_##TYPE##_destroy(struct ws_linked_list_##TYPE* list, void(*strategy)(TYPE*))                                                              \
+void ws_linked_list_##TYPE##_destroy(struct ws_linked_list_##TYPE* list, void(*strategy)(TYPE*))                                                                             \
 {                                                                                                                                                                            \
     assert(list != nullptr && "LINKED LIST POINTER WAS NULL");                                                                                                               \
                                                                                                                                                                              \
@@ -225,3 +223,4 @@ WS_DECLARATION void ws_linked_list_##TYPE##_destroy(struct ws_linked_list_##TYPE
 #endif
 
 #endif
+

@@ -1,5 +1,3 @@
-set(CMAKE_CXX_VERSION 23)
-
 add_subdirectory(algorithm)
 
 add_subdirectory(vector)

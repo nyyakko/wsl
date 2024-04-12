@@ -71,21 +71,19 @@ struct ws_hash_map_##TYPE                                                       
     size_t capacity;                                                                                                                                                                              \
 };                                                                                                                                                                                                \
                                                                                                                                                                                                   \
-size_t ws_hash_map_##TYPE##_size(struct ws_hash_map_##TYPE hashMap);                                                                                                                              \
-[[nodiscard]]TYPE* ws_hash_map_##TYPE##_search_hashed(struct ws_hash_map_##TYPE hashmap, TYPE value)                                                                                              \
-[[nodiscard]]TYPE* ws_hash_map_##TYPE##_search(struct ws_hash_map_##TYPE hashMap, size_t key);                                                                                                    \
+[[nodiscard]] size_t ws_hash_map_##TYPE##_size(struct ws_hash_map_##TYPE hashMap);                                                                                                                \
+[[nodiscard]] TYPE* ws_hash_map_##TYPE##_search_hashed(struct ws_hash_map_##TYPE hashmap, TYPE value)                                                                                             \
+[[nodiscard]] TYPE* ws_hash_map_##TYPE##_search(struct ws_hash_map_##TYPE hashMap, size_t key);                                                                                                   \
 void ws_hash_map_##TYPE##_push_hashed(struct ws_hash_map_##TYPE* hashmap, TYPE value)                                                                                                             \
 void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t key, TYPE value);                                                                                                       \
 void ws_hash_map_##TYPE##_pop_hashed(struct ws_hash_map_##TYPE* hashmap, TYPE value)                                                                                                              \
-[[nodiscard]]TYPE ws_hash_map_##TYPE##_pop(struct ws_hash_map_##TYPE* hashMap, size_t key);                                                                                                       \
-[[nodiscard]]struct ws_hash_map_##TYPE ws_hash_map_##TYPE##_create();                                                                                                                             \
+[[nodiscard]] TYPE ws_hash_map_##TYPE##_pop(struct ws_hash_map_##TYPE* hashMap, size_t key);                                                                                                      \
+[[nodiscard]] struct ws_hash_map_##TYPE ws_hash_map_##TYPE##_create();                                                                                                                            \
 void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, void(*strategy)(TYPE*));
 
 size_t ws_hash_map_hash(void const* bytes, size_t length);
 
 #else
-
-#define WS_DECLARATION inline
 
 #define WS_HASH_MAP(TYPE)                                                                                                                                                                         \
                                                                                                                                                                                                   \
@@ -104,12 +102,12 @@ struct __ws_hash_map_tree_##TYPE                                                
     size_t size;                                                                                                                                                                                  \
 };                                                                                                                                                                                                \
                                                                                                                                                                                                   \
-WS_DECLARATION size_t __ws_hash_map_tree_##TYPE##_size(struct __ws_hash_map_tree_##TYPE tree)                                                                                                     \
+size_t __ws_hash_map_tree_##TYPE##_size(struct __ws_hash_map_tree_##TYPE tree)                                                                                                                    \
 {                                                                                                                                                                                                 \
     return tree.size;                                                                                                                                                                             \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-WS_DECLARATION struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYPE##_search(struct __ws_hash_map_tree_##TYPE tree, size_t key)                                                     \
+struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYPE##_search(struct __ws_hash_map_tree_##TYPE tree, size_t key)                                                                    \
 {                                                                                                                                                                                                 \
     struct __ws_hash_map_tree_##TYPE##_node* node = tree.head;                                                                                                                                    \
                                                                                                                                                                                                   \
@@ -129,7 +127,7 @@ WS_DECLARATION struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYP
     return nullptr;                                                                                                                                                                               \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-WS_DECLARATION struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYPE##_minimum(struct __ws_hash_map_tree_##TYPE##_node* head)                                                        \
+struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYPE##_minimum(struct __ws_hash_map_tree_##TYPE##_node* head)                                                                       \
 {                                                                                                                                                                                                 \
     assert(head != nullptr && "NODE WAS NULL");                                                                                                                                                   \
                                                                                                                                                                                                   \
@@ -141,7 +139,7 @@ WS_DECLARATION struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYP
     return head;                                                                                                                                                                                  \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-WS_DECLARATION struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYPE##_maximum(struct __ws_hash_map_tree_##TYPE##_node* head)                                                        \
+struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYPE##_maximum(struct __ws_hash_map_tree_##TYPE##_node* head)                                                                       \
 {                                                                                                                                                                                                 \
     assert(head != nullptr && "NODE WAS NULL");                                                                                                                                                   \
                                                                                                                                                                                                   \
@@ -153,7 +151,7 @@ WS_DECLARATION struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYP
     return head;                                                                                                                                                                                  \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-WS_DECLARATION struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYPE##_successor(struct __ws_hash_map_tree_##TYPE##_node* head)                                                      \
+struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYPE##_successor(struct __ws_hash_map_tree_##TYPE##_node* head)                                                                     \
 {                                                                                                                                                                                                 \
     assert(head != nullptr && "NODE WAS NULL");                                                                                                                                                   \
                                                                                                                                                                                                   \
@@ -173,7 +171,7 @@ WS_DECLARATION struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYP
     return parent;                                                                                                                                                                                \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-WS_DECLARATION struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYPE##_predecessor(struct __ws_hash_map_tree_##TYPE##_node* head)                                                    \
+struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYPE##_predecessor(struct __ws_hash_map_tree_##TYPE##_node* head)                                                                   \
 {                                                                                                                                                                                                 \
     assert(head != nullptr && "NODE WAS NULL");                                                                                                                                                   \
                                                                                                                                                                                                   \
@@ -193,7 +191,7 @@ WS_DECLARATION struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYP
     return parent;                                                                                                                                                                                \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-WS_DECLARATION void __ws_hash_map_tree_##TYPE##_shift_nodes(struct __ws_hash_map_tree_##TYPE* tree, struct __ws_hash_map_tree_##TYPE##_node* lhs, struct __ws_hash_map_tree_##TYPE##_node* rhs)   \
+void __ws_hash_map_tree_##TYPE##_shift_nodes(struct __ws_hash_map_tree_##TYPE* tree, struct __ws_hash_map_tree_##TYPE##_node* lhs, struct __ws_hash_map_tree_##TYPE##_node* rhs)                  \
 {                                                                                                                                                                                                 \
     assert(tree != nullptr && "TREE WAS NULL");                                                                                                                                                   \
     assert(lhs != nullptr && "LHS NODE WAS NULL");                                                                                                                                                \
@@ -216,7 +214,7 @@ WS_DECLARATION void __ws_hash_map_tree_##TYPE##_shift_nodes(struct __ws_hash_map
     }                                                                                                                                                                                             \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-WS_DECLARATION void __ws_hash_map_tree_##TYPE##_push(struct __ws_hash_map_tree_##TYPE* tree, size_t key, TYPE value)                                                                              \
+void __ws_hash_map_tree_##TYPE##_push(struct __ws_hash_map_tree_##TYPE* tree, size_t key, TYPE value)                                                                                             \
 {                                                                                                                                                                                                 \
     assert(tree != nullptr && "TREE WAS NULL");                                                                                                                                                   \
                                                                                                                                                                                                   \
@@ -254,7 +252,7 @@ WS_DECLARATION void __ws_hash_map_tree_##TYPE##_push(struct __ws_hash_map_tree_#
     *node = newNode;                                                                                                                                                                              \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-[[nodiscard]]WS_DECLARATION TYPE __ws_hash_map_tree_##TYPE##_pop(struct __ws_hash_map_tree_##TYPE* tree, size_t key)                                                                              \
+TYPE __ws_hash_map_tree_##TYPE##_pop(struct __ws_hash_map_tree_##TYPE* tree, size_t key)                                                                                                          \
 {                                                                                                                                                                                                 \
     assert(tree->size && "TREE WAS EMPTY");                                                                                                                                                       \
                                                                                                                                                                                                   \
@@ -303,7 +301,7 @@ WS_DECLARATION void __ws_hash_map_tree_##TYPE##_push(struct __ws_hash_map_tree_#
     return returnValue;                                                                                                                                                                           \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-[[nodiscard]]WS_DECLARATION struct __ws_hash_map_tree_##TYPE __ws_hash_map_tree_##TYPE##_create()                                                                                                 \
+struct __ws_hash_map_tree_##TYPE __ws_hash_map_tree_##TYPE##_create()                                                                                                                             \
 {                                                                                                                                                                                                 \
     struct __ws_hash_map_tree_##TYPE tree =                                                                                                                                                       \
     {                                                                                                                                                                                             \
@@ -314,7 +312,7 @@ WS_DECLARATION void __ws_hash_map_tree_##TYPE##_push(struct __ws_hash_map_tree_#
     return tree;                                                                                                                                                                                  \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-WS_DECLARATION void __ws_hash_map_tree_##TYPE##_destroy_branch(struct __ws_hash_map_tree_##TYPE##_node* head, void(*strategy)(TYPE*))                                                             \
+void __ws_hash_map_tree_##TYPE##_destroy_branch(struct __ws_hash_map_tree_##TYPE##_node* head, void(*strategy)(TYPE*))                                                                            \
 {                                                                                                                                                                                                 \
     if (head == nullptr)                                                                                                                                                                          \
     {                                                                                                                                                                                             \
@@ -336,7 +334,7 @@ WS_DECLARATION void __ws_hash_map_tree_##TYPE##_destroy_branch(struct __ws_hash_
     free(head);                                                                                                                                                                                   \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-WS_DECLARATION void __ws_hash_map_tree_##TYPE##_destroy(struct __ws_hash_map_tree_##TYPE* tree, void(*strategy)(TYPE*))                                                                           \
+void __ws_hash_map_tree_##TYPE##_destroy(struct __ws_hash_map_tree_##TYPE* tree, void(*strategy)(TYPE*))                                                                                          \
 {                                                                                                                                                                                                 \
     assert(tree != nullptr && "TREE WAS NULL");                                                                                                                                                   \
     __ws_hash_map_tree_##TYPE##_destroy_branch(tree->head, strategy);                                                                                                                             \
@@ -356,12 +354,12 @@ struct ws_hash_map_##TYPE                                                       
     size_t capacity;                                                                                                                                                                              \
 };                                                                                                                                                                                                \
                                                                                                                                                                                                   \
-WS_DECLARATION size_t ws_hash_map_##TYPE##_size(struct ws_hash_map_##TYPE hashMap)                                                                                                                \
+size_t ws_hash_map_##TYPE##_size(struct ws_hash_map_##TYPE hashMap)                                                                                                                               \
 {                                                                                                                                                                                                 \
     return hashMap.size;                                                                                                                                                                          \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-[[nodiscard]]WS_DECLARATION TYPE* ws_hash_map_##TYPE##_search(struct ws_hash_map_##TYPE hashMap, size_t key)                                                                                      \
+TYPE* ws_hash_map_##TYPE##_search(struct ws_hash_map_##TYPE hashMap, size_t key)                                                                                                                  \
 {                                                                                                                                                                                                 \
     for (size_t index = 0llu; index != hashMap.capacity; index += 1)                                                                                                                              \
     {                                                                                                                                                                                             \
@@ -377,7 +375,7 @@ WS_DECLARATION size_t ws_hash_map_##TYPE##_size(struct ws_hash_map_##TYPE hashMa
     return nullptr;                                                                                                                                                                               \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-[[nodiscard]]TYPE* ws_hash_map_##TYPE##_search_hashed(struct ws_hash_map_##TYPE hashmap, TYPE value)                                                                                              \
+TYPE* ws_hash_map_##TYPE##_search_hashed(struct ws_hash_map_##TYPE hashmap, TYPE value)                                                                                                           \
 {                                                                                                                                                                                                 \
     if (!(__WS_IS_TRIVIALLY_HASHABLE(#TYPE)))                                                                                                                                                     \
     {                                                                                                                                                                                             \
@@ -390,7 +388,7 @@ WS_DECLARATION size_t ws_hash_map_##TYPE##_size(struct ws_hash_map_##TYPE hashMa
     return ws_hash_map_##TYPE##_search(hashmap, hash);                                                                                                                                            \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-WS_DECLARATION void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t key, TYPE value)                                                                                         \
+void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t key, TYPE value)                                                                                                        \
 {                                                                                                                                                                                                 \
     assert(hashMap != nullptr && "HASHMAP POINTER WAS NULL");                                                                                                                                     \
                                                                                                                                                                                                   \
@@ -422,7 +420,7 @@ void ws_hash_map_##TYPE##_push_hashed(struct ws_hash_map_##TYPE* hashmap, TYPE v
     ws_hash_map_##TYPE##_push(hashmap, hash, value);                                                                                                                                              \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-[[nodiscard]]WS_DECLARATION TYPE ws_hash_map_##TYPE##_pop(struct ws_hash_map_##TYPE* hashMap, size_t key)                                                                                         \
+TYPE ws_hash_map_##TYPE##_pop(struct ws_hash_map_##TYPE* hashMap, size_t key)                                                                                                                     \
 {                                                                                                                                                                                                 \
     assert(hashMap != nullptr && "HASHMAP POINTER WAS NULL");                                                                                                                                     \
                                                                                                                                                                                                   \
@@ -446,7 +444,7 @@ TYPE ws_hash_map_##TYPE##_pop_hashed(struct ws_hash_map_##TYPE* hashmap, TYPE va
     return ws_hash_map_##TYPE##_pop(hashmap, hash);                                                                                                                                               \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-[[nodiscard]]WS_DECLARATION struct ws_hash_map_##TYPE ws_hash_map_##TYPE##_create()                                                                                                               \
+struct ws_hash_map_##TYPE ws_hash_map_##TYPE##_create()                                                                                                                                           \
 {                                                                                                                                                                                                 \
     struct ws_hash_map_##TYPE hashMap =                                                                                                                                                           \
     {                                                                                                                                                                                             \
@@ -466,7 +464,7 @@ TYPE ws_hash_map_##TYPE##_pop_hashed(struct ws_hash_map_##TYPE* hashmap, TYPE va
     return hashMap;                                                                                                                                                                               \
 }                                                                                                                                                                                                 \
                                                                                                                                                                                                   \
-WS_DECLARATION void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, void(*strategy)(TYPE*))                                                                                      \
+void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, void(*strategy)(TYPE*))                                                                                                     \
 {                                                                                                                                                                                                 \
     assert(hashMap != nullptr && "HASHMAP POINTER WAS NULL");                                                                                                                                     \
                                                                                                                                                                                                   \
@@ -482,7 +480,7 @@ WS_DECLARATION void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hash
 
 // MurmurHash: https://en.wikipedia.org/wiki/MurmurHash
 
-WS_DECLARATION size_t ws_hash_map_hash(void const* bytes, size_t length)
+size_t ws_hash_map_hash(void const* bytes, size_t length)
 {
     const unsigned long long m = 0xc6a4a7935bd1e995ULL;
     const int r = 47;

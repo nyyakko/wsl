@@ -29,22 +29,20 @@ struct ws_binary_tree_##TYPE                                                    
     size_t size;                                                                                                                                                                 \
 };                                                                                                                                                                               \
                                                                                                                                                                                  \
-size_t ws_binary_tree_##TYPE##_size(struct ws_binary_tree_##TYPE tree);                                                                                                          \
-[[nodiscard]]struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_search(struct ws_binary_tree_##TYPE tree, size_t key);                                                 \
-[[nodiscard]]struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_minimum(struct ws_binary_tree_##TYPE##_node* head);                                                    \
-[[nodiscard]]struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_maximum(struct ws_binary_tree_##TYPE##_node* head);                                                    \
-[[nodiscard]]struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_successor(struct ws_binary_tree_##TYPE##_node* head);                                                  \
-[[nodiscard]]struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_predecessor(struct ws_binary_tree_##TYPE##_node* head);                                                \
+[[nodiscard]] size_t ws_binary_tree_##TYPE##_size(struct ws_binary_tree_##TYPE tree);                                                                                            \
+[[nodiscard]] struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_search(struct ws_binary_tree_##TYPE tree, size_t key);                                                \
+[[nodiscard]] struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_minimum(struct ws_binary_tree_##TYPE##_node* head);                                                   \
+[[nodiscard]] struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_maximum(struct ws_binary_tree_##TYPE##_node* head);                                                   \
+[[nodiscard]] struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_successor(struct ws_binary_tree_##TYPE##_node* head);                                                 \
+[[nodiscard]] struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_predecessor(struct ws_binary_tree_##TYPE##_node* head);                                               \
 void ws_binary_tree_##TYPE##_shift_nodes(struct ws_binary_tree_##TYPE* tree, struct ws_binary_tree_##TYPE##_node* lhs, struct ws_binary_tree_##TYPE##_node* rhs);                \
 void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* tree, size_t key, TYPE value);                                                                                   \
-[[nodiscard]]TYPE ws_binary_tree_##TYPE##_pop(struct ws_binary_tree_##TYPE* tree, size_t key);                                                                                   \
-[[nodiscard]]struct ws_binary_tree_##TYPE ws_binary_tree_##TYPE##_create();                                                                                                      \
+[[nodiscard]] TYPE ws_binary_tree_##TYPE##_pop(struct ws_binary_tree_##TYPE* tree, size_t key);                                                                                  \
+[[nodiscard]] struct ws_binary_tree_##TYPE ws_binary_tree_##TYPE##_create();                                                                                                     \
 void ws_binary_tree_##TYPE##_destroy_branch(struct ws_binary_tree_##TYPE##_node* head, void(*strategy)(TYPE*));                                                                  \
 void ws_binary_tree_##TYPE##_destroy(struct ws_binary_tree_##TYPE* tree, void(*strategy)(TYPE*));
 
 #else
-
-#define WS_DECLARATION inline
 
 #define WS_BINARY_TREE(TYPE)                                                                                                                                                     \
                                                                                                                                                                                  \
@@ -63,12 +61,12 @@ struct ws_binary_tree_##TYPE                                                    
     size_t size;                                                                                                                                                                 \
 };                                                                                                                                                                               \
                                                                                                                                                                                  \
-WS_DECLARATION size_t ws_binary_tree_##TYPE##_size(struct ws_binary_tree_##TYPE tree)                                                                                            \
+size_t ws_binary_tree_##TYPE##_size(struct ws_binary_tree_##TYPE tree)                                                                                                           \
 {                                                                                                                                                                                \
     return tree.size;                                                                                                                                                            \
 }                                                                                                                                                                                \
                                                                                                                                                                                  \
-[[nodiscard]]WS_DECLARATION struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_search(struct ws_binary_tree_##TYPE tree, size_t key)                                   \
+struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_search(struct ws_binary_tree_##TYPE tree, size_t key)                                                               \
 {                                                                                                                                                                                \
     struct ws_binary_tree_##TYPE##_node* node = tree.head;                                                                                                                       \
                                                                                                                                                                                  \
@@ -88,7 +86,7 @@ WS_DECLARATION size_t ws_binary_tree_##TYPE##_size(struct ws_binary_tree_##TYPE 
     return nullptr;                                                                                                                                                              \
 }                                                                                                                                                                                \
                                                                                                                                                                                  \
-[[nodiscard]]WS_DECLARATION struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_minimum(struct ws_binary_tree_##TYPE##_node* head)                                      \
+struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_minimum(struct ws_binary_tree_##TYPE##_node* head)                                                                  \
 {                                                                                                                                                                                \
     assert(head != nullptr && "NODE WAS NULL");                                                                                                                                  \
                                                                                                                                                                                  \
@@ -100,7 +98,7 @@ WS_DECLARATION size_t ws_binary_tree_##TYPE##_size(struct ws_binary_tree_##TYPE 
     return head;                                                                                                                                                                 \
 }                                                                                                                                                                                \
                                                                                                                                                                                  \
-[[nodiscard]]WS_DECLARATION struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_maximum(struct ws_binary_tree_##TYPE##_node* head)                                      \
+struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_maximum(struct ws_binary_tree_##TYPE##_node* head)                                                                  \
 {                                                                                                                                                                                \
     assert(head != nullptr && "NODE WAS NULL");                                                                                                                                  \
                                                                                                                                                                                  \
@@ -112,7 +110,7 @@ WS_DECLARATION size_t ws_binary_tree_##TYPE##_size(struct ws_binary_tree_##TYPE 
     return head;                                                                                                                                                                 \
 }                                                                                                                                                                                \
                                                                                                                                                                                  \
-[[nodiscard]]WS_DECLARATION struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_successor(struct ws_binary_tree_##TYPE##_node* head)                                    \
+struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_successor(struct ws_binary_tree_##TYPE##_node* head)                                                                \
 {                                                                                                                                                                                \
     assert(head != nullptr && "NODE WAS NULL");                                                                                                                                  \
                                                                                                                                                                                  \
@@ -132,7 +130,7 @@ WS_DECLARATION size_t ws_binary_tree_##TYPE##_size(struct ws_binary_tree_##TYPE 
     return parent;                                                                                                                                                               \
 }                                                                                                                                                                                \
                                                                                                                                                                                  \
-[[nodiscard]]WS_DECLARATION struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_predecessor(struct ws_binary_tree_##TYPE##_node* head)                                  \
+struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_predecessor(struct ws_binary_tree_##TYPE##_node* head)                                                              \
 {                                                                                                                                                                                \
     assert(head != nullptr && "NODE WAS NULL");                                                                                                                                  \
                                                                                                                                                                                  \
@@ -152,7 +150,7 @@ WS_DECLARATION size_t ws_binary_tree_##TYPE##_size(struct ws_binary_tree_##TYPE 
     return parent;                                                                                                                                                               \
 }                                                                                                                                                                                \
                                                                                                                                                                                  \
-WS_DECLARATION void ws_binary_tree_##TYPE##_shift_nodes(struct ws_binary_tree_##TYPE* tree, struct ws_binary_tree_##TYPE##_node* lhs, struct ws_binary_tree_##TYPE##_node* rhs)  \
+void ws_binary_tree_##TYPE##_shift_nodes(struct ws_binary_tree_##TYPE* tree, struct ws_binary_tree_##TYPE##_node* lhs, struct ws_binary_tree_##TYPE##_node* rhs)                 \
 {                                                                                                                                                                                \
     assert(tree != nullptr && "TREE WAS NULL");                                                                                                                                  \
     assert(lhs != nullptr && "LHS NODE WAS NULL");                                                                                                                               \
@@ -175,7 +173,7 @@ WS_DECLARATION void ws_binary_tree_##TYPE##_shift_nodes(struct ws_binary_tree_##
     }                                                                                                                                                                            \
 }                                                                                                                                                                                \
                                                                                                                                                                                  \
-WS_DECLARATION void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* tree, size_t key, TYPE value)                                                                     \
+void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* tree, size_t key, TYPE value)                                                                                    \
 {                                                                                                                                                                                \
     assert(tree != nullptr && "TREE WAS NULL");                                                                                                                                  \
                                                                                                                                                                                  \
@@ -213,7 +211,7 @@ WS_DECLARATION void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* t
     *node = newNode;                                                                                                                                                             \
 }                                                                                                                                                                                \
                                                                                                                                                                                  \
-[[nodiscard]]WS_DECLARATION TYPE ws_binary_tree_##TYPE##_pop(struct ws_binary_tree_##TYPE* tree, size_t key)                                                                     \
+TYPE ws_binary_tree_##TYPE##_pop(struct ws_binary_tree_##TYPE* tree, size_t key)                                                                                                 \
 {                                                                                                                                                                                \
     assert(tree->size && "TREE WAS EMPTY");                                                                                                                                      \
                                                                                                                                                                                  \
@@ -262,7 +260,7 @@ WS_DECLARATION void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* t
     return returnValue;                                                                                                                                                          \
 }                                                                                                                                                                                \
                                                                                                                                                                                  \
-[[nodiscard]]WS_DECLARATION struct ws_binary_tree_##TYPE ws_binary_tree_##TYPE##_create()                                                                                        \
+struct ws_binary_tree_##TYPE ws_binary_tree_##TYPE##_create()                                                                                                                    \
 {                                                                                                                                                                                \
     struct ws_binary_tree_##TYPE tree =                                                                                                                                          \
     {                                                                                                                                                                            \
@@ -273,7 +271,7 @@ WS_DECLARATION void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* t
     return tree;                                                                                                                                                                 \
 }                                                                                                                                                                                \
                                                                                                                                                                                  \
-WS_DECLARATION void ws_binary_tree_##TYPE##_destroy_branch(struct ws_binary_tree_##TYPE##_node* head, void(*strategy)(TYPE*))                                                    \
+void ws_binary_tree_##TYPE##_destroy_branch(struct ws_binary_tree_##TYPE##_node* head, void(*strategy)(TYPE*))                                                                   \
 {                                                                                                                                                                                \
     if (head == nullptr)                                                                                                                                                         \
     {                                                                                                                                                                            \
@@ -295,7 +293,7 @@ WS_DECLARATION void ws_binary_tree_##TYPE##_destroy_branch(struct ws_binary_tree
     free(head);                                                                                                                                                                  \
 }                                                                                                                                                                                \
                                                                                                                                                                                  \
-WS_DECLARATION void ws_binary_tree_##TYPE##_destroy(struct ws_binary_tree_##TYPE* tree, void(*strategy)(TYPE*))                                                                  \
+void ws_binary_tree_##TYPE##_destroy(struct ws_binary_tree_##TYPE* tree, void(*strategy)(TYPE*))                                                                                 \
 {                                                                                                                                                                                \
     assert(tree != nullptr && "TREE WAS NULL");                                                                                                                                  \
     ws_binary_tree_##TYPE##_destroy_branch(tree->head, strategy);                                                                                                                \
