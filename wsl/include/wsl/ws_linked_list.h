@@ -60,6 +60,16 @@ struct ws_linked_list_##TYPE                                                    
     struct ws_linked_list_##TYPE##_node* tail;                                                                                                                               \
 };                                                                                                                                                                           \
                                                                                                                                                                              \
+[[nodiscard]] size_t ws_linked_list_##TYPE##_size(struct ws_linked_list_##TYPE list);                                                                                        \
+[[nodiscard]] TYPE* ws_linked_list_##TYPE##_front(struct ws_linked_list_##TYPE list);                                                                                        \
+[[nodiscard]] TYPE* ws_linked_list_##TYPE##_back(struct ws_linked_list_##TYPE list);                                                                                         \
+[[nodiscard]] TYPE ws_linked_list_##TYPE##_pop_front(struct ws_linked_list_##TYPE* list);                                                                                    \
+[[nodiscard]] TYPE ws_linked_list_##TYPE##_pop_back(struct ws_linked_list_##TYPE* list);                                                                                     \
+void ws_linked_list_##TYPE##_push_front(struct ws_linked_list_##TYPE* list, TYPE value);                                                                                     \
+void ws_linked_list_##TYPE##_push_back(struct ws_linked_list_##TYPE* list, TYPE value);                                                                                      \
+[[nodiscard]] struct ws_linked_list_##TYPE ws_linked_list_##TYPE##_create(size_t count, ...);                                                                                \
+void ws_linked_list_##TYPE##_destroy(struct ws_linked_list_##TYPE* list, void(*strategy)(TYPE*));                                                                            \
+                                                                                                                                                                             \
 size_t ws_linked_list_##TYPE##_size(struct ws_linked_list_##TYPE list)                                                                                                       \
 {                                                                                                                                                                            \
     return list.size;                                                                                                                                                        \

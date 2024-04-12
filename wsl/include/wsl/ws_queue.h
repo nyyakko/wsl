@@ -57,6 +57,18 @@ struct ws_queue_##TYPE                                                          
     size_t capacity;                                                                                                                              \
 };                                                                                                                                                \
                                                                                                                                                   \
+[[nodiscard]] size_t ws_queue_##TYPE##_size(struct ws_queue_##TYPE queue);                                                                        \
+[[nodiscard]] bool ws_queue_##TYPE##_is_empty(struct ws_queue_##TYPE queue);                                                                      \
+[[nodiscard]] TYPE* ws_queue_##TYPE##_front(struct ws_queue_##TYPE queue);                                                                        \
+[[nodiscard]] TYPE* ws_queue_##TYPE##_back(struct ws_queue_##TYPE queue);                                                                         \
+[[nodiscard]] TYPE* ws_queue_##TYPE##_search(struct ws_queue_##TYPE queue, TYPE value, bool(*predicate)(TYPE const*, TYPE const*));               \
+void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, struct ws_queue_##TYPE const* source, void(*strategy)(TYPE*));                   \
+void __ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue);                                                                                  \
+void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value);                                                                           \
+[[nodiscard]] TYPE ws_queue_##TYPE##_pop(struct ws_queue_##TYPE* queue);                                                                          \
+[[nodiscard]] struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...);                                                                 \
+void ws_queue_##TYPE##_destroy(struct ws_queue_##TYPE* queue, void(*strategy)(TYPE*));                                                            \
+                                                                                                                                                  \
 size_t ws_queue_##TYPE##_size(struct ws_queue_##TYPE queue)                                                                                       \
 {                                                                                                                                                 \
     return queue.size;                                                                                                                            \

@@ -72,11 +72,11 @@ struct ws_hash_map_##TYPE                                                       
 };                                                                                                                                                                                                \
                                                                                                                                                                                                   \
 [[nodiscard]] size_t ws_hash_map_##TYPE##_size(struct ws_hash_map_##TYPE hashMap);                                                                                                                \
-[[nodiscard]] TYPE* ws_hash_map_##TYPE##_search_hashed(struct ws_hash_map_##TYPE hashmap, TYPE value)                                                                                             \
+[[nodiscard]] TYPE* ws_hash_map_##TYPE##_search_hashed(struct ws_hash_map_##TYPE hashmap, TYPE value);                                                                                            \
 [[nodiscard]] TYPE* ws_hash_map_##TYPE##_search(struct ws_hash_map_##TYPE hashMap, size_t key);                                                                                                   \
-void ws_hash_map_##TYPE##_push_hashed(struct ws_hash_map_##TYPE* hashmap, TYPE value)                                                                                                             \
+void ws_hash_map_##TYPE##_push_hashed(struct ws_hash_map_##TYPE* hashmap, TYPE value);                                                                                                            \
 void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t key, TYPE value);                                                                                                       \
-void ws_hash_map_##TYPE##_pop_hashed(struct ws_hash_map_##TYPE* hashmap, TYPE value)                                                                                                              \
+[[nodiscard]] TYPE ws_hash_map_##TYPE##_pop_hashed(struct ws_hash_map_##TYPE* hashmap, TYPE value);                                                                                               \
 [[nodiscard]] TYPE ws_hash_map_##TYPE##_pop(struct ws_hash_map_##TYPE* hashMap, size_t key);                                                                                                      \
 [[nodiscard]] struct ws_hash_map_##TYPE ws_hash_map_##TYPE##_create();                                                                                                                            \
 void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, void(*strategy)(TYPE*));
@@ -101,6 +101,42 @@ struct __ws_hash_map_tree_##TYPE                                                
     struct __ws_hash_map_tree_##TYPE##_node* head;                                                                                                                                                \
     size_t size;                                                                                                                                                                                  \
 };                                                                                                                                                                                                \
+                                                                                                                                                                                                  \
+size_t __ws_hash_map_tree_##TYPE##_size(struct __ws_hash_map_tree_##TYPE tree);                                                                                                                   \
+struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYPE##_search(struct __ws_hash_map_tree_##TYPE tree, size_t key);                                                                   \
+struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYPE##_minimum(struct __ws_hash_map_tree_##TYPE##_node* head);                                                                      \
+struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYPE##_maximum(struct __ws_hash_map_tree_##TYPE##_node* head);                                                                      \
+struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYPE##_successor(struct __ws_hash_map_tree_##TYPE##_node* head);                                                                    \
+struct __ws_hash_map_tree_##TYPE##_node* __ws_hash_map_tree_##TYPE##_predecessor(struct __ws_hash_map_tree_##TYPE##_node* head);                                                                  \
+void __ws_hash_map_tree_##TYPE##_shift_nodes(struct __ws_hash_map_tree_##TYPE* tree, struct __ws_hash_map_tree_##TYPE##_node* lhs, struct __ws_hash_map_tree_##TYPE##_node* rhs);                 \
+void __ws_hash_map_tree_##TYPE##_push(struct __ws_hash_map_tree_##TYPE* tree, size_t key, TYPE value);                                                                                            \
+TYPE __ws_hash_map_tree_##TYPE##_pop(struct __ws_hash_map_tree_##TYPE* tree, size_t key);                                                                                                         \
+struct __ws_hash_map_tree_##TYPE __ws_hash_map_tree_##TYPE##_create();                                                                                                                            \
+void __ws_hash_map_tree_##TYPE##_destroy_branch(struct __ws_hash_map_tree_##TYPE##_node* head, void(*strategy)(TYPE*));                                                                           \
+void __ws_hash_map_tree_##TYPE##_destroy(struct __ws_hash_map_tree_##TYPE* tree, void(*strategy)(TYPE*));                                                                                         \
+                                                                                                                                                                                                  \
+struct __ws_hash_map_##TYPE##_bucket                                                                                                                                                              \
+{                                                                                                                                                                                                 \
+    struct __ws_hash_map_tree_##TYPE tree;                                                                                                                                                        \
+    size_t size;                                                                                                                                                                                  \
+};                                                                                                                                                                                                \
+                                                                                                                                                                                                  \
+struct ws_hash_map_##TYPE                                                                                                                                                                         \
+{                                                                                                                                                                                                 \
+    struct __ws_hash_map_##TYPE##_bucket* buckets;                                                                                                                                                \
+    size_t size;                                                                                                                                                                                  \
+    size_t capacity;                                                                                                                                                                              \
+};                                                                                                                                                                                                \
+                                                                                                                                                                                                  \
+[[nodiscard]] size_t ws_hash_map_##TYPE##_size(struct ws_hash_map_##TYPE hashMap);                                                                                                                \
+[[nodiscard]] TYPE* ws_hash_map_##TYPE##_search_hashed(struct ws_hash_map_##TYPE hashmap, TYPE value);                                                                                            \
+[[nodiscard]] TYPE* ws_hash_map_##TYPE##_search(struct ws_hash_map_##TYPE hashMap, size_t key);                                                                                                   \
+void ws_hash_map_##TYPE##_push_hashed(struct ws_hash_map_##TYPE* hashmap, TYPE value);                                                                                                            \
+void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t key, TYPE value);                                                                                                       \
+[[nodiscard]] TYPE ws_hash_map_##TYPE##_pop_hashed(struct ws_hash_map_##TYPE* hashmap, TYPE value);                                                                                               \
+[[nodiscard]] TYPE ws_hash_map_##TYPE##_pop(struct ws_hash_map_##TYPE* hashMap, size_t key);                                                                                                      \
+[[nodiscard]] struct ws_hash_map_##TYPE ws_hash_map_##TYPE##_create();                                                                                                                            \
+void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, void(*strategy)(TYPE*));                                                                                                    \
                                                                                                                                                                                                   \
 size_t __ws_hash_map_tree_##TYPE##_size(struct __ws_hash_map_tree_##TYPE tree)                                                                                                                    \
 {                                                                                                                                                                                                 \
@@ -340,19 +376,6 @@ void __ws_hash_map_tree_##TYPE##_destroy(struct __ws_hash_map_tree_##TYPE* tree,
     __ws_hash_map_tree_##TYPE##_destroy_branch(tree->head, strategy);                                                                                                                             \
     memset(tree, 0, sizeof(struct __ws_hash_map_tree_##TYPE));                                                                                                                                    \
 }                                                                                                                                                                                                 \
-                                                                                                                                                                                                  \
-struct __ws_hash_map_##TYPE##_bucket                                                                                                                                                              \
-{                                                                                                                                                                                                 \
-    struct __ws_hash_map_tree_##TYPE tree;                                                                                                                                                        \
-    size_t size;                                                                                                                                                                                  \
-};                                                                                                                                                                                                \
-                                                                                                                                                                                                  \
-struct ws_hash_map_##TYPE                                                                                                                                                                         \
-{                                                                                                                                                                                                 \
-    struct __ws_hash_map_##TYPE##_bucket* buckets;                                                                                                                                                \
-    size_t size;                                                                                                                                                                                  \
-    size_t capacity;                                                                                                                                                                              \
-};                                                                                                                                                                                                \
                                                                                                                                                                                                   \
 size_t ws_hash_map_##TYPE##_size(struct ws_hash_map_##TYPE hashMap)                                                                                                                               \
 {                                                                                                                                                                                                 \

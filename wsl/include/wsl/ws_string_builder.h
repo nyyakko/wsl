@@ -17,8 +17,6 @@ struct ws_string_builder
     size_t capacity;
 };
 
-#ifndef WS_STRING_BUILDER_DEFINITION
-
 [[nodiscard]] size_t ws_string_builder_size(struct ws_string_builder string);
 [[nodiscard]] bool ws_string_builder_is_empty(struct ws_string_builder string);
 [[nodiscard]] bool ws_string_builder_equals(struct ws_string_builder lhs, struct ws_string_builder rhs);
@@ -40,7 +38,7 @@ void ws_string_builder_copy(struct ws_string_builder* destination, struct ws_str
 [[nodiscard]] struct ws_string_builder ws_string_builder_create(char const* data);
 void ws_string_builder_destroy(struct ws_string_builder* string);
 
-#else
+#ifdef WS_STRING_BUILDER_DEFINITION
 
 size_t ws_string_builder_size(struct ws_string_builder string)
 {

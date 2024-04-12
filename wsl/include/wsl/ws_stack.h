@@ -45,8 +45,6 @@ void ws_stack_##TYPE##_destroy(struct ws_stack_##TYPE* stack, void(*strategy)(TY
 
 #else
 
-#define inline
-
 #define WS_STACK(TYPE)                                                                                                                           \
                                                                                                                                                  \
 struct ws_stack_##TYPE                                                                                                                           \
@@ -57,6 +55,17 @@ struct ws_stack_##TYPE                                                          
     size_t size;                                                                                                                                 \
     size_t capacity;                                                                                                                             \
 };                                                                                                                                               \
+                                                                                                                                                 \
+[[nodiscard]] size_t ws_stack_##TYPE##_size(struct ws_stack_##TYPE stack);                                                                       \
+[[nodiscard]] bool ws_stack_##TYPE##_is_empty(struct ws_stack_##TYPE stack);                                                                     \
+[[nodiscard]] TYPE* ws_stack_##TYPE##_search(struct ws_stack_##TYPE stack, TYPE value, int(*predicate)(TYPE const*, TYPE const*));               \
+[[nodiscard]] TYPE* ws_stack_##TYPE##_top(struct ws_stack_##TYPE stack);                                                                         \
+void ws_stack_##TYPE##_copy(struct ws_stack_##TYPE* destination, struct ws_stack_##TYPE const* source, void(*strategy)(TYPE*));                  \
+void __ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack);                                                                                 \
+void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value);                                                                          \
+[[nodiscard]] TYPE ws_stack_##TYPE##_pop(struct ws_stack_##TYPE* stack);                                                                         \
+[[nodiscard]] struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...);                                                                \
+void ws_stack_##TYPE##_destroy(struct ws_stack_##TYPE* stack, void(*strategy)(TYPE*));                                                           \
                                                                                                                                                  \
 size_t ws_stack_##TYPE##_size(struct ws_stack_##TYPE stack)                                                                                      \
 {                                                                                                                                                \

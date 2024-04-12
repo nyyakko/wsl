@@ -61,6 +61,19 @@ struct ws_binary_tree_##TYPE                                                    
     size_t size;                                                                                                                                                                 \
 };                                                                                                                                                                               \
                                                                                                                                                                                  \
+[[nodiscard]] size_t ws_binary_tree_##TYPE##_size(struct ws_binary_tree_##TYPE tree);                                                                                            \
+[[nodiscard]] struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_search(struct ws_binary_tree_##TYPE tree, size_t key);                                                \
+[[nodiscard]] struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_minimum(struct ws_binary_tree_##TYPE##_node* head);                                                   \
+[[nodiscard]] struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_maximum(struct ws_binary_tree_##TYPE##_node* head);                                                   \
+[[nodiscard]] struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_successor(struct ws_binary_tree_##TYPE##_node* head);                                                 \
+[[nodiscard]] struct ws_binary_tree_##TYPE##_node* ws_binary_tree_##TYPE##_predecessor(struct ws_binary_tree_##TYPE##_node* head);                                               \
+void ws_binary_tree_##TYPE##_shift_nodes(struct ws_binary_tree_##TYPE* tree, struct ws_binary_tree_##TYPE##_node* lhs, struct ws_binary_tree_##TYPE##_node* rhs);                \
+void ws_binary_tree_##TYPE##_push(struct ws_binary_tree_##TYPE* tree, size_t key, TYPE value);                                                                                   \
+[[nodiscard]] TYPE ws_binary_tree_##TYPE##_pop(struct ws_binary_tree_##TYPE* tree, size_t key);                                                                                  \
+[[nodiscard]] struct ws_binary_tree_##TYPE ws_binary_tree_##TYPE##_create();                                                                                                     \
+void ws_binary_tree_##TYPE##_destroy_branch(struct ws_binary_tree_##TYPE##_node* head, void(*strategy)(TYPE*));                                                                  \
+void ws_binary_tree_##TYPE##_destroy(struct ws_binary_tree_##TYPE* tree, void(*strategy)(TYPE*));                                                                                \
+                                                                                                                                                                                 \
 size_t ws_binary_tree_##TYPE##_size(struct ws_binary_tree_##TYPE tree)                                                                                                           \
 {                                                                                                                                                                                \
     return tree.size;                                                                                                                                                            \

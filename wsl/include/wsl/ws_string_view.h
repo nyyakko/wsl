@@ -15,8 +15,6 @@ struct ws_string_view
     size_t size;
 };
 
-#ifndef WS_STRING_VIEW_DEFINITION
-
 [[nodiscard]] size_t ws_string_view_size(struct ws_string_view view);
 [[nodiscard]] bool ws_string_view_is_empty(struct ws_string_view view);
 [[nodiscard]] bool ws_string_view_equals(struct ws_string_view lhs, struct ws_string_view rhs);
@@ -31,7 +29,7 @@ void ws_string_view_chop_until_last(struct ws_string_view* view, char delimiter)
 void ws_string_view_copy(struct ws_string_view* destination, struct ws_string_view const* source);
 [[nodiscard]] struct ws_string_view ws_string_view_create(char const* data);
 
-#else
+#ifdef WS_STRING_VIEW_DEFINITION
 
 size_t ws_string_view_size(struct ws_string_view view)
 {

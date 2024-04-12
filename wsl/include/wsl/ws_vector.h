@@ -77,6 +77,21 @@ struct ws_vector_##TYPE                                                         
     size_t capacity;                                                                                                                                \
 };                                                                                                                                                  \
                                                                                                                                                     \
+[[nodiscard]] size_t ws_vector_##TYPE##_size(struct ws_vector_##TYPE vector);                                                                       \
+[[nodiscard]] bool ws_vector_##TYPE##_is_empty(struct ws_vector_##TYPE vector);                                                                     \
+[[nodiscard]] TYPE* ws_vector_##TYPE##_at(struct ws_vector_##TYPE vector, size_t position);                                                         \
+[[nodiscard]] TYPE* ws_vector_##TYPE##_front(struct ws_vector_##TYPE vector);                                                                       \
+[[nodiscard]] TYPE* ws_vector_##TYPE##_back(struct ws_vector_##TYPE vector);                                                                        \
+[[nodiscard]] TYPE* ws_vector_##TYPE##_search(struct ws_vector_##TYPE vector, TYPE value, int(*predicate)(TYPE const*, TYPE const*));               \
+void ws_vector_##TYPE##_sort(struct ws_vector_##TYPE* vector, int(*predicate)(TYPE const*, TYPE const*));                                           \
+void ws_vector_##TYPE##_copy(struct ws_vector_##TYPE* destination, struct ws_vector_##TYPE const* source, void(*strategy)(TYPE*));                  \
+void ws_vector_##TYPE##_clear(struct ws_vector_##TYPE* vector, void(*strategy)(TYPE*));                                                             \
+void __ws_vector_##TYPE##_realloc(struct ws_vector_##TYPE* vector);                                                                                 \
+void ws_vector_##TYPE##_push(struct ws_vector_##TYPE* vector, TYPE value);                                                                          \
+[[nodiscard]] TYPE ws_vector_##TYPE##_pop(struct ws_vector_##TYPE* vector);                                                                         \
+[[nodiscard]] struct ws_vector_##TYPE ws_vector_##TYPE##_create(size_t count, ...);                                                                 \
+void ws_vector_##TYPE##_destroy(struct ws_vector_##TYPE* vector, void(*strategy)(TYPE*));                                                           \
+                                                                                                                                                    \
 size_t ws_vector_##TYPE##_size(struct ws_vector_##TYPE vector)                                                                                      \
 {                                                                                                                                                   \
     return vector.size;                                                                                                                             \
