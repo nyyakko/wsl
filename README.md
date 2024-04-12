@@ -1,4 +1,4 @@
-# ads library.
+# data structures and algorithms library.
 
 because c ain't got anything. lol.
 
