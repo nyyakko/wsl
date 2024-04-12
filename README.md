@@ -22,6 +22,7 @@ target_link_libraries(CoolProject PRIVATE wsl::wsl)
 
 # examples
 ```c++
+#define WS_VECTOR_DEFINITION
 #include <wsl/ws_vector.h>
 
 #include <stdio.h>
@@ -42,6 +43,7 @@ int main()
 ```
 
 ```c++
+#define WS_STRING_BUILDER_DEFINITION
 #include <wsl/ws_string_builder.h>
 
 #include <stdio.h>
