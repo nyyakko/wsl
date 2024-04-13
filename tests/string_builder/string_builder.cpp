@@ -140,7 +140,7 @@ TEST(string_builder, substring)
     ws_string_builder_destroy(&stringC);
 }
 
-TEST(string_builder, copy_values)
+TEST(string_builder, copy_values_non_empty)
 {
     struct ws_string_builder stringA = ws_string_builder_create("Its so over");
     struct ws_string_builder stringB = ws_string_builder_create("so over");
@@ -158,17 +158,33 @@ TEST(string_builder, copy_values)
 
 TEST(string_builder, copy_empty)
 {
-    struct ws_string_builder stringA = ws_string_builder_create("");
-    struct ws_string_builder stringB = ws_string_builder_create("Its so over");
+    {
+        struct ws_string_builder stringA = ws_string_builder_create("");
+        struct ws_string_builder stringB = ws_string_builder_create("Its so over");
 
-    ws_string_builder_copy(&stringB, &stringA);
+        ws_string_builder_copy(&stringB, &stringA);
 
-    EXPECT_STREQ(stringB.data, stringA.data);
-    EXPECT_EQ(stringB.begin, 0);
-    EXPECT_EQ(stringB.end, 0);
-    EXPECT_EQ(stringB.size, 0);
+        EXPECT_STREQ(stringB.data, stringA.data);
+        EXPECT_EQ(stringB.begin, 0);
+        EXPECT_EQ(stringB.end, 0);
+        EXPECT_EQ(stringB.size, 0);
 
-    ws_string_builder_destroy(&stringA);
-    ws_string_builder_destroy(&stringB);
+        ws_string_builder_destroy(&stringA);
+        ws_string_builder_destroy(&stringB);
+    }
+    {
+        struct ws_string_builder stringA = ws_string_builder_create("");
+        struct ws_string_builder stringB = ws_string_builder_create("");
+
+        ws_string_builder_copy(&stringB, &stringA);
+
+        EXPECT_STREQ(stringB.data, stringA.data);
+        EXPECT_EQ(stringB.begin, 0);
+        EXPECT_EQ(stringB.end, 0);
+        EXPECT_EQ(stringB.size, 0);
+
+        ws_string_builder_destroy(&stringA);
+        ws_string_builder_destroy(&stringB);
+    }
 }
 

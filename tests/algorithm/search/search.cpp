@@ -1,8 +1,7 @@
 #include <gtest/gtest.h>
 
-#define WS_ALGORITHM_DEFINITION
-#include <wsl/algorithm/ws_algorithm.h>
-
+#define WS_SEARCH_DEFINITION
+#include <wsl/algorithm/ws_search.h>
 #define WS_VECTOR_DEFINITION
 #include <wsl/ws_vector.h>
 
@@ -13,7 +12,7 @@ TEST(algorithm, vector_search)
     struct ws_vector_int vector = ws_vector_int_create(ws_vector_initialize(int, 69, 420, 720));
 
     int value = 420;
-    EXPECT_NE(ws_search(&vector, &value), nullptr);
+    EXPECT_NE(ws_search((ws_container_interface const*)&vector, &value), nullptr);
 
     ws_vector_destroy(int, &vector);
 }
@@ -40,9 +39,9 @@ TEST(algorithm, vector_search_with_projection)
     ws_vector_student_push(&vector, student);
 
     int valueA = 420;
-    EXPECT_NE(ws_search(&vector, &valueA, nullptr, (ws_projection*)student_get_id), nullptr);
+    EXPECT_NE(ws_search((ws_container_interface const*)&vector, &valueA, nullptr, (ws_projection*)student_get_id), nullptr);
     int valueB = 720;
-    EXPECT_EQ(ws_search(&vector, &valueB, nullptr, (ws_projection*)student_get_id), nullptr);
+    EXPECT_EQ(ws_search((ws_container_interface const*)&vector, &valueB, nullptr, (ws_projection*)student_get_id), nullptr);
 
     ws_vector_destroy(student, &vector);
 }
@@ -52,6 +51,6 @@ TEST(algorithm, c_array_search)
     int array[3] = { 69, 720, 420 };
 
     int value = 420;
-    EXPECT_NE(ws_search_ex(array, 0, 2, sizeof(int), &value, nullptr, nullptr), nullptr);
+    EXPECT_NE(ws_search_ex(array, 0, 3, sizeof(int), &value, nullptr, nullptr), nullptr);
 }
 
