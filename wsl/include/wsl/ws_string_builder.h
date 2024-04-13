@@ -154,8 +154,7 @@ void ws_string_builder_chop_until_first(struct ws_string_builder* string, char d
         return;
     }
 
-    memmove(string->data, &string->data[position + 1], string->size - (position + 1));
-    memset(&string->data[string->size - (position + 1)], 0, string->size - (position + 1));
+    memmove(string->data, &string->data[position + 1], string->capacity - (position + 1));
 
     string->size  = string->size - position - 1;
     string->begin = 0;
@@ -177,8 +176,7 @@ void ws_string_builder_chop_until_last(struct ws_string_builder* string, char de
     // FIXME: solve the case where it may occoour an allocation of 0 bytes ?
     assert(string->size - (position + 1) && "HOW DID YOU DID THIS?");
 
-    memmove(string->data, &string->data[position + 1], string->size - (position + 1));
-    memset(&string->data[string->size - (position + 1)], 0, string->size - (position + 1));
+    memmove(string->data, &string->data[position + 1], string->capacity - (position + 1));
 
     string->size -= position + 1;
     string->begin = 0;
