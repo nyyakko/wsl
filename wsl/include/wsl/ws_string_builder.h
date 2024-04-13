@@ -2,7 +2,7 @@
 #define WS_STRING_BUILDER_H
 
 #include <assert.h>
-#include <cstring>
+#include <string.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
