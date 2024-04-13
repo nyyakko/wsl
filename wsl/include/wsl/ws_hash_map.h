@@ -138,6 +138,8 @@ void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_t key, T
 [[nodiscard]] struct ws_hash_map_##TYPE ws_hash_map_##TYPE##_create();                                                                                                                            \
 void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, void(*strategy)(TYPE*));                                                                                                    \
                                                                                                                                                                                                   \
+size_t ws_hash_map_hash(void const* bytes, size_t length);                                                                                                                                        \
+                                                                                                                                                                                                  \
 size_t __ws_hash_map_tree_##TYPE##_size(struct __ws_hash_map_tree_##TYPE tree)                                                                                                                    \
 {                                                                                                                                                                                                 \
     return tree.size;                                                                                                                                                                             \
