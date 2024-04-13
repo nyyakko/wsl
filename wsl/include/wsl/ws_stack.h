@@ -37,11 +37,12 @@ struct ws_stack_##TYPE                                                          
 [[nodiscard]] TYPE* ws_stack_##TYPE##_search(struct ws_stack_##TYPE stack, TYPE value, int(*predicate)(TYPE const*, TYPE const*));               \
 [[nodiscard]] TYPE* ws_stack_##TYPE##_top(struct ws_stack_##TYPE stack);                                                                         \
 void ws_stack_##TYPE##_copy(struct ws_stack_##TYPE* destination, struct ws_stack_##TYPE const* source, void(*strategy)(TYPE*));                  \
-void __ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack);                                                                                 \
 void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value);                                                                          \
 [[nodiscard]] TYPE ws_stack_##TYPE##_pop(struct ws_stack_##TYPE* stack);                                                                         \
 [[nodiscard]] struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...);                                                                \
-void ws_stack_##TYPE##_destroy(struct ws_stack_##TYPE* stack, void(*strategy)(TYPE*));
+void ws_stack_##TYPE##_destroy(struct ws_stack_##TYPE* stack, void(*strategy)(TYPE*));                                                           \
+                                                                                                                                                 \
+void __ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack);
 
 #else
 
@@ -61,11 +62,12 @@ struct ws_stack_##TYPE                                                          
 [[nodiscard]] TYPE* ws_stack_##TYPE##_search(struct ws_stack_##TYPE stack, TYPE value, int(*predicate)(TYPE const*, TYPE const*));               \
 [[nodiscard]] TYPE* ws_stack_##TYPE##_top(struct ws_stack_##TYPE stack);                                                                         \
 void ws_stack_##TYPE##_copy(struct ws_stack_##TYPE* destination, struct ws_stack_##TYPE const* source, void(*strategy)(TYPE*));                  \
-void __ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack);                                                                                 \
 void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value);                                                                          \
 [[nodiscard]] TYPE ws_stack_##TYPE##_pop(struct ws_stack_##TYPE* stack);                                                                         \
 [[nodiscard]] struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...);                                                                \
 void ws_stack_##TYPE##_destroy(struct ws_stack_##TYPE* stack, void(*strategy)(TYPE*));                                                           \
+                                                                                                                                                 \
+void __ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack);                                                                                 \
                                                                                                                                                  \
 size_t ws_stack_##TYPE##_size(struct ws_stack_##TYPE stack)                                                                                      \
 {                                                                                                                                                \
@@ -119,19 +121,6 @@ void ws_stack_##TYPE##_copy(struct ws_stack_##TYPE* destination, struct ws_stack
     destination->data     = (TYPE*)malloc(destination->capacity * sizeof(TYPE));                                                                 \
                                                                                                                                                  \
     memcpy(destination->data, source->data, destination->capacity * sizeof(TYPE));                                                               \
-}                                                                                                                                                \
-                                                                                                                                                 \
-void __ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack)                                                                                  \
-{                                                                                                                                                \
-    assert(stack != nullptr && "STACK POINTER WAS NULL");                                                                                        \
-                                                                                                                                                 \
-    TYPE* oldData = stack->data;                                                                                                                 \
-    stack->capacity += stack->capacity;                                                                                                          \
-    stack->data = (TYPE*)malloc(stack->capacity * sizeof(TYPE));                                                                                 \
-    memset(stack->data, 0, stack->capacity * sizeof(TYPE));                                                                                      \
-    memcpy(stack->data, oldData, stack->size * sizeof(TYPE));                                                                                    \
-                                                                                                                                                 \
-    free(oldData);                                                                                                                               \
 }                                                                                                                                                \
                                                                                                                                                  \
 void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value)                                                                           \
@@ -193,6 +182,19 @@ void ws_stack_##TYPE##_destroy(struct ws_stack_##TYPE* stack, void(*strategy)(TY
                                                                                                                                                  \
     free(stack->data);                                                                                                                           \
     memset(stack, 0, sizeof(struct ws_stack_##TYPE));                                                                                            \
+}                                                                                                                                                \
+                                                                                                                                                 \
+void __ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack)                                                                                  \
+{                                                                                                                                                \
+    assert(stack != nullptr && "STACK POINTER WAS NULL");                                                                                        \
+                                                                                                                                                 \
+    TYPE* oldData = stack->data;                                                                                                                 \
+    stack->capacity += stack->capacity;                                                                                                          \
+    stack->data = (TYPE*)malloc(stack->capacity * sizeof(TYPE));                                                                                 \
+    memset(stack->data, 0, stack->capacity * sizeof(TYPE));                                                                                      \
+    memcpy(stack->data, oldData, stack->size * sizeof(TYPE));                                                                                    \
+                                                                                                                                                 \
+    free(oldData);                                                                                                                               \
 }
 
 #endif

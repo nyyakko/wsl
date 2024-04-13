@@ -38,11 +38,12 @@ struct ws_queue_##TYPE                                                          
 [[nodiscard]] TYPE* ws_queue_##TYPE##_back(struct ws_queue_##TYPE queue);                                                                         \
 [[nodiscard]] TYPE* ws_queue_##TYPE##_search(struct ws_queue_##TYPE queue, TYPE value, bool(*predicate)(TYPE const*, TYPE const*));               \
 void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, struct ws_queue_##TYPE const* source, void(*strategy)(TYPE*));                   \
-void __ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue);                                                                                  \
 void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value);                                                                           \
 [[nodiscard]] TYPE ws_queue_##TYPE##_pop(struct ws_queue_##TYPE* queue);                                                                          \
 [[nodiscard]] struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...);                                                                 \
-void ws_queue_##TYPE##_destroy(struct ws_queue_##TYPE* queue, void(*strategy)(TYPE*));
+void ws_queue_##TYPE##_destroy(struct ws_queue_##TYPE* queue, void(*strategy)(TYPE*));                                                            \
+                                                                                                                                                  \
+void __ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue);
 
 #else
 
@@ -63,11 +64,12 @@ struct ws_queue_##TYPE                                                          
 [[nodiscard]] TYPE* ws_queue_##TYPE##_back(struct ws_queue_##TYPE queue);                                                                         \
 [[nodiscard]] TYPE* ws_queue_##TYPE##_search(struct ws_queue_##TYPE queue, TYPE value, bool(*predicate)(TYPE const*, TYPE const*));               \
 void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, struct ws_queue_##TYPE const* source, void(*strategy)(TYPE*));                   \
-void __ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue);                                                                                  \
 void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value);                                                                           \
 [[nodiscard]] TYPE ws_queue_##TYPE##_pop(struct ws_queue_##TYPE* queue);                                                                          \
 [[nodiscard]] struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...);                                                                 \
 void ws_queue_##TYPE##_destroy(struct ws_queue_##TYPE* queue, void(*strategy)(TYPE*));                                                            \
+                                                                                                                                                  \
+void __ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue);                                                                                  \
                                                                                                                                                   \
 size_t ws_queue_##TYPE##_size(struct ws_queue_##TYPE queue)                                                                                       \
 {                                                                                                                                                 \
@@ -126,19 +128,6 @@ void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, struct ws_queue
     destination->data     = (TYPE*)malloc(destination->capacity * sizeof(TYPE));                                                                  \
                                                                                                                                                   \
     memcpy(destination->data, source->data, destination->capacity * sizeof(TYPE));                                                                \
-}                                                                                                                                                 \
-                                                                                                                                                  \
-void __ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue)                                                                                   \
-{                                                                                                                                                 \
-    assert(queue != nullptr && "QUEUE POINTER WAS NULL");                                                                                         \
-                                                                                                                                                  \
-    TYPE* oldData = queue->data;                                                                                                                  \
-    queue->capacity += queue->capacity;                                                                                                           \
-    queue->data = (TYPE*)malloc(queue->capacity * sizeof(TYPE));                                                                                  \
-    memset(queue->data, 0, queue->capacity * sizeof(TYPE));                                                                                       \
-    memcpy(queue->data, oldData, queue->size * sizeof(TYPE));                                                                                     \
-                                                                                                                                                  \
-    free(oldData);                                                                                                                                \
 }                                                                                                                                                 \
                                                                                                                                                   \
 void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value)                                                                            \
@@ -200,6 +189,19 @@ void ws_queue_##TYPE##_destroy(struct ws_queue_##TYPE* queue, void(*strategy)(TY
                                                                                                                                                   \
     free(queue->data);                                                                                                                            \
     memset(queue, 0, sizeof(struct ws_queue_##TYPE));                                                                                             \
+}                                                                                                                                                 \
+                                                                                                                                                  \
+void __ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue)                                                                                   \
+{                                                                                                                                                 \
+    assert(queue != nullptr && "QUEUE POINTER WAS NULL");                                                                                         \
+                                                                                                                                                  \
+    TYPE* oldData = queue->data;                                                                                                                  \
+    queue->capacity += queue->capacity;                                                                                                           \
+    queue->data = (TYPE*)malloc(queue->capacity * sizeof(TYPE));                                                                                  \
+    memset(queue->data, 0, queue->capacity * sizeof(TYPE));                                                                                       \
+    memcpy(queue->data, oldData, queue->size * sizeof(TYPE));                                                                                     \
+                                                                                                                                                  \
+    free(oldData);                                                                                                                                \
 }
 
 #endif
