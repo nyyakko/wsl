@@ -2,6 +2,8 @@
 #define WS_SORT_H
 
 #include <assert.h>
+#include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 
 #ifndef WS_GENERIC_CONTAINER_INTERFACE
@@ -42,6 +44,8 @@ void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_pre
     assert(data && "CONTAINER WAS NULL");
     assert(predicate && "PREDICATE WAS NULL");
 
+    char* valueTemporary = (char*)malloc(elementSize);
+
     while (true)
     {
         bool sorted = true;
@@ -50,8 +54,6 @@ void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_pre
         {
             void* currentValue  = (void*)((uintptr_t)data + (elementIndex * elementSize));
             void* previousValue = (void*)((uintptr_t)data + ((elementIndex - 1) * elementSize));
-
-            char valueTemporary[elementSize];
 
             if (projection != nullptr && predicate(projection(currentValue), projection(previousValue)))
             {
@@ -71,8 +73,10 @@ void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_pre
             }
         }
 
-        if (sorted) return;
+        if (sorted) break;
     }
+
+    free(valueTemporary);
 }
 
 void ws_sort_in(struct ws_container_interface* container, ws_predicate* predicate, ws_projection* projection)

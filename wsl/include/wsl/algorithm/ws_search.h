@@ -2,6 +2,8 @@
 #define WS_SEARCH_H
 
 #include <assert.h>
+#include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 
 #ifndef WS_GENERIC_CONTAINER_INTERFACE
@@ -33,6 +35,8 @@ typedef void(ws_strategy)(void*);
 #define __ws_search__select(_1, _2, _3, selected, ...) selected
 #define ws_search(container, ...) __ws_search__select(__VA_ARGS__, __ws_search__3, __ws_search__2, __ws_search__1, void)(container, __VA_ARGS__)
 
+#define WS_SEARCH_DEFINITION
+
 #ifndef WS_SEARCH_DEFINITION
 
 [[nodiscard]] void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_predicate* predicate, ws_projection* projection);
@@ -47,6 +51,11 @@ void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSiz
 {
     assert(data && "CONTAINER WAS NULL");
 
+    char* valueLhs = (char*)malloc(elementSize);
+    char* valueRhs = (char*)malloc(elementSize);
+
+    void* result = nullptr;
+
     for (size_t index = begin; index != end; index += 1)
     {
         uintptr_t currentValue = (uintptr_t)data + (index * elementSize);
@@ -54,20 +63,23 @@ void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSiz
         if (predicate != nullptr)
         {
             if (projection != nullptr && predicate(projection((void const*)currentValue), value))
-                return (void*)(currentValue);
+            {
+                result = (void*)(currentValue);
+                break;
+            }
             if (predicate((void const*)currentValue, value))
-                return (void*)(currentValue);
+            {
+                result = (void*)(currentValue);
+                break;
+            }
         }
         else
         {
-            char valueLhs[elementSize];
-
             if (projection != nullptr)
                 memcpy(valueLhs, projection((void const*)currentValue), elementSize);
             else
                 memcpy(valueLhs, (void const*)currentValue, elementSize);
 
-            char valueRhs[elementSize];
             memcpy(valueRhs, value, elementSize);
 
             bool found = true;
@@ -81,11 +93,18 @@ void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSiz
                 }
             }
 
-            if (found) return (void*)(currentValue);
+            if (found)
+            {
+                result = (void*)(currentValue);
+                break;
+            }
         }
     }
 
-    return nullptr;
+    free(valueLhs);
+    free(valueRhs);
+
+    return result;
 }
 
 void* ws_search_in(struct ws_container_interface const* container, void const* value, ws_predicate* predicate, ws_projection* projection)
