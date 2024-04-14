@@ -1,7 +1,7 @@
-#define WS_BINARY_TREE_DEFINITION
-
 #include <gtest/gtest.h>
-#include <wsl/ws_binary_tree.h>
+
+#define WSL_DEFINITION
+#include <wsl/wsl.h>
 
 WS_BINARY_TREE(int)
 

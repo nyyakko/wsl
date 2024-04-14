@@ -12,6 +12,7 @@ set(wsl_HeaderFiles ${wsl_HeaderFiles}
     "${DIR}/ws_string_builder.h"
     "${DIR}/ws_string_view.h"
     "${DIR}/ws_vector.h"
+    "${DIR}/wsl.h"
 
     PARENT_SCOPE
 )

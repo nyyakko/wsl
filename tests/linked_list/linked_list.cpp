@@ -1,7 +1,7 @@
-#define WS_LINKED_LIST_DEFINITION
-
 #include <gtest/gtest.h>
-#include <wsl/ws_linked_list.h>
+
+#define WSL_DEFINITION
+#include <wsl/wsl.h>
 
 WS_LINKED_LIST(int)
 

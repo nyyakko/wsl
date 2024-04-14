@@ -1,7 +1,28 @@
-#define WS_STRING_BUILDER_DEFINITION
-
 #include <gtest/gtest.h>
-#include <wsl/ws_string_builder.h>
+
+#define WSL_DEFINITION
+#include <wsl/wsl.h>
+
+TEST(string_builder, create_from_sb)
+{
+    struct ws_string_builder other  = ws_string_builder_create("hello, world!");
+    struct ws_string_builder string = ws_string_builder_create_from_sb(other);
+
+    EXPECT_STREQ(other.data, string.data);
+
+    ws_string_builder_destroy(&string);
+    ws_string_builder_destroy(&other);
+}
+
+TEST(string_builder, create_from_sv)
+{
+    struct ws_string_view view      = ws_string_view_create("hello, world!");
+    struct ws_string_builder string = ws_string_builder_create_from_sv(view);
+
+    EXPECT_STREQ(view.data, string.data);
+
+    ws_string_builder_destroy(&string);
+}
 
 TEST(string_builder, remove_prefix)
 {

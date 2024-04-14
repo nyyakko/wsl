@@ -1,7 +1,7 @@
-#define WS_VECTOR_DEFINITION
-
 #include <gtest/gtest.h>
-#include <wsl/ws_vector.h>
+
+#define WSL_DEFINITION
+#include <wsl/wsl.h>
 
 WS_VECTOR(int)
 

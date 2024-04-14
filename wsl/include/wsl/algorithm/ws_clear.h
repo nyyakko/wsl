@@ -19,7 +19,8 @@ struct ws_container_interface
 typedef struct ws_container_interface ws_container_interface;
 
 typedef void const*(ws_projection)(void const*);
-typedef int(ws_predicate)(void const*, void const*);
+typedef int(ws_unary_predicate)(void const*);
+typedef int(ws_binary_predicate)(void const*, void const*);
 typedef void(ws_strategy)(void*);
 #endif
 

@@ -20,7 +20,8 @@ struct ws_container_interface
 typedef struct ws_container_interface ws_container_interface;
 
 typedef void const*(ws_projection)(void const*);
-typedef int(ws_predicate)(void const*, void const*);
+typedef int(ws_unary_predicate)(void const*);
+typedef int(ws_binary_predicate)(void const*, void const*);
 typedef void(ws_strategy)(void*);
 #endif
 
@@ -31,15 +32,15 @@ typedef void(ws_strategy)(void*);
 
 #ifndef WS_SORT_DEFINITION
 
-void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_predicate* predicate, ws_projection* projection);
-void ws_sort_in(struct ws_container_interface* container, ws_predicate* predicate, ws_projection* projection);
+void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_binary_predicate* predicate, ws_projection* projection);
+void ws_sort_in(struct ws_container_interface* container, ws_binary_predicate* predicate, ws_projection* projection);
 
 #else
 
-void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_predicate* predicate, ws_projection* projection);
-void ws_sort_in(struct ws_container_interface* container, ws_predicate* predicate, ws_projection* projection);
+void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_binary_predicate* predicate, ws_projection* projection);
+void ws_sort_in(struct ws_container_interface* container, ws_binary_predicate* predicate, ws_projection* projection);
 
-void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_predicate* predicate, ws_projection* projection)
+void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_binary_predicate* predicate, ws_projection* projection)
 {
     assert(data && "CONTAINER WAS NULL");
     assert(predicate && "PREDICATE WAS NULL");
@@ -79,7 +80,7 @@ void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_pre
     free(valueTemporary);
 }
 
-void ws_sort_in(struct ws_container_interface* container, ws_predicate* predicate, ws_projection* projection)
+void ws_sort_in(struct ws_container_interface* container, ws_binary_predicate* predicate, ws_projection* projection)
 {
     struct ws_container_interface containerInterface = {};
     memcpy(&containerInterface, container, sizeof(struct ws_container_interface));

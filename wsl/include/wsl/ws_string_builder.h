@@ -38,6 +38,7 @@ void ws_string_builder_append_string_while_not(struct ws_string_builder* destina
 void ws_string_builder_append_string(struct ws_string_builder* string, char const* value);
 [[nodiscard]] struct ws_string_builder ws_string_builder_substr(struct ws_string_builder string, size_t begin, size_t end);
 void ws_string_builder_copy(struct ws_string_builder* destination, struct ws_string_builder const* source);
+[[nodiscard]] struct ws_string_builder ws_string_builder_create_from_sb(struct ws_string_builder other);
 [[nodiscard]] struct ws_string_builder ws_string_builder_create(char const* data);
 void ws_string_builder_destroy(struct ws_string_builder* string);
 
@@ -286,6 +287,24 @@ void ws_string_builder_copy(struct ws_string_builder* destination, struct ws_str
 
     memset(destination->data, 0, source->capacity);
     memcpy(destination->data, source->data, source->size);
+}
+
+struct ws_string_builder ws_string_builder_create_from_sb(struct ws_string_builder other)
+{
+    struct ws_string_builder result =
+    {
+        .begin       = 0,
+        .end         = other.end,
+        .elementSize = sizeof(char),
+        .data        = (char*)malloc(other.capacity),
+        .size        = other.size,
+        .capacity    = other.capacity
+    };
+
+    memset(result.data, 0, other.capacity);
+    memcpy(result.data, other.data, other.capacity);
+
+    return result;
 }
 
 struct ws_string_builder ws_string_builder_create(char const* data)

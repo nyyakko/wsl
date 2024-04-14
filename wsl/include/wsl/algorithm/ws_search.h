@@ -20,7 +20,8 @@ struct ws_container_interface
 typedef struct ws_container_interface ws_container_interface;
 
 typedef void const*(ws_projection)(void const*);
-typedef int(ws_predicate)(void const*, void const*);
+typedef int(ws_unary_predicate)(void const*);
+typedef int(ws_binary_predicate)(void const*, void const*);
 typedef void(ws_strategy)(void*);
 #endif
 
@@ -39,15 +40,15 @@ typedef void(ws_strategy)(void*);
 
 #ifndef WS_SEARCH_DEFINITION
 
-[[nodiscard]] void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_predicate* predicate, ws_projection* projection);
-[[nodiscard]] void* ws_search_in(struct ws_container_interface const* container, void const* value, ws_predicate* predicate, ws_projection* projection);
+[[nodiscard]] void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_binary_predicate* predicate, ws_projection* projection);
+[[nodiscard]] void* ws_search_in(struct ws_container_interface const* container, void const* value, ws_binary_predicate* predicate, ws_projection* projection);
 
 #else
 
-[[nodiscard]] void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_predicate* predicate, ws_projection* projection);
-[[nodiscard]] void* ws_search_in(struct ws_container_interface const* container, void const* value, ws_predicate* predicate, ws_projection* projection);
+[[nodiscard]] void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_binary_predicate* predicate, ws_projection* projection);
+[[nodiscard]] void* ws_search_in(struct ws_container_interface const* container, void const* value, ws_binary_predicate* predicate, ws_projection* projection);
 
-void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_predicate* predicate, ws_projection* projection)
+void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_binary_predicate* predicate, ws_projection* projection)
 {
     assert(data && "CONTAINER WAS NULL");
 
@@ -107,7 +108,7 @@ void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSiz
     return result;
 }
 
-void* ws_search_in(struct ws_container_interface const* container, void const* value, ws_predicate* predicate, ws_projection* projection)
+void* ws_search_in(struct ws_container_interface const* container, void const* value, ws_binary_predicate* predicate, ws_projection* projection)
 {
     struct ws_container_interface containerInterface = {};
     memcpy(&containerInterface, container, sizeof(struct ws_container_interface));

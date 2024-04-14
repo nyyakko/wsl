@@ -27,6 +27,7 @@ void ws_string_view_chop_until_first(struct ws_string_view* view, char delimiter
 void ws_string_view_chop_until_last(struct ws_string_view* view, char delimiter);
 [[nodiscard]] struct ws_string_view ws_string_view_subview(struct ws_string_view view, size_t begin, size_t end);
 void ws_string_view_copy(struct ws_string_view* destination, struct ws_string_view const* source);
+[[nodiscard]] struct ws_string_view ws_string_view_create_from_sv(struct ws_string_view other);
 [[nodiscard]] struct ws_string_view ws_string_view_create(char const* data);
 
 #ifdef WS_STRING_VIEW_DEFINITION
@@ -152,6 +153,19 @@ void ws_string_view_copy(struct ws_string_view* destination, struct ws_string_vi
     destination->begin = source->begin;
     destination->end   = source->end;
     destination->size  = source->size;
+}
+
+struct ws_string_view ws_string_view_create_from_sv(struct ws_string_view other)
+{
+    struct ws_string_view result =
+    {
+        .begin = other.begin,
+        .end   = other.size,
+        .data  = other.data,
+        .size  = other.size,
+    };
+
+    return result;
 }
 
 struct ws_string_view ws_string_view_create(char const* data)

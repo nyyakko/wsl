@@ -1,9 +1,7 @@
 #include <gtest/gtest.h>
 
-#define WS_SEARCH_DEFINITION
-#include <wsl/algorithm/ws_search.h>
-#define WS_VECTOR_DEFINITION
-#include <wsl/ws_vector.h>
+#define WSL_DEFINITION
+#include <wsl/wsl.h>
 
 WS_VECTOR(int)
 

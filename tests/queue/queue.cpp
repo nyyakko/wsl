@@ -1,7 +1,7 @@
-#define WS_QUEUE_DEFINITION
-
 #include <gtest/gtest.h>
-#include <wsl/ws_queue.h>
+
+#define WSL_DEFINITION
+#include <wsl/wsl.h>
 
 WS_QUEUE(int)
 

@@ -45,7 +45,7 @@ typedef void(ws_strategy)(void*);
 [[nodiscard]] size_t ws_count_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_projection* projection);
 [[nodiscard]] size_t ws_count_in(struct ws_container_interface const* container, void const* value, ws_projection* projection);
 [[nodiscard]] size_t ws_count_if_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_unary_predicate* predicate, ws_projection* projection);
-[[nodiscard]] size_t ws_count_if_in(struct ws_container_interface const* container, void const* value, ws_unary_predicate* predicate, ws_projection* projection);
+[[nodiscard]] size_t ws_count_if_in(struct ws_container_interface const* container, ws_unary_predicate* predicate, ws_projection* projection);
 
 #else
 

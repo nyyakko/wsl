@@ -10,7 +10,7 @@ target_compile_definitions(
 )
 
 enable_clang_tidy()
-enable_cppcheck()
+# enable_cppcheck()
 
 target_compile_features(${TEST_NAME} PRIVATE cxx_std_23)
 

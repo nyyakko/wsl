@@ -1,7 +1,7 @@
-#define WS_HASH_MAP_DEFINITION
-
 #include <gtest/gtest.h>
-#include <wsl/ws_hash_map.h>
+
+#define WSL_DEFINITION
+#include <wsl/wsl.h>
 
 WS_HASH_MAP(int)
 
