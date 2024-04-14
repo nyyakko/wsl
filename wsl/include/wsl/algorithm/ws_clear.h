@@ -2,6 +2,7 @@
 #define WS_CLEAR_H
 
 #include <assert.h>
+#include <stdint.h>
 #include <string.h>
 
 #ifndef WS_GENERIC_CONTAINER_INTERFACE
