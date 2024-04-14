@@ -13,6 +13,7 @@ struct ws_string_builder
 {
     size_t begin;
     size_t end;
+    size_t elementSize;
     char* data;
     size_t size;
     size_t capacity;
@@ -42,6 +43,8 @@ void ws_string_builder_destroy(struct ws_string_builder* string);
 
 void __ws_string_builder_realloc(struct ws_string_builder* string);
 size_t __ws_string_builder_round(size_t value);
+
+#define WS_STRING_BUILDER_DEFINITION
 
 #ifdef WS_STRING_BUILDER_DEFINITION
 
@@ -250,11 +253,12 @@ struct ws_string_builder ws_string_builder_substr(struct ws_string_builder strin
 
     struct ws_string_builder result =
     {
-        .begin    = 0,
-        .end      = length,
-        .data     = (char*)malloc(capacity),
-        .size     = length,
-        .capacity = capacity
+        .begin       = 0,
+        .end         = length,
+        .elementSize = sizeof(char),
+        .data        = (char*)malloc(capacity),
+        .size        = length,
+        .capacity    = capacity
     };
 
     memset(result.data, 0, capacity);
@@ -292,11 +296,12 @@ struct ws_string_builder ws_string_builder_create(char const* data)
 
     struct ws_string_builder result =
     {
-        .begin    = 0,
-        .end      = length,
-        .data     = (char*)malloc(capacity),
-        .size     = length,
-        .capacity = capacity
+        .begin       = 0,
+        .end         = length,
+        .elementSize = sizeof(char),
+        .data        = (char*)malloc(capacity),
+        .size        = length,
+        .capacity    = capacity
     };
 
     memset(result.data, 0, capacity);

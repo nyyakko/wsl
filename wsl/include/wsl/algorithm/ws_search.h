@@ -22,9 +22,14 @@ typedef int(ws_predicate)(void const*, void const*);
 typedef void(ws_strategy)(void*);
 #endif
 
+#ifndef WS_PRVALUE
+#define WS_PRVALUE
+#define ws_prvalue(TYPE, value) ({ TYPE _ = value; &_; })
+#endif
+
 #define __ws_search__1(container, value) ws_search_in(container, value, nullptr, nullptr)
-#define __ws_search__2(container, value, projection) ws_search_in(container, value, projection, nullptr)
-#define __ws_search__3(container, value, projection, predicate) ws_search_in(container, value, projection, predicate)
+#define __ws_search__2(container, value, predicate) ws_search_in(container, value, predicate, nullptr)
+#define __ws_search__3(container, value, predicate, projection) ws_search_in(container, value, predicate, projection)
 #define __ws_search__select(_1, _2, _3, selected, ...) selected
 #define ws_search(container, ...) __ws_search__select(__VA_ARGS__, __ws_search__3, __ws_search__2, __ws_search__1, void)(container, __VA_ARGS__)
 

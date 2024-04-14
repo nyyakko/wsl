@@ -10,10 +10,7 @@ WS_VECTOR(int)
 TEST(algorithm, vector_search)
 {
     struct ws_vector_int vector = ws_vector_int_create(ws_vector_initialize(int, 69, 420, 720));
-
-    int value = 420;
-    EXPECT_NE(ws_search((ws_container_interface const*)&vector, &value), nullptr);
-
+    EXPECT_NE(ws_search((ws_container_interface const*)&vector, ws_prvalue(int, 420)), nullptr);
     ws_vector_destroy(int, &vector);
 }
 
@@ -38,10 +35,8 @@ TEST(algorithm, vector_search_with_projection)
     struct student student = { .id = 420 };
     ws_vector_student_push(&vector, student);
 
-    int valueA = 420;
-    EXPECT_NE(ws_search((ws_container_interface const*)&vector, &valueA, nullptr, (ws_projection*)student_get_id), nullptr);
-    int valueB = 720;
-    EXPECT_EQ(ws_search((ws_container_interface const*)&vector, &valueB, nullptr, (ws_projection*)student_get_id), nullptr);
+    EXPECT_NE(ws_search((ws_container_interface const*)&vector, ws_prvalue(int, 420), nullptr, (ws_projection*)student_get_id), nullptr);
+    EXPECT_EQ(ws_search((ws_container_interface const*)&vector, ws_prvalue(int, 720), nullptr, (ws_projection*)student_get_id), nullptr);
 
     ws_vector_destroy(student, &vector);
 }
@@ -49,8 +44,6 @@ TEST(algorithm, vector_search_with_projection)
 TEST(algorithm, c_array_search)
 {
     int array[3] = { 69, 720, 420 };
-
-    int value = 420;
-    EXPECT_NE(ws_search_ex(array, 0, 3, sizeof(int), &value, nullptr, nullptr), nullptr);
+    EXPECT_NE(ws_search_ex(array, 0, 3, sizeof(int), ws_prvalue(int, 420), nullptr, nullptr), nullptr);
 }
 
