@@ -1,4 +1,4 @@
-#define WS_FILE_ISTREAM_DEFINITION
+#define WS_ISTREAM_DEFINITION
 
 #include <gtest/gtest.h>
 #include <wsl/filesystem/ws_istream.h>

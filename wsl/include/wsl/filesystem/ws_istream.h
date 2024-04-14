@@ -1,5 +1,5 @@
-#ifndef WS_ISTREAM
-#define WS_ISTREAM
+#ifndef WS_ISTREAM_H
+#define WS_ISTREAM_H
 
 #include <assert.h>
 #include <ctype.h>
@@ -32,7 +32,7 @@ void ws_istream_read_line_to_container(struct ws_istream* stream, void* destinat
 [[nodiscard]] struct ws_istream ws_istream_open(char const* file);
 void ws_istream_close(struct ws_istream* stream);
 
-#ifdef WS_FILE_ISTREAM_DEFINITION
+#ifdef WS_ISTREAM_DEFINITION
 
 bool ws_istream_eof(struct ws_istream* stream)
 {
