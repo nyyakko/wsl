@@ -18,7 +18,7 @@ struct ws_string_view
 #ifndef WS_STRING_VIEW_DEFINITION
     #define WS_DECL extern
 #else
-    #define WS_DECL
+    #define WS_DECL static
 #endif
 
 [[nodiscard]] WS_DECL size_t ws_string_view_size(struct ws_string_view view);

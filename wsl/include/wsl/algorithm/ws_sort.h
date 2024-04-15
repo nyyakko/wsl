@@ -33,7 +33,7 @@ typedef void(ws_strategy)(void*);
 #ifndef WS_SORT_DEFINITION
     #define WS_DECL extern
 #else
-    #define WS_DECL
+    #define WS_DECL static
 #endif
 
 #ifndef WS_SORT_DEFINITION

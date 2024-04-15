@@ -37,8 +37,14 @@
 
 #include "filesystem/ws_istream.h"
 
-[[nodiscard]] struct ws_string_builder ws_string_builder_create_from_sv(struct ws_string_view other);
-[[nodiscard]] struct ws_string_view ws_string_view_create_from_sb(struct ws_string_builder other);
+#ifndef WSL_DEFINITION
+    #define WS_DECL extern
+#else
+    #define WS_DECL static
+#endif
+
+[[nodiscard]] WS_DECL struct ws_string_builder ws_string_builder_create_from_sv(struct ws_string_view other);
+[[nodiscard]] WS_DECL struct ws_string_view ws_string_view_create_from_sb(struct ws_string_builder other);
 
 #ifdef WSL_DEFINITION
 

@@ -43,24 +43,24 @@ typedef void(ws_strategy)(void*);
 #ifndef WS_COUNT_DEFINITION
     #define WS_DECL extern
 #else
-    #define WS_DECL
+    #define WS_DECL static
 #endif
 
 #ifndef WS_COUNT_DEFINITION
 
 [[nodiscard]] WS_DECL size_t ws_count_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_projection* projection);
 [[nodiscard]] WS_DECL size_t ws_count_in(struct ws_container_interface const* container, void const* value, ws_projection* projection);
-[[nodiscard]] WS_DECL size_t ws_count_if_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_unary_predicate* predicate, ws_projection* projection);
+[[nodiscard]] WS_DECL size_t ws_count_if_ex(void const* data, size_t begin, size_t end, size_t elementSize, ws_unary_predicate* predicate, ws_projection* projection);
 [[nodiscard]] WS_DECL size_t ws_count_if_in(struct ws_container_interface const* container, ws_unary_predicate* predicate, ws_projection* projection);
 
 #else
 
 [[nodiscard]] WS_DECL size_t ws_count_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_projection* projection);
 [[nodiscard]] WS_DECL size_t ws_count_in(struct ws_container_interface const* container, void const* value, ws_projection* projection);
-[[nodiscard]] WS_DECL size_t ws_count_if_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_unary_predicate* predicate, ws_projection* projection);
+[[nodiscard]] WS_DECL size_t ws_count_if_ex(void const* data, size_t begin, size_t end, size_t elementSize, ws_unary_predicate* predicate, ws_projection* projection);
 [[nodiscard]] WS_DECL size_t ws_count_if_in(struct ws_container_interface const* container, ws_unary_predicate* predicate, ws_projection* projection);
 
-[[nodiscard]] size_t ws_count_if_ex(void const* data, size_t begin, size_t end, size_t elementSize, ws_unary_predicate* predicate, ws_projection* projection)
+size_t ws_count_if_ex(void const* data, size_t begin, size_t end, size_t elementSize, ws_unary_predicate* predicate, ws_projection* projection)
 {
     assert(data && "CONTAINER WAS NULL");
     assert(predicate && "PREDICATE WAS NULL");
@@ -80,7 +80,7 @@ typedef void(ws_strategy)(void*);
     return occurences;
 }
 
-[[nodiscard]] size_t ws_count_if_in(struct ws_container_interface const* container, ws_unary_predicate* predicate, ws_projection* projection)
+size_t ws_count_if_in(struct ws_container_interface const* container, ws_unary_predicate* predicate, ws_projection* projection)
 {
     assert(container && "CONTAINER WAS NULL");
     struct ws_container_interface containerInterface = {};

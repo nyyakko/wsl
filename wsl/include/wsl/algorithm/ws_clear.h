@@ -32,7 +32,7 @@ typedef void(ws_strategy)(void*);
 #ifndef WS_CLEAR_DEFINITION
     #define WS_DECL extern
 #else
-    #define WS_DECL
+    #define WS_DECL static
 #endif
 
 #ifndef WS_CLEAR_DEFINITION

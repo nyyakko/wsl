@@ -22,7 +22,7 @@
 #ifndef WS_QUEUE_DEFINITION
     #define WS_DECL extern
 #else
-    #define WS_DECL
+    #define WS_DECL static
 #endif
 
 #ifndef WS_QUEUE_DEFINITION

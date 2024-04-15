@@ -23,7 +23,7 @@ typedef void(strategy_t)(void*, char);
 #ifndef WS_ISTREAM_DEFINITION
     #define WS_DECL extern
 #else
-    #define WS_DECL
+    #define WS_DECL static
 #endif
 
 [[nodiscard]] WS_DECL bool ws_istream_eof(struct ws_istream* stream);

@@ -29,8 +29,10 @@
 #ifndef WS_HASH_MAP_DEFINITION
     #define WS_DECL extern
 #else
-    #define WS_DECL
+    #define WS_DECL static
 #endif
+
+[[nodiscard]] WS_DECL size_t ws_hash_map_hash(void const* bytes, size_t length);
 
 #ifndef WS_HASH_MAP_DEFINITION
 
@@ -87,8 +89,6 @@ WS_DECL void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_
 [[nodiscard]] WS_DECL struct ws_hash_map_##TYPE ws_hash_map_##TYPE##_create();                                                                                                                    \
 WS_DECL void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, void(*strategy)(TYPE*));
 
-WS_DECL size_t ws_hash_map_hash(void const* bytes, size_t length);
-
 #else
 
 #define WS_HASH_MAP(TYPE)                                                                                                                                                                         \
@@ -143,8 +143,6 @@ WS_DECL void ws_hash_map_##TYPE##_push(struct ws_hash_map_##TYPE* hashMap, size_
 [[nodiscard]] WS_DECL TYPE ws_hash_map_##TYPE##_pop(struct ws_hash_map_##TYPE* hashMap, size_t key);                                                                                              \
 [[nodiscard]] WS_DECL struct ws_hash_map_##TYPE ws_hash_map_##TYPE##_create();                                                                                                                    \
 WS_DECL void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, void(*strategy)(TYPE*));                                                                                            \
-                                                                                                                                                                                                  \
-WS_DECL size_t ws_hash_map_hash(void const* bytes, size_t length);                                                                                                                                \
                                                                                                                                                                                                   \
 size_t __ws_hash_map_tree_##TYPE##_size(struct __ws_hash_map_tree_##TYPE tree)                                                                                                                    \
 {                                                                                                                                                                                                 \
@@ -509,6 +507,8 @@ void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, void(*stra
     memset(hashMap, 0, sizeof(struct ws_hash_map_##TYPE));                                                                                                                                        \
 }
 
+#endif
+
 // MurmurHash: https://en.wikipedia.org/wiki/MurmurHash
 
 size_t ws_hash_map_hash(void const* bytes, size_t length)
@@ -565,8 +565,6 @@ size_t ws_hash_map_hash(void const* bytes, size_t length)
 
     return h;
 }
-
-#endif
 
 #endif
 
