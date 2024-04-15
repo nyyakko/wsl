@@ -20,6 +20,12 @@
 #define ws_queue_destroy(type, ...) __ws_queue_destroy_select(__VA_ARGS__, __ws_queue_destroy_2, __ws_queue_destroy_1, void)(type, __VA_ARGS__)
 
 #ifndef WS_QUEUE_DEFINITION
+    #define WS_DECL extern
+#else
+    #define WS_DECL
+#endif
+
+#ifndef WS_QUEUE_DEFINITION
 
 #define WS_QUEUE(TYPE)                                                                                                                            \
                                                                                                                                                   \
@@ -32,18 +38,18 @@ struct ws_queue_##TYPE                                                          
     size_t capacity;                                                                                                                              \
 };                                                                                                                                                \
                                                                                                                                                   \
-[[nodiscard]] size_t ws_queue_##TYPE##_size(struct ws_queue_##TYPE queue);                                                                        \
-[[nodiscard]] bool ws_queue_##TYPE##_is_empty(struct ws_queue_##TYPE queue);                                                                      \
-[[nodiscard]] TYPE* ws_queue_##TYPE##_front(struct ws_queue_##TYPE queue);                                                                        \
-[[nodiscard]] TYPE* ws_queue_##TYPE##_back(struct ws_queue_##TYPE queue);                                                                         \
-[[nodiscard]] TYPE* ws_queue_##TYPE##_search(struct ws_queue_##TYPE queue, TYPE value, bool(*predicate)(TYPE const*, TYPE const*));               \
-void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value);                                                                           \
-[[nodiscard]] TYPE ws_queue_##TYPE##_pop(struct ws_queue_##TYPE* queue);                                                                          \
-void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, struct ws_queue_##TYPE const* source, void(*strategy)(TYPE*));                   \
-[[nodiscard]] struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...);                                                                 \
-void ws_queue_##TYPE##_destroy(struct ws_queue_##TYPE* queue, void(*strategy)(TYPE*));                                                            \
+[[nodiscard]] WS_DECL size_t ws_queue_##TYPE##_size(struct ws_queue_##TYPE queue);                                                                \
+[[nodiscard]] WS_DECL bool ws_queue_##TYPE##_is_empty(struct ws_queue_##TYPE queue);                                                              \
+[[nodiscard]] WS_DECL TYPE* ws_queue_##TYPE##_front(struct ws_queue_##TYPE queue);                                                                \
+[[nodiscard]] WS_DECL TYPE* ws_queue_##TYPE##_back(struct ws_queue_##TYPE queue);                                                                 \
+[[nodiscard]] WS_DECL TYPE* ws_queue_##TYPE##_search(struct ws_queue_##TYPE queue, TYPE value, bool(*predicate)(TYPE const*, TYPE const*));       \
+WS_DECL void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value);                                                                   \
+[[nodiscard]] WS_DECL TYPE ws_queue_##TYPE##_pop(struct ws_queue_##TYPE* queue);                                                                  \
+WS_DECL void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, struct ws_queue_##TYPE const* source, void(*strategy)(TYPE*));           \
+[[nodiscard]] WS_DECL struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...);                                                         \
+WS_DECL void ws_queue_##TYPE##_destroy(struct ws_queue_##TYPE* queue, void(*strategy)(TYPE*));                                                    \
                                                                                                                                                   \
-void __ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue);
+WS_DECL void __ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue);
 
 #else
 
@@ -58,18 +64,18 @@ struct ws_queue_##TYPE                                                          
     size_t capacity;                                                                                                                              \
 };                                                                                                                                                \
                                                                                                                                                   \
-[[nodiscard]] size_t ws_queue_##TYPE##_size(struct ws_queue_##TYPE queue);                                                                        \
-[[nodiscard]] bool ws_queue_##TYPE##_is_empty(struct ws_queue_##TYPE queue);                                                                      \
-[[nodiscard]] TYPE* ws_queue_##TYPE##_front(struct ws_queue_##TYPE queue);                                                                        \
-[[nodiscard]] TYPE* ws_queue_##TYPE##_back(struct ws_queue_##TYPE queue);                                                                         \
-[[nodiscard]] TYPE* ws_queue_##TYPE##_search(struct ws_queue_##TYPE queue, TYPE value, bool(*predicate)(TYPE const*, TYPE const*));               \
-void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value);                                                                           \
-[[nodiscard]] TYPE ws_queue_##TYPE##_pop(struct ws_queue_##TYPE* queue);                                                                          \
-void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, struct ws_queue_##TYPE const* source, void(*strategy)(TYPE*));                   \
-[[nodiscard]] struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...);                                                                 \
-void ws_queue_##TYPE##_destroy(struct ws_queue_##TYPE* queue, void(*strategy)(TYPE*));                                                            \
+[[nodiscard]] WS_DECL size_t ws_queue_##TYPE##_size(struct ws_queue_##TYPE queue);                                                                \
+[[nodiscard]] WS_DECL bool ws_queue_##TYPE##_is_empty(struct ws_queue_##TYPE queue);                                                              \
+[[nodiscard]] WS_DECL TYPE* ws_queue_##TYPE##_front(struct ws_queue_##TYPE queue);                                                                \
+[[nodiscard]] WS_DECL TYPE* ws_queue_##TYPE##_back(struct ws_queue_##TYPE queue);                                                                 \
+[[nodiscard]] WS_DECL TYPE* ws_queue_##TYPE##_search(struct ws_queue_##TYPE queue, TYPE value, bool(*predicate)(TYPE const*, TYPE const*));       \
+WS_DECL void ws_queue_##TYPE##_push(struct ws_queue_##TYPE* queue, TYPE value);                                                                   \
+[[nodiscard]] WS_DECL TYPE ws_queue_##TYPE##_pop(struct ws_queue_##TYPE* queue);                                                                  \
+WS_DECL void ws_queue_##TYPE##_copy(struct ws_queue_##TYPE* destination, struct ws_queue_##TYPE const* source, void(*strategy)(TYPE*));           \
+[[nodiscard]] WS_DECL struct ws_queue_##TYPE ws_queue_##TYPE##_create(size_t count, ...);                                                         \
+WS_DECL void ws_queue_##TYPE##_destroy(struct ws_queue_##TYPE* queue, void(*strategy)(TYPE*));                                                    \
                                                                                                                                                   \
-void __ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue);                                                                                  \
+WS_DECL void __ws_queue_##TYPE##_realloc(struct ws_queue_##TYPE* queue);                                                                          \
                                                                                                                                                   \
 size_t ws_queue_##TYPE##_size(struct ws_queue_##TYPE queue)                                                                                       \
 {                                                                                                                                                 \

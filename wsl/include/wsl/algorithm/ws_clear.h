@@ -30,14 +30,20 @@ typedef void(ws_strategy)(void*);
 #define ws_clear(container, ...) __ws_clear__select(__VA_ARGS__ __VA_OPT__(,) __ws_clear__2, __ws_clear__1)(container, __VA_ARGS__)
 
 #ifndef WS_CLEAR_DEFINITION
+    #define WS_DECL extern
+#else
+    #define WS_DECL
+#endif
 
-void ws_clear_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_strategy* strategy);
-void ws_clear_in(struct ws_container_interface* container, ws_strategy* strategy);
+#ifndef WS_CLEAR_DEFINITION
+
+WS_DECL void ws_clear_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_strategy* strategy);
+WS_DECL void ws_clear_in(struct ws_container_interface* container, ws_strategy* strategy);
 
 #else
 
-void ws_clear_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_strategy* strategy);
-void ws_clear_in(struct ws_container_interface* container, ws_strategy* strategy);
+WS_DECL void ws_clear_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_strategy* strategy);
+WS_DECL void ws_clear_in(struct ws_container_interface* container, ws_strategy* strategy);
 
 void ws_clear_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_strategy* strategy)
 {

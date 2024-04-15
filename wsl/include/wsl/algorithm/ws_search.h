@@ -36,17 +36,21 @@ typedef void(ws_strategy)(void*);
 #define __ws_search__select(_1, _2, _3, selected, ...) selected
 #define ws_search(container, ...) __ws_search__select(__VA_ARGS__, __ws_search__3, __ws_search__2, __ws_search__1, void)(container, __VA_ARGS__)
 
-#define WS_SEARCH_DEFINITION
+#ifndef WS_SEARCH_DEFINITION
+    #define WS_DECL extern
+#else
+    #define WS_DECL
+#endif
 
 #ifndef WS_SEARCH_DEFINITION
 
-[[nodiscard]] void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_binary_predicate* predicate, ws_projection* projection);
-[[nodiscard]] void* ws_search_in(struct ws_container_interface const* container, void const* value, ws_binary_predicate* predicate, ws_projection* projection);
+[[nodiscard]] WS_DECL void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_binary_predicate* predicate, ws_projection* projection);
+[[nodiscard]] WS_DECL void* ws_search_in(struct ws_container_interface const* container, void const* value, ws_binary_predicate* predicate, ws_projection* projection);
 
 #else
 
-[[nodiscard]] void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_binary_predicate* predicate, ws_projection* projection);
-[[nodiscard]] void* ws_search_in(struct ws_container_interface const* container, void const* value, ws_binary_predicate* predicate, ws_projection* projection);
+[[nodiscard]] WS_DECL void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_binary_predicate* predicate, ws_projection* projection);
+[[nodiscard]] WS_DECL void* ws_search_in(struct ws_container_interface const* container, void const* value, ws_binary_predicate* predicate, ws_projection* projection);
 
 void* ws_search_ex(void const* data, size_t begin, size_t end, size_t elementSize, void const* value, ws_binary_predicate* predicate, ws_projection* projection)
 {

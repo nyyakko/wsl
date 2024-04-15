@@ -20,17 +20,23 @@ struct ws_istream
 
 typedef void(strategy_t)(void*, char);
 
-[[nodiscard]] bool ws_istream_eof(struct ws_istream* stream);
-void ws_istream_ignore_whitespaces(struct ws_istream* stream, bool should);
-[[nodiscard]] char ws_istream_peek(struct ws_istream* stream);
-void ws_istream_unread_char(struct ws_istream* stream, char byte);
-[[nodiscard]] char ws_istream_read_char(struct ws_istream* stream);
-void ws_istream_read_to_buffer(struct ws_istream* stream, char* destination, size_t destinationSize);
-void ws_istream_read_to_container(struct ws_istream* stream, void* destination, strategy_t* strategy);
-void ws_istream_read_line_to_buffer(struct ws_istream* stream, char* destination, size_t destinationSize);
-void ws_istream_read_line_to_container(struct ws_istream* stream, void* destination, strategy_t* strategy);
-[[nodiscard]] struct ws_istream ws_istream_open(char const* file);
-void ws_istream_close(struct ws_istream* stream);
+#ifndef WS_ISTREAM_DEFINITION
+    #define WS_DECL extern
+#else
+    #define WS_DECL
+#endif
+
+[[nodiscard]] WS_DECL bool ws_istream_eof(struct ws_istream* stream);
+WS_DECL void ws_istream_ignore_whitespaces(struct ws_istream* stream, bool should);
+[[nodiscard]] WS_DECL char ws_istream_peek(struct ws_istream* stream);
+WS_DECL void ws_istream_unread_char(struct ws_istream* stream, char byte);
+[[nodiscard]] WS_DECL char ws_istream_read_char(struct ws_istream* stream);
+WS_DECL void ws_istream_read_to_buffer(struct ws_istream* stream, char* destination, size_t destinationSize);
+WS_DECL void ws_istream_read_to_container(struct ws_istream* stream, void* destination, strategy_t* strategy);
+WS_DECL void ws_istream_read_line_to_buffer(struct ws_istream* stream, char* destination, size_t destinationSize);
+WS_DECL void ws_istream_read_line_to_container(struct ws_istream* stream, void* destination, strategy_t* strategy);
+[[nodiscard]] WS_DECL struct ws_istream ws_istream_open(char const* file);
+WS_DECL void ws_istream_close(struct ws_istream* stream);
 
 #ifdef WS_ISTREAM_DEFINITION
 

@@ -15,20 +15,26 @@ struct ws_string_view
     size_t size;
 };
 
-[[nodiscard]] size_t ws_string_view_size(struct ws_string_view view);
-[[nodiscard]] bool ws_string_view_is_empty(struct ws_string_view view);
-[[nodiscard]] bool ws_string_view_equals(struct ws_string_view lhs, struct ws_string_view rhs);
-[[nodiscard]] char ws_string_view_at(struct ws_string_view view, size_t index);
-[[nodiscard]] char ws_string_view_front(struct ws_string_view view);
-[[nodiscard]] char ws_string_view_back(struct ws_string_view view);
-[[nodiscard]] size_t ws_string_view_search_first(struct ws_string_view view, char needle);
-[[nodiscard]] size_t ws_string_view_search_last(struct ws_string_view view, char needle);
-void ws_string_view_chop_until_first(struct ws_string_view* view, char delimiter);
-void ws_string_view_chop_until_last(struct ws_string_view* view, char delimiter);
-[[nodiscard]] struct ws_string_view ws_string_view_subview(struct ws_string_view view, size_t begin, size_t end);
-void ws_string_view_copy(struct ws_string_view* destination, struct ws_string_view const* source);
-[[nodiscard]] struct ws_string_view ws_string_view_create_from_sv(struct ws_string_view other);
-[[nodiscard]] struct ws_string_view ws_string_view_create(char const* data);
+#ifndef WS_STRING_VIEW_DEFINITION
+    #define WS_DECL extern
+#else
+    #define WS_DECL
+#endif
+
+[[nodiscard]] WS_DECL size_t ws_string_view_size(struct ws_string_view view);
+[[nodiscard]] WS_DECL bool ws_string_view_is_empty(struct ws_string_view view);
+[[nodiscard]] WS_DECL bool ws_string_view_equals(struct ws_string_view lhs, struct ws_string_view rhs);
+[[nodiscard]] WS_DECL char ws_string_view_at(struct ws_string_view view, size_t index);
+[[nodiscard]] WS_DECL char ws_string_view_front(struct ws_string_view view);
+[[nodiscard]] WS_DECL char ws_string_view_back(struct ws_string_view view);
+[[nodiscard]] WS_DECL size_t ws_string_view_search_first(struct ws_string_view view, char needle);
+[[nodiscard]] WS_DECL size_t ws_string_view_search_last(struct ws_string_view view, char needle);
+WS_DECL void ws_string_view_chop_until_first(struct ws_string_view* view, char delimiter);
+WS_DECL void ws_string_view_chop_until_last(struct ws_string_view* view, char delimiter);
+[[nodiscard]] WS_DECL struct ws_string_view ws_string_view_subview(struct ws_string_view view, size_t begin, size_t end);
+WS_DECL void ws_string_view_copy(struct ws_string_view* destination, struct ws_string_view const* source);
+[[nodiscard]] WS_DECL struct ws_string_view ws_string_view_create_from_sv(struct ws_string_view other);
+[[nodiscard]] WS_DECL struct ws_string_view ws_string_view_create(char const* data);
 
 #ifdef WS_STRING_VIEW_DEFINITION
 

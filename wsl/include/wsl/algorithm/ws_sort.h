@@ -31,14 +31,20 @@ typedef void(ws_strategy)(void*);
 #define ws_sort(container, ...) __ws_sort__select(__VA_ARGS__, __ws_sort__2, __ws_sort__1, void)(container, __VA_ARGS__)
 
 #ifndef WS_SORT_DEFINITION
+    #define WS_DECL extern
+#else
+    #define WS_DECL
+#endif
 
-void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_binary_predicate* predicate, ws_projection* projection);
-void ws_sort_in(struct ws_container_interface* container, ws_binary_predicate* predicate, ws_projection* projection);
+#ifndef WS_SORT_DEFINITION
+
+WS_DECL void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_binary_predicate* predicate, ws_projection* projection);
+WS_DECL void ws_sort_in(struct ws_container_interface* container, ws_binary_predicate* predicate, ws_projection* projection);
 
 #else
 
-void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_binary_predicate* predicate, ws_projection* projection);
-void ws_sort_in(struct ws_container_interface* container, ws_binary_predicate* predicate, ws_projection* projection);
+WS_DECL void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_binary_predicate* predicate, ws_projection* projection);
+WS_DECL void ws_sort_in(struct ws_container_interface* container, ws_binary_predicate* predicate, ws_projection* projection);
 
 void ws_sort_ex(void* data, size_t begin, size_t end, size_t elementSize, ws_binary_predicate* predicate, ws_projection* projection)
 {

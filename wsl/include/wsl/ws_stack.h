@@ -20,6 +20,12 @@
 #define ws_stack_destroy(type, ...) __ws_stack_destroy_select(__VA_ARGS__, __ws_stack_destroy_2, __ws_stack_destroy_1, void)(type, __VA_ARGS__)
 
 #ifndef WS_STACK_DEFINITION
+    #define WS_DECL extern
+#else
+    #define WS_DECL
+#endif
+
+#ifndef WS_STACK_DEFINITION
 
 #define WS_STACK(TYPE)                                                                                                                           \
                                                                                                                                                  \
@@ -32,17 +38,17 @@ struct ws_stack_##TYPE                                                          
     size_t capacity;                                                                                                                             \
 };                                                                                                                                               \
                                                                                                                                                  \
-[[nodiscard]] size_t ws_stack_##TYPE##_size(struct ws_stack_##TYPE stack);                                                                       \
-[[nodiscard]] bool ws_stack_##TYPE##_is_empty(struct ws_stack_##TYPE stack);                                                                     \
-[[nodiscard]] TYPE* ws_stack_##TYPE##_search(struct ws_stack_##TYPE stack, TYPE value, int(*predicate)(TYPE const*, TYPE const*));               \
-[[nodiscard]] TYPE* ws_stack_##TYPE##_top(struct ws_stack_##TYPE stack);                                                                         \
-void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value);                                                                          \
-[[nodiscard]] TYPE ws_stack_##TYPE##_pop(struct ws_stack_##TYPE* stack);                                                                         \
-void ws_stack_##TYPE##_copy(struct ws_stack_##TYPE* destination, struct ws_stack_##TYPE const* source, void(*strategy)(TYPE*));                  \
-[[nodiscard]] struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...);                                                                \
-void ws_stack_##TYPE##_destroy(struct ws_stack_##TYPE* stack, void(*strategy)(TYPE*));                                                           \
+[[nodiscard]] WS_DECL size_t ws_stack_##TYPE##_size(struct ws_stack_##TYPE stack);                                                               \
+[[nodiscard]] WS_DECL bool ws_stack_##TYPE##_is_empty(struct ws_stack_##TYPE stack);                                                             \
+[[nodiscard]] WS_DECL TYPE* ws_stack_##TYPE##_search(struct ws_stack_##TYPE stack, TYPE value, int(*predicate)(TYPE const*, TYPE const*));       \
+[[nodiscard]] WS_DECL TYPE* ws_stack_##TYPE##_top(struct ws_stack_##TYPE stack);                                                                 \
+WS_DECL void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value);                                                                  \
+[[nodiscard]] WS_DECL TYPE ws_stack_##TYPE##_pop(struct ws_stack_##TYPE* stack);                                                                 \
+WS_DECL void ws_stack_##TYPE##_copy(struct ws_stack_##TYPE* destination, struct ws_stack_##TYPE const* source, void(*strategy)(TYPE*));          \
+[[nodiscard]] WS_DECL struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...);                                                        \
+WS_DECL void ws_stack_##TYPE##_destroy(struct ws_stack_##TYPE* stack, void(*strategy)(TYPE*));                                                   \
                                                                                                                                                  \
-void __ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack);
+WS_DECL void __ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack);
 
 #else
 
@@ -57,17 +63,17 @@ struct ws_stack_##TYPE                                                          
     size_t capacity;                                                                                                                             \
 };                                                                                                                                               \
                                                                                                                                                  \
-[[nodiscard]] size_t ws_stack_##TYPE##_size(struct ws_stack_##TYPE stack);                                                                       \
-[[nodiscard]] bool ws_stack_##TYPE##_is_empty(struct ws_stack_##TYPE stack);                                                                     \
-[[nodiscard]] TYPE* ws_stack_##TYPE##_search(struct ws_stack_##TYPE stack, TYPE value, int(*predicate)(TYPE const*, TYPE const*));               \
-[[nodiscard]] TYPE* ws_stack_##TYPE##_top(struct ws_stack_##TYPE stack);                                                                         \
-void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value);                                                                          \
-[[nodiscard]] TYPE ws_stack_##TYPE##_pop(struct ws_stack_##TYPE* stack);                                                                         \
-void ws_stack_##TYPE##_copy(struct ws_stack_##TYPE* destination, struct ws_stack_##TYPE const* source, void(*strategy)(TYPE*));                  \
-[[nodiscard]] struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...);                                                                \
-void ws_stack_##TYPE##_destroy(struct ws_stack_##TYPE* stack, void(*strategy)(TYPE*));                                                           \
+[[nodiscard]] WS_DECL size_t ws_stack_##TYPE##_size(struct ws_stack_##TYPE stack);                                                               \
+[[nodiscard]] WS_DECL bool ws_stack_##TYPE##_is_empty(struct ws_stack_##TYPE stack);                                                             \
+[[nodiscard]] WS_DECL TYPE* ws_stack_##TYPE##_search(struct ws_stack_##TYPE stack, TYPE value, int(*predicate)(TYPE const*, TYPE const*));       \
+[[nodiscard]] WS_DECL TYPE* ws_stack_##TYPE##_top(struct ws_stack_##TYPE stack);                                                                 \
+WS_DECL void ws_stack_##TYPE##_push(struct ws_stack_##TYPE* stack, TYPE value);                                                                  \
+[[nodiscard]] WS_DECL TYPE ws_stack_##TYPE##_pop(struct ws_stack_##TYPE* stack);                                                                 \
+WS_DECL void ws_stack_##TYPE##_copy(struct ws_stack_##TYPE* destination, struct ws_stack_##TYPE const* source, void(*strategy)(TYPE*));          \
+[[nodiscard]] WS_DECL struct ws_stack_##TYPE ws_stack_##TYPE##_create(size_t count, ...);                                                        \
+WS_DECL void ws_stack_##TYPE##_destroy(struct ws_stack_##TYPE* stack, void(*strategy)(TYPE*));                                                   \
                                                                                                                                                  \
-void __ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack);                                                                                 \
+WS_DECL void __ws_stack_##TYPE##_realloc(struct ws_stack_##TYPE* stack);                                                                         \
                                                                                                                                                  \
 size_t ws_stack_##TYPE##_size(struct ws_stack_##TYPE stack)                                                                                      \
 {                                                                                                                                                \
