@@ -507,10 +507,7 @@ void ws_hash_map_##TYPE##_destroy(struct ws_hash_map_##TYPE* hashMap, void(*stra
     memset(hashMap, 0, sizeof(struct ws_hash_map_##TYPE));                                                                                                                                        \
 }
 
-#endif
-
 // MurmurHash: https://en.wikipedia.org/wiki/MurmurHash
-
 size_t ws_hash_map_hash(void const* bytes, size_t length)
 {
     const unsigned long long m = 0xc6a4a7935bd1e995ULL;
@@ -565,6 +562,8 @@ size_t ws_hash_map_hash(void const* bytes, size_t length)
 
     return h;
 }
+
+#endif
 
 #endif
 
